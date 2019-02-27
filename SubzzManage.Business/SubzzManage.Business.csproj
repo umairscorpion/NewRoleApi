@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SubzzManage.DataAccess\SubzzManage.DataAccess.csproj" />
+    <ProjectReference Include="..\SubzzV2.Core\SubzzV2.Core.csproj" />
+  </ItemGroup>
+
+</Project>

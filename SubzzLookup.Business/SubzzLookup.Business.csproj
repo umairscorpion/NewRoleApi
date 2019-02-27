@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Lookup\Interface\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SubzzLookup.DataAccess\SubzzLookup.DataAccess.csproj" />
+    <ProjectReference Include="..\SubzzV2.Core\SubzzV2.Core.csproj" />
+  </ItemGroup>
+
+</Project>
