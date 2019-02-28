@@ -189,13 +189,13 @@ namespace Subzz.Api.Controllers.User
             return _service.GetSubstitutePreferredSchools(UserId);
         }
 
-        //[Route("updateEnabledSchools")]
-        //[HttpGet]
-        //public async Task<IActionResult> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel)
-        //{
-        //    await _service.UpdateEnabledSchools(preferredSchoolModel);
-        //    return Json("success");
-        //}
+        [Route("updateEnabledSchools")]
+        [HttpGet]
+        public async Task<IActionResult> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel)
+        {
+            await _service.UpdateEnabledSchools(preferredSchoolModel);
+            return Json("success");
+        }
 
     }
 }
