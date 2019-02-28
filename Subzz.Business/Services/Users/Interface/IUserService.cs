@@ -35,5 +35,7 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<User> GetFavoriteSubstitutes(string UserId);
         IEnumerable<User> GetBlockedSubstitutes(string UserId);
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
+        IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
+        Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
     }
 }

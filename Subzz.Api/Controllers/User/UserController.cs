@@ -182,5 +182,20 @@ namespace Subzz.Api.Controllers.User
             return _service.GetBlockedSubstitutes(UserId);
         }
 
+        [Route("getSubstitutePreferredSchools/{UserId}")]
+        [HttpGet]
+        public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
+        {
+            return _service.GetSubstitutePreferredSchools(UserId);
+        }
+
+        [Route("updateEnabledSchools")]
+        [HttpGet]
+        public async Task<IActionResult> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel)
+        {
+            await _service.UpdateEnabledSchools(preferredSchoolModel);
+            return Json("success");
+        }
+
     }
 }
