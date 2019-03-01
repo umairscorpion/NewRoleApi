@@ -64,7 +64,6 @@
     <Compile Include="Models\SubstituteCategoryModel.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
     <Compile Include="Models\UserReference.cs" />
-    <Compile Include="Models\UserRefree.cs" />
     <Compile Include="Models\UserResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
