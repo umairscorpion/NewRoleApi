@@ -21,11 +21,15 @@ using SubzzAbsence.Business.Absence;
 using SubzzAbsence.Business.Absence.Interface;
 using SubzzAbsence.Business.Leaves;
 using SubzzAbsence.Business.Leaves.Interface;
+using SubzzAbsence.Business.Reports;
+using SubzzAbsence.Business.Reports.Interface;
 using SubzzAbsence.DataAccess.Repositories.Absence;
 using SubzzAbsence.DataAccess.Repositories.Absence.Interface;
 using SubzzAbsence.DataAccess.Repositories.Base;
 using SubzzAbsence.DataAccess.Repositories.Leaves;
 using SubzzAbsence.DataAccess.Repositories.Leaves.Interface;
+using SubzzAbsence.DataAccess.Repositories.Reports;
+using SubzzAbsence.DataAccess.Repositories.Reports.Interface;
 using SubzzLookup.Business.Lookups;
 using SubzzLookup.Business.Lookups.Interface;
 using SubzzLookup.DataAccess.Repositories;
@@ -90,6 +94,9 @@ namespace Subzz.Api
 
             services.AddTransient<IJobService, JobService>();
             services.AddTransient<IJobRepository, JobRepository>();
+
+            services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<IReportRepository, ReportRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>

@@ -9,7 +9,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
 {
     public class ReportRepository : EntityRepository, IReportRepository
     {
-        public ReportSummary GetReportSummary(ReportFilter filter)
+        public List<ReportSummary> GetReportSummary(ReportFilter filter)
         {
             using (var connection = base.GetConnection)
             {
@@ -24,7 +24,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                 param.Add("@DistrictId", filter.DistrictId);
                 param.Add("@ReasonId", filter.ReasonId);
                 param.Add("@EmployeeName", filter.EmployeeName);
-                return connection.Query<ReportSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+                return connection.Query<ReportSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
 

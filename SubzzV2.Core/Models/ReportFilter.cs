@@ -10,8 +10,8 @@ namespace SubzzV2.Core.Models
     {
         public string ReportType { get; set; }
         public string ReportTitle { get; set; }
-        public string FromDate { get; set; }
-        public string ToDate{ get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
         public string JobNumber { get; set; }
         public int EmployeeTypeId { get; set; }
         public int AbsenceTypeId { get; set; }

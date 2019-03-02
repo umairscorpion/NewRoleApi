@@ -15,7 +15,7 @@ namespace SubzzAbsence.Business.Reports
             _repo = repo;
         }
 
-        public ReportSummary GetReportSummary(ReportFilter model)
+        public List<ReportSummary> GetReportSummary(ReportFilter model)
         {
             return _repo.GetReportSummary(model);
         }
