@@ -21,7 +21,7 @@ namespace Subzz.Api.Controllers.Reports
 
         [Route("summary")]
         [HttpPost]
-        public IActionResult GetSummary(ReportFilter model)
+        public IActionResult GetSummary([FromBody]ReportFilter model)
         {
             var reportSummary = _service.GetReportSummary(model);
             return Ok(reportSummary);
@@ -29,7 +29,7 @@ namespace Subzz.Api.Controllers.Reports
 
         [Route("details")]
         [HttpPost]
-        public IActionResult GetDetails(ReportFilter model)
+        public IActionResult GetDetails([FromBody]ReportFilter model)
         {
             var reportDetails = _service.GetReportDetails(model);
             return Ok(reportDetails);
