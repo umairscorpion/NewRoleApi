@@ -299,10 +299,11 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             try
             {
-                var sql = "[users].[DeleteSubstitutePreference]";
+                var sql = "[users].[SaveEnabledSchoolsBySubstitute]";
                 var queryParams = new DynamicParameters();
-                queryParams.Add("@UserId", preferredSchoolModel.Id);
-                queryParams.Add("@SubstituteId", preferredSchoolModel.IsEnabled);
+                queryParams.Add("@OrganizationId", preferredSchoolModel.OrganizationId); 
+                queryParams.Add("@SubstituteId", preferredSchoolModel.UserId);
+                queryParams.Add("@IsEnabled", preferredSchoolModel.IsEnabled);
                 await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)

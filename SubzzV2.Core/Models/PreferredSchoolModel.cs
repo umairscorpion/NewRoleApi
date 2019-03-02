@@ -10,6 +10,8 @@ namespace SubzzV2.Core.Models
     {
         public int Id { get; set; }
         public string OrganizationName { get; set; }
-        public int IsEnabled { get; set; }
+        public string OrganizationId { get; set; }
+        public bool IsEnabled { get; set; }
+        public string UserId { get; set; }
     }
 }
