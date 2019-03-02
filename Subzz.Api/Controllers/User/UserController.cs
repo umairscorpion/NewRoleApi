@@ -190,8 +190,8 @@ namespace Subzz.Api.Controllers.User
         }
 
         [Route("updateEnabledSchools")]
-        [HttpGet]
-        public async Task<IActionResult> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateEnabledSchools([FromBody]PreferredSchoolModel preferredSchoolModel)
         {
             await _service.UpdateEnabledSchools(preferredSchoolModel);
             return Json("success");
