@@ -7,7 +7,7 @@ namespace SubzzAbsence.Business.Reports.Interface
 {
     public interface IReportService
     {
-        ReportSummary GetReportSummary(ReportFilter model);
+        List<ReportSummary> GetReportSummary(ReportFilter model);
         List<ReportDetail> GetReportDetails(ReportFilter model);
     }
 }

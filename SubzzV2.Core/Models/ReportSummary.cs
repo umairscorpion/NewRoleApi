@@ -8,7 +8,9 @@ namespace SubzzV2.Core.Models
 {
     public class ReportSummary
     {
-        public string Title { get; set; }
-        public int Count { get; set; }  
+        public int TotalCount { get; set; }
+        public int Filled { get; set; }
+        public int Unfilled { get; set; }
+        public int NoSubRequired { get; set; }
     }
 }

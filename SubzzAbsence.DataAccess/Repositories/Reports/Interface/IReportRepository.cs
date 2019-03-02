@@ -7,7 +7,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports.Interface
 {
     public interface IReportRepository
     {
-        ReportSummary GetReportSummary(ReportFilter reportFilter);
+        List<ReportSummary> GetReportSummary(ReportFilter reportFilter);
         List<ReportDetail> GetReportDetail(ReportFilter model);
     }
 }
