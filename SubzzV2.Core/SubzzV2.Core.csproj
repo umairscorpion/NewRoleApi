@@ -58,12 +58,12 @@
     <Compile Include="Models\LookupModel.cs" />
     <Compile Include="Models\NoticationSettingsModel.cs" />
     <Compile Include="Models\OrganizationModel.cs" />
+    <Compile Include="Models\PreferredSchoolModel.cs" />
     <Compile Include="Models\PreferredSubstituteModel.cs" />
     <Compile Include="Models\StateModel.cs" />
     <Compile Include="Models\SubstituteCategoryModel.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
     <Compile Include="Models\UserReference.cs" />
-    <Compile Include="Models\UserRefree.cs" />
     <Compile Include="Models\UserResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -118,5 +118,15 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.GetAdminListByAbsenceId(AbsenceId);
         }
+
+        public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
+        {
+            return _repo.GetSubstitutePreferredSchools(UserId);
+        }
+
+        public async Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel)
+        {
+            return await _repo.UpdateEnabledSchools(preferredSchoolModel);
+        }
     }
 }

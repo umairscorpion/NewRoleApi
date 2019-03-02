@@ -287,6 +287,30 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
+        public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
+        {
+            var sql = "[users].[GetSubstitutePreferredSchools]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@SubstituteId", UserId);
+            return Db.Query<PreferredSchoolModel>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public async Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel)
+        {
+            try
+            {
+                var sql = "[users].[DeleteSubstitutePreference]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@UserId", preferredSchoolModel.Id);
+                queryParams.Add("@SubstituteId", preferredSchoolModel.IsEnabled);
+                await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+            }
+            return 1;
+        }
+
         public bool Delete(string sql, DynamicParameters param, CommandType commandType)
         {
             var DeletedRecord = Db.Execute(sql, param: param, commandType: commandType);
