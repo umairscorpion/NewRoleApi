@@ -19,18 +19,21 @@ namespace SubzzV2.Core.Models
         public string CreatedByUser { get; set; }
         public string EmployeeName { get; set; }
         public string SubstituteName { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
         public int AbsenceReasonId { get; set; }
         public string AbsenceStatusDescription { get; set; }
         public string AbsenceLocation { get; set; }
         public int DurationType { get; set; }
         public int PositionId { get; set; }
         public string OrganizationId { get; set; }
+        public string OrganizationName { get; set; }
+        public string OrganizationAddress { get; set; }
         public int Status { get; set; }
         public int DistrictId { get; set; }
+        public string DistrictAddress { get; set; }
         public string SubstituteId { get; set; }
         public bool SubstituteRequired { get; set; }
         public int AbsenceScope { get; set; }
@@ -50,6 +53,8 @@ namespace SubzzV2.Core.Models
         public List<User> Users { get; set; }
         public int Interval { get; set; }
         public int TotalInterval { get; set; }
+        public int anyConflict { get; set; }
+        public string ProfilePicture { get; set; }
     }
 
 }

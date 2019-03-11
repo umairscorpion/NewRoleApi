@@ -52,6 +52,7 @@
     <Compile Include="Models\EmployeeSchedule.cs" />
     <Compile Include="Models\ErrorlogModel.cs" />
     <Compile Include="Models\ExternalUser.cs" />
+    <Compile Include="Models\FileManager.cs" />
     <Compile Include="Models\LeaveRequestModel.cs" />
     <Compile Include="Models\LeaveTypeModel.cs" />
     <Compile Include="Models\LocationTime.cs" />

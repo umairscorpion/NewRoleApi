@@ -47,8 +47,8 @@ namespace Subzz.Api.Controllers.Manage
                 IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                 Message message = new Message();
                 message.AbsenceId = absenceDetail.AbsenceId;
-                message.StartTime = absenceDetail.StartTime.ToSubzzTime();
-                message.EndTime = absenceDetail.EndTime.ToSubzzTime();
+                message.StartTime = Convert.ToDateTime(absenceDetail.StartTime).ToSubzzTime();
+                message.EndTime = Convert.ToDateTime(absenceDetail.EndTime).ToSubzzTime();
                 message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
                 message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
                 message.EmployeeName = absenceDetail.EmployeeName;
