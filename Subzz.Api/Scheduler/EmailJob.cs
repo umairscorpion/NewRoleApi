@@ -25,7 +25,7 @@ namespace Subzz.Api.Schedules
             _absenceService = new AbsenceService();
             _userService = new UserService();
             return Task.Run(() => {
-               SendNotificationToPreferredSubstitutes();
+               //SendNotificationToPreferredSubstitutes();
             });
         }
 

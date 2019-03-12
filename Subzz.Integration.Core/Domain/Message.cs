@@ -49,6 +49,8 @@ namespace Subzz.Integration.Core.Domain
         public string PhoneNumber { get; set; }
         public int AbsenceId { get; set; }
         public string SubstituteName { get; set; }
+        public string AcceptUrl { get; set; }
+        public string Password { get; set; }
 
     }
 

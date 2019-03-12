@@ -70,13 +70,6 @@ namespace Subzz.Api.Controllers.User
         [HttpPatch]
         public SubzzV2.Core.Entities.User UpdateUser([FromBody]SubzzV2.Core.Entities.User model)
         {
-            //In Case Of Substitute
-            //if (model.RoleId == 4)
-            //{
-            //    model.TeachingLevel = 0 ;
-            //    model.Speciality = "N/A" ;
-            //    model.OrganizationId = "N/A";
-            //}
             return _service.UpdateUser(model);
         }
 

@@ -50,8 +50,12 @@ namespace Subzz.Api.Controllers.Absence
             try
             {
                 var file = Request.Form.Files[0];
-                string folderName = "Upload";
+                string folderName = "Attachment";
                 string webRootPath = _hostingEnvironment.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                {
+                    webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
                 string filePath = Path.Combine(webRootPath, folderName);
                 if (!Directory.Exists(filePath))
                 {
@@ -89,7 +93,7 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     
                     model.AbsenceId = absenceCreation;
-                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.StartTime, model.EndTime);
+                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), Convert.ToDateTime(model.StartTime), Convert.ToDateTime(model.EndTime));
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                     if (model.AbsenceScope == 3)
                     {
@@ -134,10 +138,14 @@ namespace Subzz.Api.Controllers.Absence
 
         [Route("getfile")]
         [HttpPost]
-        public IActionResult GetFile([FromBody] AbsenceModel model)
+        public IActionResult GetFile([FromBody]AbsenceModel model)
         {
-            string folderName = "Upload";
+            string folderName = "Attachment";
             string webRootPath = _hostingEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
             string filePath = Path.Combine(webRootPath, folderName);
             byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, model.AttachedFileName));
             return File(bytes, model.FileContentType);
@@ -149,8 +157,8 @@ namespace Subzz.Api.Controllers.Absence
             //SubstituteId Contains All Substitute Ids in case Of Request specific Substitute.
             var DataForEmails = _userService.GetUsersForSendingAbsenceNotificationOnEntireSub(absenceModel.DistrictId, absenceModel.OrganizationId, absenceModel.AbsenceId, absenceModel.SubstituteId);
             message.AbsenceId = absenceModel.AbsenceId;
-            message.StartTime = absenceModel.StartTime.ToSubzzTime();
-            message.EndTime = absenceModel.EndTime.ToSubzzTime();
+            message.StartTime = Convert.ToDateTime(absenceModel.StartTime).ToSubzzTime();
+            message.EndTime = Convert.ToDateTime(absenceModel.EndTime).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceModel.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceModel.EndDate).ToString("D");
             message.EmployeeName = DataForEmails.EmployeeName;
@@ -167,19 +175,21 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     try
                     {
+                        message.Password = User.Password;
                         message.UserName = User.FirstName;
                         message.SendTo = User.Email;
                         //For Substitutes
                         if (User.RoleId == 4)
                         {
                             message.TemplateId = 1;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+
                         }
                         //For Admins
                         else
                         {
                             message.TemplateId = 2;
                         }
-                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
                     catch (Exception ex)
                     {

@@ -16,6 +16,7 @@ namespace SubzzV2.Integration.Core.Notification
     public class EmailProcessor : IEmailProcessor
     {
         private const string registrationConfirmedPath = "registrationConfirmed/";
+        private const string url = "http://162.241.138.178/plesk-site-preview/sv2.loginsubzz.com";
 
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
@@ -30,6 +31,10 @@ namespace SubzzV2.Integration.Core.Notification
         {
             try
             {
+                if(message.TemplateId == 1)
+                {
+                    message.AcceptUrl = url + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId;
+                }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
                 string[] to;
@@ -130,6 +135,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Location}"] = message.Location,
                 ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "N/A",
                 ["{Duration}"] = message.Duration ,
+                ["{AcceptUrl}"] = message.AcceptUrl,
             };
             return param;
         }

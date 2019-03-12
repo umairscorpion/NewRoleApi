@@ -52,6 +52,8 @@ namespace SubzzV2.Core.Entities
         public string Speciality { get; set; }
         public int TeachingLevel { get; set; }
         public int UserLevel { get; set; }
+        public int CategoryId { get; set; }
+        public string Password { get; set; }
 
     }
 }
