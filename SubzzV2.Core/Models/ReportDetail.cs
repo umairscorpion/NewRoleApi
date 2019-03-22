@@ -12,8 +12,8 @@ namespace SubzzV2.Core.Models
         public string Reason { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public string DistrictName { get; set; }
         public DateTime PostedOn { get; set; }
         public string PostedById { get; set; } 
