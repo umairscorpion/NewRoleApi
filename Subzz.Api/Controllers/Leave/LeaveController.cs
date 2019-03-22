@@ -40,18 +40,27 @@ namespace Subzz.Api.Controllers.Leave
             var leaveTypeModel = _service.InsertLeaveType(model);
             return leaveTypeModel;
         }
-        [Route("getLeaveRequests/{IsApproved}/{IsDenied}")]
+        [Route("getLeaveRequests/{districtId}/{organizationId}")]
         [HttpGet]
-        public IEnumerable<LeaveRequestModel> GetLeaveRequests(int IsApproved, int IsDenied)
+        public IEnumerable<LeaveRequestModel> GetLeaveRequests(int districtId, string organizationId)
         {
-            var leaveRequests = _service.GetLeaveRequests(IsApproved, IsDenied);
+            var leaveRequests = _service.GetLeaveRequests(districtId, organizationId);
             return leaveRequests;
         }
+
         [Route("getLeaveTypes")]
         [HttpGet]
         public IEnumerable<LeaveTypeModel> GetLeaveTypes()
         {
             var leaveTypes = _service.GetLeaveTypes();
+            return leaveTypes;
+        }
+
+        [Route("getLeaveTypes/{districtId}/{organizationId}")]
+        [HttpGet]
+        public IEnumerable<LeaveTypeModel> GetLeaveTypes(int districtId, string organizationId)
+        {
+            var leaveTypes = _service.GetLeaveTypes(districtId, organizationId);
             return leaveTypes;
         }
     }

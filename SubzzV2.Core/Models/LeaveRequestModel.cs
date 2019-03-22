@@ -13,8 +13,8 @@ namespace SubzzV2.Core.Models
         public string EmployeeId { get; set; }
         public string CreatedById { get; set; }
         public int LeaveTypeId { get; set; }
-        public int IsApproved { get; set; }
-        public int IsDeniend { get; set; }
+        public bool IsApproved { get; set; }
+        public bool IsDeniend { get; set; }
         public string LeaveTypeName { get; set; }
         public string Description { get; set; }
         public string StartDate { get; set; }
@@ -24,5 +24,6 @@ namespace SubzzV2.Core.Models
         public string CreatedDate { get; set; }
         public string ApprovedDate { get; set; }
         public string DeniedDate { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 //If Length is greater than 10 ,it means its not direct assign so we are not saving substitute ID
                 queryParams.Add("@SubstituteId", model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId);
                 queryParams.Add("@SubstituteRequired", model.SubstituteRequired);
-                queryParams.Add("@ApprovalRequired", 1);
+                queryParams.Add("@ApprovalRequired", model.IsApprovalRequired);
                 queryParams.Add("@AbsenceScope", model.AbsenceScope);
                 queryParams.Add("@PayrollNotes", model.PayrollNotes);
                 queryParams.Add("@SubstituteNotes", model.SubstituteNotes);

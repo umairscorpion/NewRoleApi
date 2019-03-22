@@ -45,7 +45,9 @@ namespace SubzzV2.Core.Entities
         public int IsCertified { get; set; }
         public string Gender { get; set; }
         public int DistrictId { get; set; }
+        public string DistrictName { get; set; }
         public string OrganizationId { get; set; }
+        public string OrganizationName { get; set; }
         public bool Isdeleted { get; set; }
         public string UserTypeDescription { get; set; }
         public string UserRoleDesciption { get; set; }

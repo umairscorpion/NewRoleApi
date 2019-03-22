@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,8 +20,12 @@ namespace Subzz.Api.Custom
         /// /// <param name="StartTime">STARTTIME OF ABSENCE</param>
         /// /// <param name="EndTime">END TIME OF ABSENCE</param>
         /// <returns>dataTable, CONTAINS MULTIDAY ABSENCE AS SINGLE DAY</returns>
-        public static DataTable InsertAbsenceBasicDetailAsSingleDay(int AbsenceId, DateTime StartDate, DateTime EndDate, DateTime StartTime, DateTime EndTime)
+        public static DataTable InsertAbsenceBasicDetailAsSingleDay(int AbsenceId, DateTime StartDate, DateTime EndDate, TimeSpan StartTime, TimeSpan EndTime)
         {
+            DateTime startTime = DateTime.ParseExact(Convert.ToString(StartTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture);
+            DateTime endTime = DateTime.ParseExact(Convert.ToString(EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture);
             var dataTable = new DataTable();
             dataTable.Columns.Add("AbsenceSchedule_Id");
             dataTable.Columns.Add("StartDate");
@@ -31,8 +36,8 @@ namespace Subzz.Api.Custom
             dataTable.Columns.Add("CreatedDate");
             if (StartDate.Date == EndDate.Date)
             {
-                StartDate = StartDate.Add(StartTime.TimeOfDay);
-                EndDate = EndDate.Add(EndTime.TimeOfDay);
+                StartDate = StartDate.Add(startTime.TimeOfDay);
+                EndDate = EndDate.Add(endTime.TimeOfDay);
                 dataTable.Rows.Add(1, StartDate, EndDate, AbsenceId, DBNull.Value, 1, DateTime.Now);
             }
             else
@@ -45,12 +50,12 @@ namespace Subzz.Api.Custom
                     for (int i = 1; i <= Days + 1; i++)
                     {
                         // For multi Day e.g if start time starts from today and ends on next day
-                        if (EndTime.TimeOfDay <= StartTime.TimeOfDay)
+                        if (endTime.TimeOfDay <= startTime.TimeOfDay)
                         {
                             //For First Day
                             if (i == 1)
                             {
-                                startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(StartTime.TimeOfDay);
+                                startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(startTime.TimeOfDay);
                                 endDateForStoringInDataTable = StartDate.AddDays(i - 1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
                                 dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
                             }
@@ -58,16 +63,16 @@ namespace Subzz.Api.Custom
                             else if (i == Days + 1)
                             {
                                 startDateForStoringInDataTable = StartDate.AddDays(i - 1).Date;
-                                endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(EndTime.TimeOfDay);
+                                endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(endTime.TimeOfDay);
                                 dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
                             }
                             // Between First and Last Date
                             else
                             {
                                 startDateForStoringInDataTable = StartDate.AddDays(i - 1).Date;
-                                endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(EndTime.TimeOfDay);
+                                endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(endTime.TimeOfDay);
                                 dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
-                                startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(StartTime.TimeOfDay);
+                                startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(startTime.TimeOfDay);
                                 endDateForStoringInDataTable = StartDate.AddDays(i - 1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
                                 dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
                             }
@@ -75,8 +80,8 @@ namespace Subzz.Api.Custom
                         }
                         else
                         {
-                            startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(StartTime.TimeOfDay);
-                            endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(EndTime.TimeOfDay);
+                            startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(startTime.TimeOfDay);
+                            endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(endTime.TimeOfDay);
                             dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
                         }
                     }
