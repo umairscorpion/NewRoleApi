@@ -128,5 +128,25 @@ namespace Subzz.Business.Services.Users
         {
             return await _repo.UpdateEnabledSchools(preferredSchoolModel);
         }
+
+        public IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability)
+        {
+            return _repo.GetAvailabilities(availability);
+        }
+
+        public UserAvailability InsertAvailability(UserAvailability availability)
+        {
+            return _repo.InsertAvailability(availability);
+        }
+
+        public UserAvailability UpdateAvailability(UserAvailability availability)
+        {
+            return _repo.UpdateAvailability(availability);
+        }
+
+        public UserAvailability DeleteAvailability(UserAvailability availability)
+        {
+            return _repo.DeleteAvailability(availability);
+        }
     }
 }

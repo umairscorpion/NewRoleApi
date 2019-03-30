@@ -44,5 +44,12 @@ namespace SubzzLookup.DataAccess.Repositories.Lookups
             return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
 
         }
+
+        public IEnumerable<LookupModel> GetAvailabilityStatuses()
+        {
+            var sql = "[Users].[GetAvailabilityStatus]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="Entities\UserProfile.cs" />
     <Compile Include="Enum\MailTemplateEnums.cs" />
     <Compile Include="Models\AbsenceModel.cs" />
+    <Compile Include="Models\CalendarEvent.cs" />
     <Compile Include="Models\CountryModel.cs" />
     <Compile Include="Models\DisctrictModel.cs" />
     <Compile Include="Models\EmployeeSchedule.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Models\StateModel.cs" />
     <Compile Include="Models\SubstituteCategoryModel.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
+    <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserReference.cs" />
     <Compile Include="Models\UserResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
