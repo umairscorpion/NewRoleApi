@@ -25,5 +25,6 @@ namespace SubzzV2.Core.Models
         public string ApprovedDate { get; set; }
         public string DeniedDate { get; set; }
         public bool IsArchived { get; set; }
+        public int TotalDays { get; set; }
     }
 }

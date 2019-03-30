@@ -41,5 +41,15 @@ namespace SubzzAbsence.Business.Leaves
         {
             return _repo.GetLeaveTypes(districtId, organizationId);
         }
+
+        public int DeleteLeaveType(int leaveTypeId)
+        {
+            return _repo.DeleteLeaveType(leaveTypeId);
+        }
+
+        public LeaveTypeModel GetleaveTypeById(int leaveTypeId)
+        {
+            return _repo.GetleaveTypeById(leaveTypeId);
+        }
     }
 }

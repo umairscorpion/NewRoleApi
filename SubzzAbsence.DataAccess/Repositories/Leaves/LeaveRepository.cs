@@ -85,6 +85,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
         {
             var sql = "[Leaves].[InsertLeaveType]";
             var queryParams = new DynamicParameters();
+            queryParams.Add("@leaveTypeId", model.LeaveTypeId);
             queryParams.Add("@Name", model.LeaveTypeName);
             queryParams.Add("@StartingBalance", model.StartingBalance);
             queryParams.Add("@IsSubtractAllowance", model.IsSubtractAllowance);
@@ -96,6 +97,22 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             queryParams.Add("@ModifiedDate", DateTime.Now);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
+        }
+
+        public LeaveTypeModel GetleaveTypeById(int leaveTypeId)
+        {
+            var sql = "[Leaves].[GetleaveTypeById]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@leaveTpeId", leaveTypeId);
+            return Db.Query<LeaveTypeModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public int DeleteLeaveType(int leaveTypeId)
+        {
+            var sql = "[Leaves].[DeleteLeaveType]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@leaveTpeId", leaveTypeId);
+            return Db.Execute(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure);
         }
     }
 }

@@ -63,5 +63,21 @@ namespace Subzz.Api.Controllers.Leave
             var leaveTypes = _service.GetLeaveTypes(districtId, organizationId);
             return leaveTypes;
         }
+
+        [Route("deleteLeaveType/{leaveTypeId}")]
+        [HttpDelete]
+        public IActionResult DeleteLeaveType(int leaveTypeId)
+        {
+            var response = _service.DeleteLeaveType(leaveTypeId);
+            return Ok(response);
+        }
+
+        [Route("getleaveTypeById/{leaveTypeId}")]
+        [HttpGet]
+        public IActionResult GetleaveTypeById(int leaveTypeId)
+        {
+            var response = _service.GetleaveTypeById(leaveTypeId);
+            return Ok(response);
+        }
     }
 }
