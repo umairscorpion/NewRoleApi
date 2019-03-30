@@ -35,5 +35,13 @@ namespace Subzz.Api.Controllers.Lookup
             var countries = _service.GetTeachingLevels();
             return countries;
         }
+
+        [Route("availability-status")]
+        [HttpGet]
+        public IEnumerable<LookupModel> GetAvailabilityStatuses()
+        {
+            var result = _service.GetAvailabilityStatuses();
+            return result;
+        }
     }
 }

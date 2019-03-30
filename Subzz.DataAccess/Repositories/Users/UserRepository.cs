@@ -318,5 +318,74 @@ namespace Subzz.DataAccess.Repositories.Users
             return Convert.ToBoolean(DeletedRecord);
             //return Convert.ToBoolean(param.Get<int>("@HasSucceeded"));
         }
+
+        #region Availability
+        public IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability)
+        {
+            const string query = "[Users].[GetAvailability]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", availability.UserId);
+            queryParams.Add("@StartDate", availability.StartDate);
+            queryParams.Add("@EndDate", availability.EndDate);
+            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public UserAvailability InsertAvailability(UserAvailability availability)
+        {
+            const string query = "[Users].[InsertAvailability]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", availability.UserId);
+            queryParams.Add("@AvailabilityStatusId", availability.AvailabilityStatusId);
+            queryParams.Add("@Title", availability.Title);
+            queryParams.Add("@StartDate", availability.StartDate);
+            queryParams.Add("@EndDate", availability.EndDate);
+            queryParams.Add("@StartTime", availability.StartTime);
+            queryParams.Add("@EndTime", availability.EndTime);
+            queryParams.Add("@IsAllDayOut", availability.IsAllDayOut);
+            queryParams.Add("@IsRepeat", availability.IsRepeat);
+            queryParams.Add("@RepeatType", availability.RepeatType);
+            queryParams.Add("@RepeatValue", availability.RepeatValue);
+            queryParams.Add("@RepeatOnWeekDays", availability.RepeatOnWeekDays);
+            queryParams.Add("@IsEndsNever", availability.IsEndsNever);
+            queryParams.Add("@EndsOnAfterNumberOfOccurrance", availability.EndsOnAfterNumberOfOccurrance);
+            queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);
+            queryParams.Add("@Notes", availability.Notes);
+            queryParams.Add("@CreatedBy", availability.CreatedBy);
+            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public UserAvailability UpdateAvailability(UserAvailability availability)
+        {
+            const string query = "[Users].[InsertAvailability]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", availability.UserId);
+            queryParams.Add("@AvailabilityStatusId", availability.AvailabilityStatusId);
+            queryParams.Add("@Title", availability.Title);
+            queryParams.Add("@StartDate", availability.StartDate);
+            queryParams.Add("@EndDate", availability.EndDate);
+            queryParams.Add("@StartTime", availability.StartTime);
+            queryParams.Add("@EndTime", availability.EndTime);
+            queryParams.Add("@IsAllDayOut", availability.IsAllDayOut);
+            queryParams.Add("@IsRepeat", availability.IsRepeat);
+            queryParams.Add("@RepeatType", availability.RepeatType);
+            queryParams.Add("@RepeatValue", availability.RepeatValue);
+            queryParams.Add("@RepeatOnWeekDays", availability.RepeatOnWeekDays);
+            queryParams.Add("@IsEndsNever", availability.IsEndsNever);
+            queryParams.Add("@EndsOnAfterNumberOfOccurrance", availability.EndsOnAfterNumberOfOccurrance);
+            queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);
+            queryParams.Add("@Notes", availability.Notes);
+            queryParams.Add("@ModifiedBy", availability.ModifiedBy);
+            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public UserAvailability DeleteAvailability(UserAvailability availability)
+        {
+            const string query = "[Users].[InsertAvailability]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@AvailabilityId", availability.AvailabilityId);
+            queryParams.Add("@ArchivedBy", availability.ArchivedBy);
+            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+        #endregion
     }
 }

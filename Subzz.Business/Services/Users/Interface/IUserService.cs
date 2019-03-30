@@ -37,5 +37,12 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
         IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
+
+        #region Availability
+        IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);
+        UserAvailability InsertAvailability(UserAvailability availability);
+        UserAvailability UpdateAvailability(UserAvailability availability);
+        UserAvailability DeleteAvailability(UserAvailability availability);
+        #endregion
     }
 }
