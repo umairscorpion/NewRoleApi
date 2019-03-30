@@ -12,7 +12,10 @@ namespace SubzzAbsence.Business.Leaves.Interface
         LeaveRequestModel InsertLeaveRequest(LeaveRequestModel model);
         LeaveRequestModel UpdateLeaveRequestStatus(LeaveRequestModel model);  
         LeaveTypeModel InsertLeaveType(LeaveTypeModel model);
-        IEnumerable<LeaveRequestModel> GetLeaveRequests(int IsApproved, int IsDenied);
+        IEnumerable<LeaveRequestModel> GetLeaveRequests(int districtId, string organizationId);
         IEnumerable<LeaveTypeModel> GetLeaveTypes();
+        IEnumerable<LeaveTypeModel> GetLeaveTypes(int districtId, string organizationId);
+        int DeleteLeaveType(int leaveTypeId);
+        LeaveTypeModel GetleaveTypeById(int leaveTypeId);
     }
 }

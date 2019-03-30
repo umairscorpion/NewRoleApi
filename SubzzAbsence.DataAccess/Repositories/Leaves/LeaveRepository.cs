@@ -31,12 +31,12 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             }
         }
         public IConfiguration Configuration { get; }
-        public IEnumerable<LeaveRequestModel> GetLeaveRequests(int IsApproved, int IsDenied)
+        public IEnumerable<LeaveRequestModel> GetLeaveRequests(int districtId, string organizationId)
         {
             var sql = "[Leaves].[GetLeaveRequests]";
             var queryParams = new DynamicParameters();
-            queryParams.Add("@IsApproved", IsApproved);
-            queryParams.Add("@IsDeniend", IsDenied);
+            queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@OrganizationId", organizationId);
             return Db.Query<LeaveRequestModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
         public LeaveRequestModel InsertLeaveRequest(LeaveRequestModel model)
@@ -46,7 +46,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             queryParams.Add("@EmployeeId", model.EmployeeId);
             queryParams.Add("@CreatedById", model.CreatedById);
             queryParams.Add("@Description", model.Description);
-            queryParams.Add("@LeaveTypeId", model.LeaveTypeId);
+            queryParams.Add("@LeaveTypeId", 1);
             queryParams.Add("@StartDate", model.StartDate);
             queryParams.Add("@EndDate", model.EndDate);
             queryParams.Add("@StartTime", model.StartTime);
@@ -65,20 +65,54 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             return model;
         }
 
+        public IEnumerable<LeaveTypeModel> GetLeaveTypes(int districtId, string organizationId)
+        {
+            var sql = "[Leaves].[GetLeaveType]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@districtId", districtId);
+            queryParams.Add("@organizationId", organizationId);
+            return Db.Query<LeaveTypeModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
         public IEnumerable<LeaveTypeModel> GetLeaveTypes()
         {
             var sql = "[Leaves].[GetLeaveTypes]";
             var queryParams = new DynamicParameters();
             return Db.Query<LeaveTypeModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
+
         public LeaveTypeModel InsertLeaveType(LeaveTypeModel model)
         {
             var sql = "[Leaves].[InsertLeaveType]";
             var queryParams = new DynamicParameters();
+            queryParams.Add("@leaveTypeId", model.LeaveTypeId);
             queryParams.Add("@Name", model.LeaveTypeName);
             queryParams.Add("@StartingBalance", model.StartingBalance);
+            queryParams.Add("@IsSubtractAllowance", model.IsSubtractAllowance);
+            queryParams.Add("@IsApprovalRequired", model.IsApprovalRequired);
+            queryParams.Add("@IsVisible", model.IsVisible);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@OrganizationId", model.OrganizationId);
+            queryParams.Add("@CreatedDate", DateTime.Now);
+            queryParams.Add("@ModifiedDate", DateTime.Now);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
+        }
+
+        public LeaveTypeModel GetleaveTypeById(int leaveTypeId)
+        {
+            var sql = "[Leaves].[GetleaveTypeById]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@leaveTpeId", leaveTypeId);
+            return Db.Query<LeaveTypeModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public int DeleteLeaveType(int leaveTypeId)
+        {
+            var sql = "[Leaves].[DeleteLeaveType]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@leaveTpeId", leaveTypeId);
+            return Db.Execute(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure);
         }
     }
 }

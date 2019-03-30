@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
 using SubzzV2.Core.Models;
@@ -93,14 +92,14 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     
                     model.AbsenceId = absenceCreation;
-                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), Convert.ToDateTime(model.StartTime), Convert.ToDateTime(model.EndTime));
+                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                     if (model.AbsenceScope == 3)
                     {
                         IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes = _userService.GetFavoriteSubstitutes(model.EmployeeId);
                         await _service.CreatePreferredAbsenceHistory(FavSubstitutes, model);
                     }
-                    else { await SendNotifications(model); }
+                    else { if (model.IsApprovalRequired) await SendNotifications(model); }
                     return Json("success");
                 }
             }
@@ -157,8 +156,10 @@ namespace Subzz.Api.Controllers.Absence
             //SubstituteId Contains All Substitute Ids in case Of Request specific Substitute.
             var DataForEmails = _userService.GetUsersForSendingAbsenceNotificationOnEntireSub(absenceModel.DistrictId, absenceModel.OrganizationId, absenceModel.AbsenceId, absenceModel.SubstituteId);
             message.AbsenceId = absenceModel.AbsenceId;
-            message.StartTime = Convert.ToDateTime(absenceModel.StartTime).ToSubzzTime();
-            message.EndTime = Convert.ToDateTime(absenceModel.EndTime).ToSubzzTime();
+            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceModel.StartTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceModel.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceModel.EndDate).ToString("D");
             message.EmployeeName = DataForEmails.EmployeeName;
@@ -182,7 +183,7 @@ namespace Subzz.Api.Controllers.Absence
                         if (User.RoleId == 4)
                         {
                             message.TemplateId = 1;
-                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            
 
                         }
                         //For Admins
@@ -190,6 +191,7 @@ namespace Subzz.Api.Controllers.Absence
                         {
                             message.TemplateId = 2;
                         }
+                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
                     catch (Exception ex)
                     {

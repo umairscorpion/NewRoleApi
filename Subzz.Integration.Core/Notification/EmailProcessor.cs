@@ -39,15 +39,12 @@ namespace SubzzV2.Integration.Core.Notification
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
                 string[] to;
                     to = new string[] { message.SendTo };
-
                 var param = GetParam(message);
                 string body = PrepareBodyMessage(param, mailTemplate.EmailContent);
-
                 if (mailTemplate.EmailDisclaimerNeeded)
                 {
                     body += mailTemplate.EmailDisclaimerContent;
                 }
-
                 await CommunicationContainer.MailClient.SendAsync(body, mailTemplate.Title, to,
                      mailTemplate.SenderEmail, true, message.ImageBase64);
             }

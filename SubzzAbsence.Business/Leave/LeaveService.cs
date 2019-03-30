@@ -24,9 +24,9 @@ namespace SubzzAbsence.Business.Leaves
         {
             return _repo.UpdateLeaveRequestStatus(model);
         }
-        public IEnumerable<LeaveRequestModel> GetLeaveRequests(int IsApproved, int IsDenied)
+        public IEnumerable<LeaveRequestModel> GetLeaveRequests(int districtId, string organizationId)
         {
-            return _repo.GetLeaveRequests(IsApproved, IsDenied);
+            return _repo.GetLeaveRequests(districtId, organizationId);
         }
         public LeaveTypeModel InsertLeaveType(LeaveTypeModel model)
         {
@@ -35,6 +35,21 @@ namespace SubzzAbsence.Business.Leaves
         public IEnumerable<LeaveTypeModel> GetLeaveTypes()
         {
             return _repo.GetLeaveTypes();
+        }
+
+        public IEnumerable<LeaveTypeModel> GetLeaveTypes(int districtId, string organizationId)
+        {
+            return _repo.GetLeaveTypes(districtId, organizationId);
+        }
+
+        public int DeleteLeaveType(int leaveTypeId)
+        {
+            return _repo.DeleteLeaveType(leaveTypeId);
+        }
+
+        public LeaveTypeModel GetleaveTypeById(int leaveTypeId)
+        {
+            return _repo.GetleaveTypeById(leaveTypeId);
         }
     }
 }

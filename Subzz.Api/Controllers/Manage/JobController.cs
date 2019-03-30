@@ -43,21 +43,21 @@ namespace Subzz.Api.Controllers.Manage
             if(AcceptJob == "success")
             {
                 //Send Notification here 
-                AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
-                IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
-                Message message = new Message();
-                message.AbsenceId = absenceDetail.AbsenceId;
-                message.StartTime = Convert.ToDateTime(absenceDetail.StartTime).ToSubzzTime();
-                message.EndTime = Convert.ToDateTime(absenceDetail.EndTime).ToSubzzTime();
-                message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
-                message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
-                message.EmployeeName = absenceDetail.EmployeeName;
-                message.Position = absenceDetail.PositionDescription;
-                message.Subject = absenceDetail.SubjectDescription;
-                message.Grade = absenceDetail.Grade;
-                message.Location = absenceDetail.AbsenceLocation;
-                message.Notes = absenceDetail.SubstituteNotes;
-                message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                //AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
+                //IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
+                //Message message = new Message();
+                //message.AbsenceId = absenceDetail.AbsenceId;
+                //message.StartTime = Convert.ToDateTime(absenceDetail.StartTime).ToSubzzTime();
+                //message.EndTime = Convert.ToDateTime(absenceDetail.EndTime).ToSubzzTime();
+                //message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
+                //message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+                //message.EmployeeName = absenceDetail.EmployeeName;
+                //message.Position = absenceDetail.PositionDescription;
+                //message.Subject = absenceDetail.SubjectDescription;
+                //message.Grade = absenceDetail.Grade;
+                //message.Location = absenceDetail.AbsenceLocation;
+                //message.Notes = absenceDetail.SubstituteNotes;
+                //message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             }
             return AcceptJob;
         }
