@@ -90,7 +90,7 @@ namespace Subzz.Api.Controllers.Absence
                 var absenceCreation = _service.CreateAbsence(model);
                 if (absenceCreation > 0)
                 {
-                    
+
                     model.AbsenceId = absenceCreation;
                     DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
@@ -99,8 +99,15 @@ namespace Subzz.Api.Controllers.Absence
                         IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes = _userService.GetFavoriteSubstitutes(model.EmployeeId);
                         await _service.CreatePreferredAbsenceHistory(FavSubstitutes, model);
                     }
-                    else { if (model.IsApprovalRequired) await SendNotifications(model); }
-                    return Json("success");
+                    else
+                    {
+                        if (model.IsApprovalRequired)
+                        {
+                            //Task.Run(() => SendNotifications(model));
+                        }
+                        return Json("success");
+
+                    }
                 }
             }
             
