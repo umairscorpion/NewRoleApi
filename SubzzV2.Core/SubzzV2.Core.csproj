@@ -47,6 +47,7 @@
     <Compile Include="Entities\UserProfile.cs" />
     <Compile Include="Enum\MailTemplateEnums.cs" />
     <Compile Include="Models\AbsenceModel.cs" />
+    <Compile Include="Models\Allowance.cs" />
     <Compile Include="Models\CalendarEvent.cs" />
     <Compile Include="Models\CountryModel.cs" />
     <Compile Include="Models\DisctrictModel.cs" />

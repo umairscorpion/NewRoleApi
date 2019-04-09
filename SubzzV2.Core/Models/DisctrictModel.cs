@@ -28,5 +28,7 @@ namespace SubzzV2.Core.Models
         public int CountryId { get; set; }
         public string CountryName { get; set; }
         public string StateName { get; set; }
+        public int WeeklyHourLimit { get; set; }
+        public bool IsWeeklyLimitApplicable { get; set; }
     }
 }

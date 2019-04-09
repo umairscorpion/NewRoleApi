@@ -106,6 +106,49 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             return Db.Query<DistrictModel>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
+        public DistrictModel UpdateSettings(DistrictModel model)
+        {
+            var sql = "[Location].[sp_updateDistrictSettings]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@WeeklyHourLimit", model.WeeklyHourLimit);
+            queryParams.Add("@IsWeeklyLimitApplicable", model.IsWeeklyLimitApplicable ? 1: 0);
+            return Db.Query<DistrictModel>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public Allowance AddAllowance(Allowance allowance)
+        {
+            var sql = allowance.Id > 0 ? "[Location].[sp_updateAllowance]" : "[Location].[sp_insertAllowance]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", allowance.Id);
+            queryParams.Add("@DistrictId", allowance.DistrictId);
+            queryParams.Add("@Title", allowance.Title);
+            queryParams.Add("@YearlyAllowance", allowance.YearlyAllowance);
+            queryParams.Add("@IsDeductAllowance", allowance.IsDeductAllowance);
+            queryParams.Add("@IsResidualDays", allowance.IsResidualDays);
+            queryParams.Add("@IsEnalbled", allowance.IsEnalbled);
+            return Db.Query<Allowance>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public IEnumerable<Allowance> GetAllowances(string districtId)
+        {
+            var sql = "[Location].[sp_getAllowances]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<Allowance>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public bool DeleteAllowance(int id)
+        {
+            int hasSucceeded = 0;
+            var sql = "[Location].[sp_deleteAllowance]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", id);
+            queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return result;
+        }
+
         public bool Delete(string sql, DynamicParameters param, CommandType commandType)
         {
             Db.Execute(sql, param: param, commandType: commandType);

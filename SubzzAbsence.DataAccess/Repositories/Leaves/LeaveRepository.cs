@@ -61,6 +61,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             queryParams.Add("@LeaveRequestId", model.LeaveRequestId);
             queryParams.Add("@IsApproved", model.IsApproved);
             queryParams.Add("@IsDeniend", model.IsDeniend);
+            queryParams.Add("@IsArchived", model.IsArchived);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }

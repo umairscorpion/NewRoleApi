@@ -36,5 +36,25 @@ namespace SubzzManage.Business.District
         {
             return _repo.GetDistrict(id);
         }
+
+        public DistrictModel UpdateSettings(DistrictModel model)
+        {
+            return _repo.UpdateSettings(model);
+        }
+
+        public Allowance AddAllowance(Allowance model)
+        {
+            return _repo.AddAllowance(model);
+        }
+
+        public IEnumerable<Allowance> GetAllowances(string districtId)
+        {
+            return _repo.GetAllowances(districtId);
+        }
+
+        public bool DeleteAllowance(int id)
+        {
+            return _repo.DeleteAllowance(id);
+        }
     }
 }

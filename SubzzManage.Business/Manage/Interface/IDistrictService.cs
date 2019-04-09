@@ -14,6 +14,10 @@ namespace SubzzManage.Business.District.Interface
         IEnumerable<DistrictModel> GetDistricts();
         bool DeleteDistrict(int id);
         IEnumerable<DistrictModel> GetDistrict(int id);
+        DistrictModel UpdateSettings(DistrictModel model);
+        Allowance AddAllowance(Allowance model);
+        IEnumerable<Allowance> GetAllowances(string districtId);
+        bool DeleteAllowance(int id);
     }
 
 }
