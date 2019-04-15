@@ -319,6 +319,20 @@ namespace Subzz.DataAccess.Repositories.Users
             //return Convert.ToBoolean(param.Get<int>("@HasSucceeded"));
         }
 
+        #region Substitute
+        public IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence)
+        {
+            var sql = "[users].[GetAvailableSubstitutes]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", absence.DistrictId);
+            queryParams.Add("@StartDate", absence.StartDate);
+            queryParams.Add("@EndDate", absence.EndDate);
+            queryParams.Add("@StartTime", absence.StartTime);
+            queryParams.Add("@EndTime", absence.EndTime);
+            return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+        #endregion
+
         #region Availability
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {

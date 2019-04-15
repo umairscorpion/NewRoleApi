@@ -190,5 +190,12 @@ namespace Subzz.Api.Controllers.User
             return Json("success");
         }
 
+        [HttpPost]
+        [Route("getAvailableSubstitutes")]
+        public IEnumerable<SubzzV2.Core.Entities.User> GetAvailableSubstitutes([FromBody]AbsenceModel absenceModel)
+        {
+            return _service.GetAvailableSubstitutes(absenceModel);
+        }
+
     }
 }

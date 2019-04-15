@@ -16,5 +16,11 @@ namespace SubzzV2.Core.Models
         public bool IsResidualDays { get; set; }
         public bool IsEnalbled { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime ExpirationStartDate { get; set; }
+        public DateTime ExpirationEndDate { get; set; }
+        public bool IsExpired { get; set; }
+        public bool IsExpiredAtEndOfYear { get; set; }
+
+
     }
 }

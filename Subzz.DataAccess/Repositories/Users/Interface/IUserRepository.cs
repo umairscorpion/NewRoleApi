@@ -43,5 +43,9 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
+
+        #region Substitute
+        IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);
+        #endregion
     }
 }
