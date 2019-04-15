@@ -42,6 +42,14 @@ namespace Subzz.Api.Controllers.Absence
             }
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public IActionResult Get(int id)
+        {
+            var result = _service.GetAbsenceDetailByAbsenceId(id);
+            return Ok(result);
+        }
+
         [Route("uploadFile")]
         [HttpPost]
         public IActionResult UploadFile()
@@ -103,10 +111,9 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         if (model.IsApprovalRequired)
                         {
-                            //Task.Run(() => SendNotifications(model));
+                            Task.Run(() => SendNotifications(model));
                         }
                         return Json("success");
-
                     }
                 }
             }
@@ -155,6 +162,26 @@ namespace Subzz.Api.Controllers.Absence
             string filePath = Path.Combine(webRootPath, folderName);
             byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, model.AttachedFileName));
             return File(bytes, model.FileContentType);
+        }
+
+        [Route("updateAbsence")]
+        [HttpPatch]
+        public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
+        {
+            int RowsEffected = _service.UpdateAbsence(model);
+            if (RowsEffected > 0)
+                return Json("success");
+            return Json("error");
+        }
+
+        [Route("updateAbseceStatusAndSub/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
+        [HttpGet]
+        public ActionResult UpdateAbseceStatusAndSub(int AbsenceId, int statusId, string UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
+        {
+            int RowsEffected = _service.UpdateAbsenceStatusAndSub(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId, SubstituteId, SubstituteRequired);
+            if (RowsEffected > 0)
+                return Json("success");
+            return Json("error");
         }
 
         async Task SendNotifications(AbsenceModel absenceModel)

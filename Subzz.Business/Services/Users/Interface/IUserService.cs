@@ -18,25 +18,30 @@ namespace Subzz.Business.Services.Users.Interface
         User UpdateUser(User user);
 
         // functions related to Employee
+        #region Employee
         User InsertUser(User model);
         User UpdateEmployee(User model);
         IEnumerable<User> GetUsers(string userId, int userRole, int districtId, string organizationId);
         IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId);
         bool DeleteUser(string UserId);
         IEnumerable<User> GetEmployee(int id);
+        #endregion
 
+        #region User Settings
         IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId);
         int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel);
-
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
-
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
-
         IEnumerable<User> GetFavoriteSubstitutes(string UserId);
         IEnumerable<User> GetBlockedSubstitutes(string UserId);
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
         IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
+        #endregion
+
+        #region Substitute
+        IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);
+        #endregion
 
         #region Availability
         IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);

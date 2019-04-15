@@ -131,6 +131,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             {
                 var sql = "[Absence].[GetAbsenceDetailByAbsenceId]";
                 var queryParams = new DynamicParameters();
+                queryParams.Add("@AbsenceId", AbsenceId);
                 return connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
             }
         }
@@ -171,6 +172,70 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@date", date);
                 return connection.Query<PreferredSubstituteModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public int UpdateAbsence(AbsenceModel model)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var queryParams = new DynamicParameters();
+                var sql = "[Absence].[UpdateAbsence]";
+                queryParams.Add("@AbsenceID", model.AbsenceId);
+                queryParams.Add("@StartDate", model.StartDate);
+                queryParams.Add("@EndDate", model.EndDate);
+                queryParams.Add("@StartTime", model.StartTime);
+                queryParams.Add("@EndTime", model.EndTime);
+                queryParams.Add("@LeaveType_Id", model.AbsenceReasonId);
+                queryParams.Add("@IsSubstituteRequired", model.SubstituteRequired);
+                queryParams.Add("@IsApproved", 1);
+                queryParams.Add("@NotesToSubstitute", model.SubstituteNotes);
+                queryParams.Add("@PayRollNotes", model.PayrollNotes);
+                queryParams.Add("@AcceptedDate", null);
+                queryParams.Add("@ApprovedDate", null);
+                queryParams.Add("@District_Id", model.DistrictId);
+                queryParams.Add("@Region_Id", model.AbsenceReasonId);
+                queryParams.Add("@School_Id", model.OrganizationId);
+                queryParams.Add("@AbsenceStatus_Id", model.Status);
+                queryParams.Add("@AbsenceType_Id", model.DurationType);
+                queryParams.Add("@AbsencePosition", model.PositionId);
+                queryParams.Add("@RemindedCount", 0);
+                queryParams.Add("@AnyAttachemt", model.AnyAttachment);
+                queryParams.Add("@User_Id", model.EmployeeId);
+                queryParams.Add("@UpdatedBy_User_Id", model.AbsenceCreatedByEmployeeId);
+                queryParams.Add("@Substitute_Id", model.SubstituteId);
+                queryParams.Add("@AbsenceDuration_Id", model.DurationType);
+                int numberOfEffectedRow = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+
+                if (model.AnyAttachment && model.AbsenceId > 0 && numberOfEffectedRow > 0)
+                {
+                    sql = "[Absence].[UpdateAttachment]";
+                    queryParams = new DynamicParameters();
+                    queryParams.Add("@AbsenceId", model.AbsenceId);
+                    queryParams.Add("@AttachedFileName", model.AttachedFileName);
+                    queryParams.Add("@CreateDate", DateTime.Now);
+                    queryParams.Add("@Extension", model.FileExtention);
+                    queryParams.Add("@ContentType", model.FileContentType);
+                    connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                }
+                return numberOfEffectedRow;
+            }
+
+        }
+
+        public int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateAbsenceStatusAndSubstitute]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@AbsenceId", AbsenceId);
+                queryParams.Add("@statusId", statusId);
+                queryParams.Add("@UpdateStatusDate", UpdateStatusDate);
+                queryParams.Add("@UserId", UserId);
+                queryParams.Add("@SubstituteId", SubstituteId);
+                queryParams.Add("@SubstituteRequired", SubstituteRequired);
+                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
 
