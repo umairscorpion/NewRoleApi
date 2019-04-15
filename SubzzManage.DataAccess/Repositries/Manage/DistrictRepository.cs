@@ -127,6 +127,10 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@IsDeductAllowance", allowance.IsDeductAllowance);
             queryParams.Add("@IsResidualDays", allowance.IsResidualDays);
             queryParams.Add("@IsEnalbled", allowance.IsEnalbled);
+            queryParams.Add("@ExpirationStartDate", allowance.ExpirationStartDate);
+            queryParams.Add("@ExpirationEndDate", allowance.ExpirationEndDate);
+            queryParams.Add("@IsExpired", allowance.IsExpired);
+            queryParams.Add("@IsExpiredAtEndOfYear", allowance.IsExpiredAtEndOfYear);
             return Db.Query<Allowance>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 

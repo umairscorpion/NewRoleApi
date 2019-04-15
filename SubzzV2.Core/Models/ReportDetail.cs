@@ -17,7 +17,7 @@ namespace SubzzV2.Core.Models
         public string EndTime { get; set; }
         public string DistrictName { get; set; }
         public DateTime PostedOn { get; set; }
-        public string PostedById { get; set; } 
+        public string PostedById { get; set; }
         public string PostedByName { get; set; }
         public int StatusId { get; set; }
         public string StatusTitle { get; set; }
@@ -26,5 +26,10 @@ namespace SubzzV2.Core.Models
         public string SubstituteName { get; set; }
         public string SubstituteProfilePicUrl { get; set; }
         public string Notes { get; set; }
+        public string AttachedFileName { get; set; }
+        public string FileContentType { get; set; }
+        public bool AnyAttachment { get; set; }
+        public bool SubstituteRequired { get; set; }
+        public string DurationType { get; set; }
     }
 }

@@ -158,5 +158,10 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.DeleteAvailability(availability);
         }
+
+        public IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence)
+        {
+            return _repo.GetAvailableSubstitutes(absence);
+        }
     }
 }
