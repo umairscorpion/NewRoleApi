@@ -1,4 +1,6 @@
-﻿namespace SubzzV2.Core.Models
+﻿using System.Collections.Generic;
+
+namespace SubzzV2.Core.Models
 {
     public class CalendarEvent
     {
@@ -14,5 +16,16 @@
         public string color { get; set; }
         public string backgroundColor { get; set; }
         public string resourceId { get; set; }
+        public string resourceName { get; set; }
+        public string profilePicUrl { get; set; }
+
+        public List<CalendarResource> Resources { get; set; }
+    }
+
+    public class CalendarResource
+    {
+        public string id { get; set; }
+        public string title { get; set; }
+        public string profilePicUrl { get; set; }
     }
 }

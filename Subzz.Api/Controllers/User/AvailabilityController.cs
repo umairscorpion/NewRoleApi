@@ -28,6 +28,45 @@ namespace Subzz.Api.Controllers.User
             return Ok(calendarEvents);
         }
 
+        [Route("substitutes")]
+        [HttpPost]
+        public IActionResult GetSubstituteAvailability([FromBody]SubstituteAvailability model)
+        {
+            if (model == null)
+            {
+                model = new SubstituteAvailability {StartDate = DateTime.Now};
+            }
+
+            var result = _service.GetSubstituteAvailability(model).ToList();
+            var resources = result.Select(a => new CalendarResource
+            {
+                id = a.UserId,
+                title = a.FirstName + " " + a.LastName,
+                profilePicUrl = a.ProfilePicUrl
+            }).Distinct().ToList();
+            var events = result.Select(a => new CalendarEvent
+            {
+                id = a.AvailabilityId,
+                title = a.AvailabilityStatusTitle,
+                description = "",
+                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + Convert.ToDateTime(a.StartTime).ToLongTimeString()).ToString("s"),
+                end = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + Convert.ToDateTime(a.StartTime).ToLongTimeString()).ToString("s"),
+                resourceId = a.UserId,
+                resourceName = a.FirstName + " " + a.LastName,
+                profilePicUrl = a.ProfilePicUrl,
+                Resources = resources
+            }).ToList();
+            return Ok(events);
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public IActionResult Get(int id)
+        {
+            var result = _service.GetAvailabilityById(id);
+            return Ok(result);
+        }
+
         [Route("")]
         [HttpPost]
         public IActionResult Post([FromBody]UserAvailability model)
@@ -38,7 +77,7 @@ namespace Subzz.Api.Controllers.User
             return Ok(result);
         }
 
-        [Route("")]
+        [Route("{id}")]
         [HttpPut]
         public IActionResult Put(int id, [FromBody]UserAvailability model)
         {
@@ -47,14 +86,14 @@ namespace Subzz.Api.Controllers.User
             return Ok(result);
         }
 
-        [Route("")]
+        [Route("{id}")]
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var model = new UserAvailability { UserId = base.CurrentUser.Id };
+            var model = new UserAvailability();
             model.AvailabilityId = id;
             model.ArchivedBy = base.CurrentUser.Id;
-            var result = _service.UpdateAvailability(model);
+            var result = _service.DeleteAvailability(model);
             return Ok(result);
         }
 

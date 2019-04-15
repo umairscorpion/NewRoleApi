@@ -39,7 +39,9 @@ namespace Subzz.Business.Services.Users.Interface
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
 
         #region Availability
+        IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model);
         IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);
+        UserAvailability GetAvailabilityById(int id);
         UserAvailability InsertAvailability(UserAvailability availability);
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);

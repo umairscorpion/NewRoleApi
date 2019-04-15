@@ -37,9 +37,11 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
         IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
+        IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model);
         IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);
         UserAvailability InsertAvailability(UserAvailability availability);
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
+        UserAvailability GetAvailabilityById(int id);
     }
 }

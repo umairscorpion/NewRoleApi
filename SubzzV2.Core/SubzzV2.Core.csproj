@@ -66,6 +66,7 @@
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportSummary.cs" />
     <Compile Include="Models\StateModel.cs" />
+    <Compile Include="Models\SubstituteAvailability.cs" />
     <Compile Include="Models\SubstituteCategoryModel.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
     <Compile Include="Models\UserAvailability.cs" />
