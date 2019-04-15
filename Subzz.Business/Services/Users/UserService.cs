@@ -129,9 +129,19 @@ namespace Subzz.Business.Services.Users
             return await _repo.UpdateEnabledSchools(preferredSchoolModel);
         }
 
+        public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
+        {
+            return _repo.GetSubstituteAvailability(model);
+        }
+
         public IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability)
         {
             return _repo.GetAvailabilities(availability);
+        }
+
+        public UserAvailability GetAvailabilityById(int id)
+        {
+            return _repo.GetAvailabilityById(id);
         }
 
         public UserAvailability InsertAvailability(UserAvailability availability)
