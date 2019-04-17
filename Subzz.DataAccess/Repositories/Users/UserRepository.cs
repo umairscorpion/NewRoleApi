@@ -325,6 +325,8 @@ namespace Subzz.DataAccess.Repositories.Users
             const string query = "[Users].[GetSubstituteAvailabilities]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@StartDate", model.StartDate);
+            queryParams.Add("@AvailabilityStatusId", model.AvailabilityStatusId);
+            queryParams.Add("@UserId", model.UserId);
             return Db.Query<SubstituteAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
         public IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability)

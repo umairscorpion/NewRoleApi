@@ -34,7 +34,7 @@ namespace Subzz.Api.Controllers.User
         {
             if (model == null)
             {
-                model = new SubstituteAvailability {StartDate = DateTime.Now};
+                model = new SubstituteAvailability {StartDate = DateTime.Now, AvailabilityStatusId = -1, UserId = ""};
             }
 
             var result = _service.GetSubstituteAvailability(model).ToList();
