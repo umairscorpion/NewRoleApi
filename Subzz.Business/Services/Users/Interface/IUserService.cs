@@ -37,6 +37,9 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
         IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
+        PositionDetail InsertPositions(PositionDetail position);
+        IEnumerable<PositionDetail> GetPositions(int districtId);
+        bool DeletePosition(int id);
         #endregion
 
         #region Substitute

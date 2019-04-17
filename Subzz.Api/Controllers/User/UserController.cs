@@ -197,5 +197,36 @@ namespace Subzz.Api.Controllers.User
             return _service.GetAvailableSubstitutes(absenceModel);
         }
 
+        [HttpPost]
+        [Route("positions")]
+        public PositionDetail InsertPositions([FromBody]PositionDetail position)
+        {
+            return _service.InsertPositions(position);
+        }
+
+        [HttpGet]
+        [Route("positions/{districtId}")]
+        public IActionResult GetPositions(int districtId)
+        {
+            var positions = _service.GetPositions(districtId);
+            return Ok(positions);
+        }
+
+        [Route("positions")]
+        [HttpPatch]
+        public IActionResult UpdatePositions([FromBody]PositionDetail position)
+        {
+            var positions = _service.InsertPositions(position);
+            return Ok(positions);
+        }
+
+        [Route("deletePosition/{id}")]
+        [HttpDelete]
+        public IActionResult DeletePosition(int id)
+        {
+            var allowance = _service.DeletePosition(id);
+            return Ok(allowance);
+        }
+
     }
 }

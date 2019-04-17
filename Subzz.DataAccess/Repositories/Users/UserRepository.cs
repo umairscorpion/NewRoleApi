@@ -80,8 +80,8 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@OrganizationId", model.OrganizationId);
             queryParams.Add("@Email", model.Email);
             queryParams.Add("@PhoneNumber", model.PhoneNumber);
-            queryParams.Add("@IsSubscribedSMS", 1);
-            queryParams.Add("@IsSubscribedEmail", 1);
+            queryParams.Add("@IsSubscribedSMS", model.IsSubscribedSMS);
+            queryParams.Add("@IsSubscribedEmail", model.IsSubscribedEmail);
             queryParams.Add("@Isdeleted", 0);
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
@@ -102,6 +102,8 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@RoleId", model.RoleId);
             queryParams.Add("@Gender", model.Gender);
             queryParams.Add("@IsCertified", model.IsCertified);
+            queryParams.Add("@IsSubscribedEmail", model.IsSubscribedEmail);
+            queryParams.Add("@IsSubscribedSMS", model.IsSubscribedSMS);
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@Email", model.Email);
             queryParams.Add("@PhoneNumber", model.PhoneNumber);
@@ -310,6 +312,36 @@ namespace Subzz.DataAccess.Repositories.Users
             {
             }
             return 1;
+        }
+
+        public PositionDetail InsertPositions(PositionDetail position)
+        {
+            var query = position.Id > 0 ? "[Users].[sp_updatePosition]" : "[Users].[sp_insertPosition]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", position.Id);
+            queryParams.Add("@Title", position.Title);
+            queryParams.Add("@IsVisible", position.IsVisible); 
+            queryParams.Add("@DistrictId", position.DistrictId);
+            queryParams.Add("@CreatedDate", DateTime.Now);
+            return Db.Query<PositionDetail>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public IEnumerable<PositionDetail> GetPositions(int districtId)
+        {
+            var sql = "[users].[sp_getPositions]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<PositionDetail>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+        public bool DeletePosition(int id)
+        {
+            int hasSucceeded = 0;
+            var sql = "[users].[sp_deletePosition]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", id);
+            queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return result;
         }
 
         public bool Delete(string sql, DynamicParameters param, CommandType commandType)
