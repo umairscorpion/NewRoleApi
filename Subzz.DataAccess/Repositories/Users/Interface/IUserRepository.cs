@@ -42,13 +42,5 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserAvailability InsertAvailability(UserAvailability availability);
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
-        UserAvailability GetAvailabilityById(int id);
-        PositionDetail InsertPositions(PositionDetail position);
-        IEnumerable<PositionDetail> GetPositions(int districtId);
-        bool DeletePosition(int id);
-
-        #region Substitute
-        IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);
-        #endregion
     }
 }
