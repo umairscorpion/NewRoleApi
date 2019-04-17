@@ -163,5 +163,19 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.GetAvailableSubstitutes(absence);
         }
+
+        public PositionDetail InsertPositions(PositionDetail position)
+        {
+            return _repo.InsertPositions(position);
+        }
+        public IEnumerable<PositionDetail> GetPositions(int districtId)
+        {
+            return _repo.GetPositions(districtId);
+        }
+
+        public bool DeletePosition(int id)
+        {
+            return _repo.DeletePosition(id);
+        }
     }
 }

@@ -61,6 +61,8 @@
     <Compile Include="Models\LookupModel.cs" />
     <Compile Include="Models\NoticationSettingsModel.cs" />
     <Compile Include="Models\OrganizationModel.cs" />
+    <Compile Include="Models\PayRateSettings.cs" />
+    <Compile Include="Models\PositionDetail.cs" />
     <Compile Include="Models\PreferredSchoolModel.cs" />
     <Compile Include="Models\PreferredSubstituteModel.cs" />
     <Compile Include="Models\ReportDetail.cs" />
