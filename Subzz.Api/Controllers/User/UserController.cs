@@ -228,5 +228,77 @@ namespace Subzz.Api.Controllers.User
             return Ok(allowance);
         }
 
+        #region PayRateSetting
+        [Route("payRate")]
+        [HttpPost]
+        public PayRateSettings InsertPayRate([FromBody] PayRateSettings payRateSettings)
+        {
+            var Settings = _service.InsertPayRate(payRateSettings);
+            return Settings;
+        }
+
+        [Route("payRate")]
+        [HttpPatch]
+        public IActionResult UpdatePayRate([FromBody]PayRateSettings payRateSettings)
+        {
+            var positions = _service.InsertPayRate(payRateSettings);
+            return Ok(positions);
+        }
+
+        [Route("getPayRate/{districtId}")]
+        [HttpGet]
+        public IActionResult GetPayRates(int districtId)
+        {
+            var positions = _service.GetPayRates(districtId);
+            return Ok(positions);
+        }
+
+        [Route("deletePayRate/{id}")]
+        [HttpDelete]
+        public IActionResult DeletePayRate(int id)
+        {
+            var payRate = new PayRateSettings();
+            payRate.Id = id;
+            payRate.ArchivedBy = base.CurrentUser.Id; ;
+            var result = _service.DeletePayRate(payRate);
+            return Ok(result);
+        }
+
+        [Route("payRateRule")]
+        [HttpPost]
+        public IActionResult InsertPayRateRule([FromBody]PayRateRule payRateRule)
+        {
+            var rule = _service.InsertPayRateRule(payRateRule);
+            return Ok(rule);
+        }
+
+        [Route("payRateRule")]
+        [HttpPatch]
+        public IActionResult UpdatePayRateRule([FromBody]PayRateRule payRateRule)
+        {
+            var rule = _service.InsertPayRateRule(payRateRule);
+            return Ok(rule);
+        }
+
+        [Route("getPayRateRule/{districtId}")]
+        [HttpGet]
+        public IActionResult GetPayRateRules(int districtId)
+        {
+            var positions = _service.GetPayRateRules(districtId);
+            return Ok(positions);
+        }
+
+        [Route("deletePayRateRule/{id}")]
+        [HttpDelete]
+        public IActionResult DeletePayRateRule(int id)
+        {
+            var payRate = new PayRateRule();
+            payRate.Id = id;
+            payRate.ArchivedBy = base.CurrentUser.Id; ;
+            var result = _service.DeletePayRateRule(payRate);
+            return Ok(result);
+        }
+        #endregion
+
     }
 }

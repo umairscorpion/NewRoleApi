@@ -34,5 +34,13 @@ namespace Subzz.Api.Controllers.Reports
             var reportDetails = _service.GetReportDetails(model);
             return Ok(reportDetails);
         }
+
+        [Route("deleteAbsences/{data}")]
+        [HttpGet]
+        public IActionResult DeleteAbsences(string data)
+        {
+            var reportDetails = _service.DeleteAbsences(data);
+            return Json("success");
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace SubzzAbsence.Business.Reports
         {
             return _repo.GetReportDetail(model);
         }
+
+        public int DeleteAbsences(string model)
+        {
+            return _repo.DeleteAbsences(model);
+        }
     }
 }

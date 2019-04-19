@@ -44,6 +44,12 @@ namespace Subzz.Business.Services.Users.Interface
 
         #region Substitute
         IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);
+        PayRateSettings InsertPayRate(PayRateSettings payRateSettings);
+        IEnumerable<PayRateSettings> GetPayRates(int districtId);
+        PayRateRule InsertPayRateRule(PayRateRule payRateRule);
+        IEnumerable<PayRateRule> GetPayRateRules(int districtId);
+        PayRateSettings DeletePayRate(PayRateSettings payRateSettings);
+        PayRateRule DeletePayRateRule(PayRateRule payRateRule);
         #endregion
 
         #region Availability

@@ -363,6 +363,77 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@EndTime", absence.EndTime);
             return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
+
+        public PayRateSettings InsertPayRate(PayRateSettings payRateSettings)
+        {
+            var query = payRateSettings.Id > 0 ? "[Users].[sp_updatePayRate]" : "[Users].[sp_insertPayRate]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", payRateSettings.Id);
+            queryParams.Add("@PositionId", payRateSettings.PositionId);
+            queryParams.Add("@PayRate", payRateSettings.PayRate);
+            queryParams.Add("@DistrictId", payRateSettings.DistrictId);
+            queryParams.Add("@Period", payRateSettings.Period);
+            queryParams.Add("@CreatedDate", DateTime.Now);
+            return Db.Query<PayRateSettings>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public IEnumerable<PayRateSettings> GetPayRates(int districtId)
+        {
+            var query = "[Users].[sp_getPayRates]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<PayRateSettings>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public PayRateRule InsertPayRateRule(PayRateRule payRateRule)
+        {
+            try
+            {
+                var query = payRateRule.Id > 0 ? "[Users].[sp_updatePayRateRule]" : "[Users].[sp_insertPayRateRule]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@Id", payRateRule.Id);
+                queryParams.Add("@PositionId", payRateRule.PositionId);
+                queryParams.Add("@PayRate", payRateRule.PayRate);
+                queryParams.Add("@DistrictId", payRateRule.DistrictId);
+                queryParams.Add("@IncreaseAfterDays", payRateRule.IncreaseAfterDays);
+                queryParams.Add("@CreatedDate", DateTime.Now);
+                return Db.Query<PayRateRule>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+            
+        }
+
+        public IEnumerable<PayRateRule> GetPayRateRules(int districtId)
+        {
+            var query = "[Users].[sp_getPayRateRules]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<PayRateRule>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public PayRateSettings DeletePayRate(PayRateSettings payRateSettings)
+        {
+            var query = "[Users].[sp_deletePayRate]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", payRateSettings.Id);
+            queryParams.Add("@IsArchived", 1);
+            queryParams.Add("@ArchivedBy", payRateSettings.ArchivedBy);
+            return Db.Query<PayRateSettings>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public PayRateRule DeletePayRateRule(PayRateRule payRateSettings)
+        {
+            var query = "[Users].[sp_deletePayRateRule]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Id", payRateSettings.Id);
+            queryParams.Add("@IsArchived", 1);
+            queryParams.Add("@ArchivedBy", payRateSettings.ArchivedBy);
+            return Db.Query<PayRateRule>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
         #endregion
 
         #region Availability

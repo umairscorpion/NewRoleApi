@@ -113,6 +113,8 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@WeeklyHourLimit", model.WeeklyHourLimit);
             queryParams.Add("@IsWeeklyLimitApplicable", model.IsWeeklyLimitApplicable ? 1: 0);
+            queryParams.Add("@DeductAfterTime", model.DeductAfterTime);
+            queryParams.Add("@IsDeductOnBreak", model.IsDeductOnBreak);
             return Db.Query<DistrictModel>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 

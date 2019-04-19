@@ -217,8 +217,6 @@ namespace Subzz.Api.Controllers.Absence
                         if (User.RoleId == 4)
                         {
                             message.TemplateId = 1;
-                            
-
                         }
                         //For Admins
                         else
