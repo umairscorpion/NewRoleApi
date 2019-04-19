@@ -56,6 +56,8 @@ namespace SubzzV2.Core.Entities
         public int UserLevel { get; set; }
         public int CategoryId { get; set; }
         public string Password { get; set; }
+        public int PayRate { get; set; }
+        public int HourLimit { get; set; }
 
     }
 }

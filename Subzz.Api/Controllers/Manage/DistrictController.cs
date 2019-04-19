@@ -76,5 +76,45 @@ namespace Subzz.Api.Controllers.Manage
             return district;
         }
 
+        [Route("updateSettings")]
+        [HttpPost]
+        public IActionResult UpdateSettings([FromBody] DistrictModel districtModel)
+        {
+            var district = _service.UpdateSettings(districtModel);
+            return Ok(district);
+        }
+
+        [Route("allowances")]
+        [HttpPost]
+        public IActionResult AddAllowances([FromBody]Allowance model)
+        {
+            var allowance = _service.AddAllowance(model);
+            return Ok(allowance);
+        }
+
+        [Route("allowances")]
+        [HttpPatch]
+        public IActionResult UpdateAllowances([FromBody]Allowance model)
+        {
+            var allowance = _service.AddAllowance(model);
+            return Ok(allowance);
+        }
+
+        [Route("getAllowances/{districtId}")]
+        [HttpGet]
+        public IActionResult GetAllowances(string districtId)
+        {
+            var allowance = _service.GetAllowances(districtId);
+            return Ok(allowance);
+        }
+
+        [Route("deleteAllowance/{id}")]
+        [HttpDelete]
+        public IActionResult DeleteAllowance(int id)
+        {
+            var allowance = _service.DeleteAllowance(id);
+            return Ok(allowance);
+        }
+
     }
 }

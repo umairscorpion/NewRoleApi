@@ -70,5 +70,15 @@ namespace SubzzAbsence.Business.Absence
         {
             return _repo.GetFavSubsForSendingSms(date);
         }
+
+        public int UpdateAbsence(AbsenceModel user)
+        {
+            return _repo.UpdateAbsence(user);
+        }
+
+        public int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
+        {
+            return _repo.UpdateAbsenceStatusAndSub(AbsenceId, statusId, UpdateStatusDate, UserId, SubstituteId, SubstituteRequired);
+        }
     }
 }

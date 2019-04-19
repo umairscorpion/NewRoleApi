@@ -261,3 +261,5 @@ __pycache__/
 *.pyc
 /Subzz.Api/wwwroot/Profile/U000000025.jpg
 /Subzz.Api/wwwroot/Upload/0d3b08b2-8241-4416-9088-0f2be80ce5c7.txt
+/Subzz.Api/wwwroot/Attachment
+/Subzz.Api/wwwroot/Profile

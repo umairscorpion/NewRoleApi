@@ -43,5 +43,18 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
+        PositionDetail InsertPositions(PositionDetail position);
+        IEnumerable<PositionDetail> GetPositions(int districtId);
+        PayRateSettings DeletePayRate(PayRateSettings payRateSettings);
+        PayRateRule DeletePayRateRule(PayRateRule payRateRule);
+        bool DeletePosition(int id);
+
+        #region Substitute
+        IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);
+        PayRateSettings InsertPayRate(PayRateSettings payRateSettings);
+        IEnumerable<PayRateSettings> GetPayRates(int districtId);
+        PayRateRule InsertPayRateRule(PayRateRule payRateRule);
+        IEnumerable<PayRateRule> GetPayRateRules(int districtId);
+        #endregion
     }
 }

@@ -42,6 +42,14 @@ namespace Subzz.Api.Controllers.Absence
             }
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public IActionResult Get(int id)
+        {
+            var result = _service.GetAbsenceDetailByAbsenceId(id);
+            return Ok(result);
+        }
+
         [Route("uploadFile")]
         [HttpPost]
         public IActionResult UploadFile()
@@ -90,7 +98,7 @@ namespace Subzz.Api.Controllers.Absence
                 var absenceCreation = _service.CreateAbsence(model);
                 if (absenceCreation > 0)
                 {
-                    
+
                     model.AbsenceId = absenceCreation;
                     DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
@@ -99,8 +107,14 @@ namespace Subzz.Api.Controllers.Absence
                         IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes = _userService.GetFavoriteSubstitutes(model.EmployeeId);
                         await _service.CreatePreferredAbsenceHistory(FavSubstitutes, model);
                     }
-                    else { if (model.IsApprovalRequired) await SendNotifications(model); }
-                    return Json("success");
+                    else
+                    {
+                        if (model.IsApprovalRequired)
+                        {
+                            Task.Run(() => SendNotifications(model));
+                        }
+                        return Json("success");
+                    }
                 }
             }
             
@@ -150,6 +164,26 @@ namespace Subzz.Api.Controllers.Absence
             return File(bytes, model.FileContentType);
         }
 
+        [Route("updateAbsence")]
+        [HttpPatch]
+        public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
+        {
+            int RowsEffected = _service.UpdateAbsence(model);
+            if (RowsEffected > 0)
+                return Json("success");
+            return Json("error");
+        }
+
+        [Route("updateAbseceStatusAndSub/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
+        [HttpGet]
+        public ActionResult UpdateAbseceStatusAndSub(int AbsenceId, int statusId, string UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
+        {
+            int RowsEffected = _service.UpdateAbsenceStatusAndSub(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId, SubstituteId, SubstituteRequired);
+            if (RowsEffected > 0)
+                return Json("success");
+            return Json("error");
+        }
+
         async Task SendNotifications(AbsenceModel absenceModel)
         {
             Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
@@ -183,8 +217,6 @@ namespace Subzz.Api.Controllers.Absence
                         if (User.RoleId == 4)
                         {
                             message.TemplateId = 1;
-                            
-
                         }
                         //For Admins
                         else

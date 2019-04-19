@@ -158,5 +158,56 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.DeleteAvailability(availability);
         }
+
+        public IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence)
+        {
+            return _repo.GetAvailableSubstitutes(absence);
+        }
+
+        public PositionDetail InsertPositions(PositionDetail position)
+        {
+            return _repo.InsertPositions(position);
+        }
+        public IEnumerable<PositionDetail> GetPositions(int districtId)
+        {
+            return _repo.GetPositions(districtId);
+        }
+
+        public bool DeletePosition(int id)
+        {
+            return _repo.DeletePosition(id);
+        }
+
+        #region Substitute
+        public PayRateSettings InsertPayRate(PayRateSettings payRateSettings)
+        {
+            return _repo.InsertPayRate(payRateSettings);
+        }
+
+        public IEnumerable<PayRateSettings> GetPayRates(int districtId)
+        {
+            return _repo.GetPayRates(districtId);
+        }
+
+        public PayRateRule InsertPayRateRule(PayRateRule payRateRule)
+        {
+            return _repo.InsertPayRateRule(payRateRule);
+        }
+
+        public IEnumerable<PayRateRule> GetPayRateRules(int districtId)
+        {
+            return _repo.GetPayRateRules(districtId);
+        }
+
+        public PayRateSettings DeletePayRate(PayRateSettings payRateSettings)
+        {
+            return _repo.DeletePayRate(payRateSettings);
+        }
+
+        public PayRateRule DeletePayRateRule(PayRateRule payRateRule)
+        {
+            return _repo.DeletePayRateRule(payRateRule);
+        }
+        #endregion
     }
 }

@@ -21,5 +21,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         AbsenceModel GetAbsenceDetailByAbsenceId(int AbsenceId);
         Task<int> CreatePreferredAbsenceHistory(IEnumerable<User> Substitutes, AbsenceModel absence);
         IEnumerable<PreferredSubstituteModel> GetFavSubsForSendingSms(DateTime date);
+        int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
+        int UpdateAbsence(AbsenceModel user);
     }
 }
