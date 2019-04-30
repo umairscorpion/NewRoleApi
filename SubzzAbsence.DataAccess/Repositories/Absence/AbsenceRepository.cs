@@ -188,21 +188,12 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@EndTime", model.EndTime);
                 queryParams.Add("@LeaveType_Id", model.AbsenceReasonId);
                 queryParams.Add("@IsSubstituteRequired", model.SubstituteRequired);
-                queryParams.Add("@IsApproved", 1);
                 queryParams.Add("@NotesToSubstitute", model.SubstituteNotes);
-                queryParams.Add("@PayRollNotes", model.PayrollNotes);
-                queryParams.Add("@AcceptedDate", null);
-                queryParams.Add("@ApprovedDate", null);
-                queryParams.Add("@District_Id", model.DistrictId);
-                queryParams.Add("@Region_Id", model.AbsenceReasonId);
-                queryParams.Add("@School_Id", model.OrganizationId);
                 queryParams.Add("@AbsenceStatus_Id", model.Status);
                 queryParams.Add("@AbsenceType_Id", model.DurationType);
-                queryParams.Add("@AbsencePosition", model.PositionId);
-                queryParams.Add("@RemindedCount", 0);
                 queryParams.Add("@AnyAttachemt", model.AnyAttachment);
                 queryParams.Add("@User_Id", model.EmployeeId);
-                queryParams.Add("@UpdatedBy_User_Id", model.AbsenceCreatedByEmployeeId);
+                queryParams.Add("@UpdatedBy_User_Id", model.UpdatedById);
                 queryParams.Add("@Substitute_Id", model.SubstituteId);
                 queryParams.Add("@AbsenceDuration_Id", model.DurationType);
                 int numberOfEffectedRow = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
@@ -236,6 +227,18 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@SubstituteId", SubstituteId);
                 queryParams.Add("@SubstituteRequired", SubstituteRequired);
                 return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
+        public List<AbsenceSummary> GetAbsenceSummary(string userId, int year)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[dbo].[GetAbsenceSummary]";
+                var param = new DynamicParameters();
+                param.Add("@UserId", userId);
+                param.Add("@Year", year);
+                return connection.Query<AbsenceSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
 

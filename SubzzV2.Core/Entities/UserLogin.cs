@@ -18,7 +18,6 @@ namespace SubzzV2.Core.Entities
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }
         public string PasswordHash { get; set; }
-        public string SecurityStamp { get; set; }
         public string Pin { get; set; }
         public bool IsActive { get; set; }
         public string PhoneNumber { get; set; }
@@ -31,12 +30,10 @@ namespace SubzzV2.Core.Entities
         public string Description { get; set; }
         public string ActivationCode { get; set; }
         public UserProfile Profile { get; set; }
-        public string ReferralCode { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string UserIP { get; set; }
-        public int PartnerReferralId { get; set; }
         public int IsSubscribedSms { get; set; }
         public int IsSubscribedEmail { get; set; }
         public string UserBrowser { get; set; }
@@ -44,7 +41,8 @@ namespace SubzzV2.Core.Entities
         public string OperatingSystem { get; set; }
         public string OSVersion { get; set; }
         public string Device { get; set; }
-        public string PartnerReferralTilte { get; set; }
         public string Password { get; set; }
+        public int DistrictId { get; set; }
+        public string OrganizationId { get; set; }
     }
 }

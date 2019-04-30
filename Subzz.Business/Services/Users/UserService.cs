@@ -169,6 +169,11 @@ namespace Subzz.Business.Services.Users
             return _repo.GetAvailableSubstitutes(absence);
         }
 
+        public IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model)
+        {
+            return _repo.GetSubstituteAvailabilitySummary(model);
+        }
+
         public PositionDetail InsertPositions(PositionDetail position)
         {
             return _repo.InsertPositions(position);

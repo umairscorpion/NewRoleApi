@@ -54,6 +54,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
+
         public LeaveRequestModel UpdateLeaveRequestStatus(LeaveRequestModel model)
         {
             var sql = "[Leaves].[UpdateLeaveRequestStatus]";

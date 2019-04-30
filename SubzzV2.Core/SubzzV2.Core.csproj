@@ -48,6 +48,7 @@
     <Compile Include="Enum\AuditLogs.cs" />
     <Compile Include="Enum\MailTemplateEnums.cs" />
     <Compile Include="Models\AbsenceModel.cs" />
+    <Compile Include="Models\AbsenceSummary.cs" />
     <Compile Include="Models\Allowance.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\CalendarEvent.cs" />

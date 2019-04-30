@@ -31,5 +31,11 @@ namespace SubzzV2.Core.Models
         public bool AnyAttachment { get; set; }
         public bool SubstituteRequired { get; set; }
         public string DurationType { get; set; }
+        public int PayRate { get; set; }
+        public int DailyHours { get; set; }
+        public string SchoolName { get; set; }
+        public string ReasonId { get; set; }
+        public int AbsenceScope { get; set; }
+        public string EmployeeId { get; set; }
     }
 }

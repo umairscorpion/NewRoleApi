@@ -60,6 +60,8 @@ namespace Subzz.Business.Services.Users.Interface
         UserAvailability InsertAvailability(UserAvailability availability);
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
+        IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
+
         #endregion
     }
 }

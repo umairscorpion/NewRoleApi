@@ -84,6 +84,8 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@IsSubscribedEmail", model.IsSubscribedEmail);
             queryParams.Add("@Isdeleted", 0);
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
+            queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
+            queryParams.Add("@HourLimit", model.HourLimit);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
@@ -109,6 +111,9 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@PhoneNumber", model.PhoneNumber);
             queryParams.Add("@Isdeleted", 0);
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
+            queryParams.Add("@IsActive", model.IsActive);
+            queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
+            queryParams.Add("@HourLimit", model.HourLimit);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
@@ -525,6 +530,12 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@AvailabilityId", availability.AvailabilityId);
             queryParams.Add("@ArchivedBy", availability.ArchivedBy);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model)
+        {
+            const string query = "[Users].[GetSubstituteAvailabilitiesSummary]";
+            return Db.Query<SubstituteAvailabilitySummary>(query, null, commandType: CommandType.StoredProcedure).ToList();
         }
         #endregion
     }

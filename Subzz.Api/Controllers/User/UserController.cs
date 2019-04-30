@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -86,7 +87,6 @@ namespace Subzz.Api.Controllers.User
         [Route("getUserById/{Id}")]
         public IEnumerable<SubzzV2.Core.Entities.User> GetUserById(string Id)
         {
-            var UserId = base.CurrentUser.Id;
             var userModel = _service.GetUserDetail(Id);
             return new List<SubzzV2.Core.Entities.User> { userModel };
         }

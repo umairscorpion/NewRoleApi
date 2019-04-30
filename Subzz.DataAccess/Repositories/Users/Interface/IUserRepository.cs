@@ -43,6 +43,8 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
+        IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
+
         PositionDetail InsertPositions(PositionDetail position);
         IEnumerable<PositionDetail> GetPositions(int districtId);
         PayRateSettings DeletePayRate(PayRateSettings payRateSettings);

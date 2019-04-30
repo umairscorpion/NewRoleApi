@@ -26,10 +26,12 @@ namespace Subzz.Api.Controllers.Leave
             var leaveModel = _service.InsertLeaveRequest(model);
             return leaveModel;
         }
+
         [Route("updateLeaveRequestStatus")]
         [HttpPost]
         public LeaveRequestModel UpdateLeaveRequestStatus([FromBody]LeaveRequestModel model)
         {
+            model.EmployeeId = base.CurrentUser.Id;
             var leaveRequests = _service.UpdateLeaveRequestStatus(model);
             return leaveRequests;
         }
