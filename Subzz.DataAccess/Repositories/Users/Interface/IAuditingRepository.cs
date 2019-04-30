@@ -10,5 +10,6 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
     public interface IAuditingRepository
     {
         void InsertErrorlog(ErrorlogModel model);
+        void InsertAuditLog(AuditLog model);
     }
 }

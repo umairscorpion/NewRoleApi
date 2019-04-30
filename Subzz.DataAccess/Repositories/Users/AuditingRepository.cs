@@ -5,6 +5,7 @@ using Subzz.DataAccess.Repositories.Users.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,12 @@ namespace Subzz.DataAccess.Repositories.Users
 {
     public class AuditingRepository : IAuditingRepository
     {
+        public IConfiguration Configuration { get; }
+        public AuditingRepository(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+        protected IDbConnection Db => new SqlConnection(Configuration.GetConnectionString("MembershipContext"));
         public void InsertErrorlog(ErrorlogModel model)
         {
             //var sql = "dbo.InsertServerAndClientErrors";
@@ -29,6 +36,19 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ErrorLine", model.ErrorLine);
             queryParams.Add("@ReasonPhrase", model.ReasonPhrase);
             //Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
+        }
+
+        public void InsertAuditLog(AuditLog model)
+        {
+            var sql = "[Users].[InsertAuditLog]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@EntityId", model.EntityId);
+            queryParams.Add("@EntityType", model.EntityType);
+            queryParams.Add("@ActionType", model.ActionType);
+            queryParams.Add("@PreValue", model.PreValue);
+            queryParams.Add("@PostValue", model.PostValue);
+            var result = Db.Query<AuditLog>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
     }
 }
