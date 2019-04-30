@@ -53,7 +53,6 @@ namespace Subzz.Business.Services.Users.Interface
         #endregion
 
         #region Availability
-        IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
         IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model);
         IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
