@@ -15,8 +15,8 @@ namespace SubzzV2.Core.Models
         public string SchoolCity { get; set; }
         public string SchoolAddress { get; set; }
         public string SchoolEmail { get; set; }
-        public int SchoolPhone { get; set; }
-        public int SchoolTimeZone { get; set; }
+        public string SchoolPhone { get; set; }
+        public string SchoolTimeZone { get; set; }
         public TimeSpan SchoolStartTime { get; set; }
         public TimeSpan School1stHalfEnd { get; set; }
         public TimeSpan School2ndHalfStart { get; set; }

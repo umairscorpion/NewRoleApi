@@ -30,7 +30,7 @@ namespace SubzzV2.Core.Models
         public string StateName { get; set; }
         public int WeeklyHourLimit { get; set; }
         public bool IsWeeklyLimitApplicable { get; set; }
-        public int DeductAfterTime { get; set; }
-        public int IsDeductOnBreak { get; set; }
+        public string DeductAfterTime { get; set; }
+        public bool IsDeductOnBreak { get; set; }
     }
 }

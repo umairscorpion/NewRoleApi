@@ -36,13 +36,16 @@ namespace Subzz.Api.Controllers.Authentication
 
             if (UserInfo != null)
             {
+                var userDetail = _userService.GetUserDetail(UserInfo.UserId);
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("P@$sw0rd123Ki@Keysec"));
                 var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
                 var tokeOptions = new JwtSecurityToken(
                     //issuer: "http://localhost:56412",
                     //audience: "http://localhost:56412",
-                    claims: new List<Claim> { new Claim("UserId", UserInfo.UserId.ToString()) },
+                    claims: new List<Claim> { new Claim("UserId", UserInfo.UserId.ToString()),
+                    new Claim("districtId", userDetail.DistrictId.ToString()),
+                    new Claim("organizationId", !string.IsNullOrEmpty(userDetail.OrganizationId)  ? userDetail.OrganizationId.ToString(): "-1")},
                     expires: DateTime.Now.AddMinutes(20),
                     signingCredentials: credentials
                 );

@@ -22,5 +22,6 @@ namespace SubzzAbsence.Business.Absence.Interface
         IEnumerable<PreferredSubstituteModel> GetFavSubsForSendingSms(DateTime date);
         int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
         int UpdateAbsence(AbsenceModel model);
+        List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
     }
 }

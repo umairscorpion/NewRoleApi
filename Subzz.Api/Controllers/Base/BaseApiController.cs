@@ -25,6 +25,16 @@ namespace Subzz.Api.Controllers.Base
                     {
                         user.Id = claim.Value.ToString();
                     }
+
+                    if (claim.Type == "districtId")
+                    {
+                        user.DistrictId = Convert.ToInt32(claim.Value);
+                    }
+
+                    if (claim.Type == "organizationId")
+                    {
+                        user.OrganizationId = Convert.ToString(claim.Value);
+                    }
                 }
                 return user;
             }

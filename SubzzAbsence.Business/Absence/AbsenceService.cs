@@ -80,5 +80,10 @@ namespace SubzzAbsence.Business.Absence
         {
             return _repo.UpdateAbsenceStatusAndSub(AbsenceId, statusId, UpdateStatusDate, UserId, SubstituteId, SubstituteRequired);
         }
+
+        public List<AbsenceSummary> GetAbsenceSummary(string userId, int year)
+        {
+            return _repo.GetAbsenceSummary(userId, year);
+        }
     }
 }

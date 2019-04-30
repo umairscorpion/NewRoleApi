@@ -26,5 +26,14 @@ namespace SubzzV2.Core.Models
         public string DeniedDate { get; set; }
         public bool IsArchived { get; set; }
         public int TotalDays { get; set; }
+        public string AcceptedDate { get; set; }
+        public string SubstituteName { get; set; }
+        public string PostedByName { get; set; }
+        public string PostedOn { get; set; }
+        public string AbsenceId { get; set; }
+        public string ApprovedBy { get; set; }
+        public string DeniedBy { get; set; }
+        public string CancelledDate { get; set; }
+        public string CancelledBy { get; set; }
     }
 }

@@ -15,23 +15,41 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
             {
                 var sql = "[Report].[GetSummary]";
                 var param = new DynamicParameters();
-                if (filter.JobNumber == "" && filter.EmployeeTypeId == 0 && filter.AbsenceTypeId == 0 && filter.LocationId == 0 && filter.DistrictId == 0 && filter.ReasonId == 0 && filter.EmployeeName == "")
+                if (filter.ReportTitle == "D")
                 {
                     param.Add("@FromDate", filter.FromDate);
                     param.Add("@ToDate", filter.ToDate);
                 }
                 else
                 {
-                    param.Add("@FromDate", null);
-                    param.Add("@ToDate", null);
+                    if (filter.Month != 0 || filter.Year != "")
+                    {
+                        param.Add("@FromDate", null);
+                        param.Add("@ToDate", null);
+                    }
+                    else
+                    {
+                        param.Add("@FromDate", filter.FromDate);
+                        param.Add("@ToDate", filter.ToDate);
+                    }
+                }
+                if (filter.LocationId == null || filter.LocationId == "")
+                {
+                    param.Add("@LocationId", filter.OrganizationId);
+                    param.Add("@DistrictId", filter.District);
+                }
+                else
+                {
+                    param.Add("@LocationId", filter.LocationId);
+                    param.Add("@DistrictId", filter.District);
                 }
                 param.Add("@JobNumber", filter.JobNumber);
-                param.Add("@EmployeeTypeId", filter.EmployeeTypeId);
                 param.Add("@AbsenceTypeId", filter.AbsenceTypeId);
-                param.Add("@LocationId", filter.LocationId);
-                param.Add("@DistrictId", filter.DistrictId);
                 param.Add("@ReasonId", filter.ReasonId);
                 param.Add("@EmployeeName", filter.EmployeeName);
+                param.Add("@Month", filter.Month);
+                param.Add("@Year", filter.Year);
+                param.Add("@AbsencePosition", filter.AbsencePosition);
                 return connection.Query<ReportSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
@@ -42,35 +60,107 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
             {
                 var sql = "[Report].[GetDetail]";
                 var param = new DynamicParameters();
-                if (filter.JobNumber == "" && filter.EmployeeTypeId == 0 && filter.AbsenceTypeId == 0 && filter.LocationId == 0 && filter.DistrictId == 0 && filter.ReasonId == 0 && filter.EmployeeName == "")
+                if (filter.ReportTitle == "D")
                 {
                     param.Add("@FromDate", filter.FromDate);
                     param.Add("@ToDate", filter.ToDate);
                 }
                 else
                 {
-                    param.Add("@FromDate", null);
-                    param.Add("@ToDate", null);
+                    if (filter.Month != 0 || filter.Year != "")
+                    {
+                        param.Add("@FromDate", null);
+                        param.Add("@ToDate", null);
+                    }
+                    else
+                    {
+                        param.Add("@FromDate", filter.FromDate);
+                        param.Add("@ToDate", filter.ToDate);
+                    }
+                }
+                if (filter.LocationId == null || filter.LocationId == "")
+                {
+                    param.Add("@LocationId", filter.OrganizationId);
+                    param.Add("@DistrictId", filter.District);
+                }
+                else
+                {
+                    param.Add("@LocationId", filter.LocationId);
+                    param.Add("@DistrictId", filter.District);
                 }
                 param.Add("@JobNumber", filter.JobNumber);
-                param.Add("@EmployeeTypeId", filter.EmployeeTypeId);
                 param.Add("@AbsenceTypeId", filter.AbsenceTypeId);
-                param.Add("@LocationId", filter.LocationId);
-                param.Add("@DistrictId", filter.DistrictId);
                 param.Add("@ReasonId", filter.ReasonId);
                 param.Add("@EmployeeName", filter.EmployeeName);
+                param.Add("@Month", filter.Month);
+                param.Add("@Year", filter.Year);
+                param.Add("@AbsencePosition", filter.AbsencePosition);
                 return connection.Query<ReportDetail>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
 
-        public int DeleteAbsences(string data)
+        public int DeleteAbsences(ReportFilter filter)
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Absence].[CancelAbsences]";
+                var sql = "[Report].[CancelAbsence]";
                 var param = new DynamicParameters();
-                param.Add("@valueList", data);
+                if (filter.OrganizationId == "1")
+                {
+                    param.Add("@OrganizationId", null);
+                }
+                else
+                {
+                    param.Add("@OrganizationId", filter.OrganizationId);
+                }
+                param.Add("@FromDate", filter.FromDate);
+                param.Add("@ToDate", filter.ToDate);
+                param.Add("@JobNumber", filter.JobNumber);
+                param.Add("@AbsenceTypeId", filter.AbsenceTypeId);
+                param.Add("@ReasonId", filter.ReasonId);
+                param.Add("@EmployeeName", filter.EmployeeName);
+                param.Add("@DeleteAbsenceReason", filter.DeleteAbsenceReason);
+                param.Add("@DistrictId", filter.District);
+                param.Add("@AbsencePosition", filter.AbsencePosition);
+                param.Add("@UserId", filter.UserId);
                 return connection.ExecuteScalar<int>(sql, param, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
+        public IEnumerable<LeaveRequestModel> GetActivityReportDetail(ReportFilter filter)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Report].[GetActivityReportDetail]";
+                var queryParams = new DynamicParameters();
+                if (filter.OrganizationId == "-1")
+                {
+                    queryParams.Add("@OrganizationId", null);
+                }
+                else
+                {
+                    queryParams.Add("@OrganizationId", filter.OrganizationId);
+                }
+                queryParams.Add("@FromDate", filter.FromDate);
+                queryParams.Add("@ToDate", filter.ToDate);
+                queryParams.Add("@DistrictId", filter.DistrictId);
+                queryParams.Add("@JobNumber", filter.JobNumber);
+                return connection.Query<LeaveRequestModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public List<ReportDetail> GetPayrollReportDetails(ReportFilter filter)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Report].[GetPayrollReportDetails]";
+                var param = new DynamicParameters();
+                param.Add("@FromDate", filter.FromDate);
+                param.Add("@ToDate", filter.ToDate);
+                param.Add("@LocationId", filter.OrganizationId);
+                param.Add("@DistrictId", filter.DistrictId);
+                param.Add("@UserId", filter.UserId);
+                return connection.Query<ReportDetail>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
     }
