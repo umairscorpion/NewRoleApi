@@ -23,6 +23,8 @@ namespace Subzz.Api.Controllers.Reports
         [HttpPost]
         public IActionResult GetSummary([FromBody]ReportFilter model)
         {
+            model.District = base.CurrentUser.DistrictId;
+            model.OrganizationId = base.CurrentUser.OrganizationId;
             var reportSummary = _service.GetReportSummary(model);
             return Ok(reportSummary);
         }
@@ -31,16 +33,42 @@ namespace Subzz.Api.Controllers.Reports
         [HttpPost]
         public IActionResult GetDetails([FromBody]ReportFilter model)
         {
+            model.District = base.CurrentUser.DistrictId;
+            model.OrganizationId = base.CurrentUser.OrganizationId;
             var reportDetails = _service.GetReportDetails(model);
             return Ok(reportDetails);
         }
 
-        [Route("deleteAbsences/{data}")]
-        [HttpGet]
-        public IActionResult DeleteAbsences(string data)
+        [Route("deleteAbsences")]
+        [HttpPost]
+        public IActionResult DeleteAbsences([FromBody]ReportFilter model)
         {
-            var reportDetails = _service.DeleteAbsences(data);
-            return Json("success");
+            model.UserId = base.CurrentUser.Id;
+            int RowsEffected = _service.DeleteAbsences(model);
+            if (RowsEffected > 0)
+                return Json("success");
+            return Json("error");
+        }
+
+        [Route("getActivityReportDetail")]
+        [HttpPost]
+        public IEnumerable<LeaveRequestModel> GetActivityReportDetail([FromBody]ReportFilter model)
+        {
+            model.DistrictId = base.CurrentUser.DistrictId;
+            model.OrganizationId = base.CurrentUser.OrganizationId;
+            var activityReportDetail = _service.GetActivityReportDetail(model);
+            return activityReportDetail;
+        }
+
+        [Route("payrollDetail")]
+        [HttpPost]
+        public IActionResult GetPayrollDetail([FromBody]ReportFilter model)
+        {
+            model.DistrictId = base.CurrentUser.DistrictId;
+            model.OrganizationId = base.CurrentUser.OrganizationId;
+            model.UserId = base.CurrentUser.Id;
+            var reportDetails = _service.GetPayrollReportDetails(model);
+            return Ok(reportDetails);
         }
     }
 }

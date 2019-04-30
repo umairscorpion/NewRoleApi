@@ -9,6 +9,8 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports.Interface
     {
         List<ReportSummary> GetReportSummary(ReportFilter reportFilter);
         List<ReportDetail> GetReportDetail(ReportFilter model);
-        int DeleteAbsences(string model);
+        IEnumerable<LeaveRequestModel> GetActivityReportDetail(ReportFilter model);
+        List<ReportDetail> GetPayrollReportDetails(ReportFilter model);
+        int DeleteAbsences(ReportFilter model);
     }
 }

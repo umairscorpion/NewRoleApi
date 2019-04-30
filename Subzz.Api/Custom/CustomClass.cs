@@ -20,7 +20,7 @@ namespace Subzz.Api.Custom
         /// /// <param name="StartTime">STARTTIME OF ABSENCE</param>
         /// /// <param name="EndTime">END TIME OF ABSENCE</param>
         /// <returns>dataTable, CONTAINS MULTIDAY ABSENCE AS SINGLE DAY</returns>
-        public static DataTable InsertAbsenceBasicDetailAsSingleDay(int AbsenceId, DateTime StartDate, DateTime EndDate, TimeSpan StartTime, TimeSpan EndTime)
+        public static DataTable InsertAbsenceBasicDetailAsSingleDay(int AbsenceId, DateTime StartDate, DateTime EndDate, TimeSpan StartTime, TimeSpan EndTime, string substituteId, int status)
         {
             DateTime startTime = DateTime.ParseExact(Convert.ToString(StartTime), "HH:mm:ss",
                                         CultureInfo.InvariantCulture);
@@ -38,7 +38,7 @@ namespace Subzz.Api.Custom
             {
                 StartDate = StartDate.Add(startTime.TimeOfDay);
                 EndDate = EndDate.Add(endTime.TimeOfDay);
-                dataTable.Rows.Add(1, StartDate, EndDate, AbsenceId, DBNull.Value, 1, DateTime.Now);
+                dataTable.Rows.Add(1, StartDate, EndDate, AbsenceId, substituteId, status, DateTime.Now);
             }
             else
             {
@@ -57,24 +57,24 @@ namespace Subzz.Api.Custom
                             {
                                 startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(startTime.TimeOfDay);
                                 endDateForStoringInDataTable = StartDate.AddDays(i - 1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
-                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
+                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, substituteId, status, DateTime.Now);
                             }
                             //For Last Day
                             else if (i == Days + 1)
                             {
                                 startDateForStoringInDataTable = StartDate.AddDays(i - 1).Date;
                                 endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(endTime.TimeOfDay);
-                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
+                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, substituteId, status, DateTime.Now);
                             }
                             // Between First and Last Date
                             else
                             {
                                 startDateForStoringInDataTable = StartDate.AddDays(i - 1).Date;
                                 endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(endTime.TimeOfDay);
-                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
+                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, substituteId, status, DateTime.Now);
                                 startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(startTime.TimeOfDay);
                                 endDateForStoringInDataTable = StartDate.AddDays(i - 1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
-                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
+                                dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, substituteId, status, DateTime.Now);
                             }
                             //For Multi day e.g if start time and end time is on same date
                         }
@@ -82,7 +82,7 @@ namespace Subzz.Api.Custom
                         {
                             startDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(startTime.TimeOfDay);
                             endDateForStoringInDataTable = StartDate.AddDays(i - 1).Add(endTime.TimeOfDay);
-                            dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, DBNull.Value, 1, DateTime.Now);
+                            dataTable.Rows.Add(i, startDateForStoringInDataTable, endDateForStoringInDataTable, AbsenceId, substituteId, status, DateTime.Now);
                         }
                     }
                 }

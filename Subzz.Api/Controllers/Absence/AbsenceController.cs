@@ -100,7 +100,7 @@ namespace Subzz.Api.Controllers.Absence
                 {
 
                     model.AbsenceId = absenceCreation;
-                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime);
+                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1": model.SubstituteId, model.Status);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                     if (model.AbsenceScope == 3)
                     {
@@ -168,10 +168,18 @@ namespace Subzz.Api.Controllers.Absence
         [HttpPatch]
         public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
         {
+            model.UpdatedById = base.CurrentUser.Id;
             int RowsEffected = _service.UpdateAbsence(model);
             if (RowsEffected > 0)
+            {
+                DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(model.AbsenceId, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
+                Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                 return Json("success");
-            return Json("error");
+            }
+            else
+            {
+                return Json("error");
+            }
         }
 
         [Route("updateAbseceStatusAndSub/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
@@ -182,6 +190,17 @@ namespace Subzz.Api.Controllers.Absence
             if (RowsEffected > 0)
                 return Json("success");
             return Json("error");
+        }
+
+        //For Dashboard Chart
+        [Route("summary")]
+        [HttpGet]
+        public IActionResult GetSummary()
+        {
+            var year = DateTime.Now.Year;
+            var userId = base.CurrentUser.Id;
+            var Summary = _service.GetAbsenceSummary(userId, year);
+            return Ok(Summary);
         }
 
         async Task SendNotifications(AbsenceModel absenceModel)
