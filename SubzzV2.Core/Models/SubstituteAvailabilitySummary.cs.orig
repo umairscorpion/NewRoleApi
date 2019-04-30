@@ -1,0 +1,19 @@
+﻿using System;
+<<<<<<< HEAD
+=======
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+>>>>>>> acb51eb39e1074754c1e938e12a4ce362300843c
+
+namespace SubzzV2.Core.Models
+{
+    public class SubstituteAvailabilitySummary
+    {
+        public string Title { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int Number { get; set; }
+    }
+}
