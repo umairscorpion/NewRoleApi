@@ -18,15 +18,6 @@ namespace Subzz.Api.Controllers.User
             _service = service;
         }
 
-        [Route("substitutes/summary")]
-        [HttpPost]
-        public IActionResult GetSubstituteAvailabilitySummary([FromBody]SubstituteAvailability model)
-        {
-            var summary = new List<SubstituteAvailabilitySummary>();
-            summary = _service.GetSubstituteAvailabilitySummary(model).ToList();
-            return Ok(summary);
-        }
-
         [Route("")]
         [HttpGet]
         public IActionResult Get()

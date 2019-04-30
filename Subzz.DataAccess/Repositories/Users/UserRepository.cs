@@ -450,7 +450,6 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<SubstituteAvailabilitySummary>(query, null, commandType: CommandType.StoredProcedure).ToList();
         }
 
-
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {
             const string query = "[Users].[GetSubstituteAvailabilities]";
@@ -530,12 +529,6 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@AvailabilityId", availability.AvailabilityId);
             queryParams.Add("@ArchivedBy", availability.ArchivedBy);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
-        }
-
-        public IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model)
-        {
-            const string query = "[Users].[GetSubstituteAvailabilitiesSummary]";
-            return Db.Query<SubstituteAvailabilitySummary>(query, null, commandType: CommandType.StoredProcedure).ToList();
         }
         #endregion
     }
