@@ -26,10 +26,12 @@ namespace Subzz.Api.Controllers.Absence
         private readonly IAbsenceService _service;
         private readonly IUserService _userService;
         private IHostingEnvironment _hostingEnvironment;
-        public AbsenceController(IAbsenceService service, IHostingEnvironment hostingEnvironment, IUserService userService)
+        private readonly IAuditingService _audit;
+        public AbsenceController(IAbsenceService service, IHostingEnvironment hostingEnvironment, IUserService userService, IAuditingService audit)
         {
             _service = service;
             _userService = userService;
+            _audit = audit;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -98,13 +100,25 @@ namespace Subzz.Api.Controllers.Absence
                 var absenceCreation = _service.CreateAbsence(model);
                 if (absenceCreation > 0)
                 {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.UserId,
+                        EntityId = absenceCreation.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Create,
+                        PostValue = Serializer.Serialize(model)
+                    };
+                    _audit.InsertAuditLog(audit);
 
                     model.AbsenceId = absenceCreation;
-                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1": model.SubstituteId, model.Status);
+                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation,
+                        model.StartDate, model.EndDate, model.StartTime, model.EndTime);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                     if (model.AbsenceScope == 3)
                     {
-                        IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes = _userService.GetFavoriteSubstitutes(model.EmployeeId);
+                        IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes =
+                            _userService.GetFavoriteSubstitutes(model.EmployeeId);
                         await _service.CreatePreferredAbsenceHistory(FavSubstitutes, model);
                     }
                     else
@@ -113,15 +127,16 @@ namespace Subzz.Api.Controllers.Absence
                         {
                             Task.Run(() => SendNotifications(model));
                         }
+
                         return Json("success");
                     }
                 }
             }
-            
             catch (Exception ex)
             {
                 return Json(ex.InnerException);
             }
+
             return Json("error");
         }
 
@@ -169,6 +184,17 @@ namespace Subzz.Api.Controllers.Absence
         public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
         {
             model.UpdatedById = base.CurrentUser.Id;
+            var audit = new AuditLog
+            {
+                UserId = CurrentUser.UserId,
+                EntityId = model.AbsenceId.ToString(),
+                EntityType = AuditLogs.EntityType.Absence,
+                ActionType = AuditLogs.ActionType.Update,
+                PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
+                PostValue = Serializer.Serialize(model)
+            };
+            _audit.InsertAuditLog(audit);
+
             int RowsEffected = _service.UpdateAbsence(model);
             if (RowsEffected > 0)
             {
