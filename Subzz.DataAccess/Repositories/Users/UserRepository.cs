@@ -353,6 +353,7 @@ namespace Subzz.DataAccess.Repositories.Users
         }
 
         #region Substitute
+        
         public IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence)
         {
             var sql = "[users].[GetAvailableSubstitutes]";
@@ -438,6 +439,13 @@ namespace Subzz.DataAccess.Repositories.Users
         #endregion
 
         #region Availability
+        public IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model)
+        {
+            const string query = "[Users].[GetSubstituteAvailabilitiesSummary]";
+            return Db.Query<SubstituteAvailabilitySummary>(query, null, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {
             const string query = "[Users].[GetSubstituteAvailabilities]";
