@@ -76,6 +76,7 @@
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportSummary.cs" />
     <Compile Include="Models\RolePermission.cs" />
+    <Compile Include="Models\SchoolSubList.cs" />
     <Compile Include="Models\StateModel.cs" />
     <Compile Include="Models\SubstituteAvailability.cs" />
     <Compile Include="Models\SubstituteAvailabilitySummary.cs" />

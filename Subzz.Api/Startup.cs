@@ -71,6 +71,10 @@ namespace Subzz.Api
             });
             services.AddTransient<IRepository, EntityRepository>();
             services.AddTransient<IUserAuthenticationService, UserAuthenticationService>();
+
+            services.AddTransient<IAuditingRepository, AuditingRepository>();
+            services.AddTransient<IAuditingService, AuditingService>();
+
             services.AddTransient<IUserRepository, UserRepository>(); 
             services.AddTransient<IUserService, UserService>();
 

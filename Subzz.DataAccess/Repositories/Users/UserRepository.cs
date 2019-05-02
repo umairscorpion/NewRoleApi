@@ -441,6 +441,44 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ArchivedBy", payRateSettings.ArchivedBy);
             return Db.Query<PayRateRule>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
+
+        public IEnumerable<SchoolSubList> GetSchoolSubList(string userId, int districtId)
+        {
+            var query = "[Users].[sp_getSchoolSubList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", userId);
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<SchoolSubList>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public async Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList)
+        {
+            try
+            {
+                var sql = "[users].[sp_insertSchoolSubList]";
+                var queryParams = new DynamicParameters();
+                var schoolSubs = JsonConvert.DeserializeObject<List<SchoolSubList>>(schoolSubList.SubstituteId);
+                foreach (var subs in schoolSubs)
+                {
+                    queryParams = new DynamicParameters();
+                    queryParams.Add("@Id", schoolSubList.Id);
+                    queryParams.Add("@DistrictId", schoolSubList.DistrictId);
+                    queryParams.Add("@AddedByUserId", schoolSubList.AddedByUserId);
+                    queryParams.Add("@SubstituteId", schoolSubList.SubstituteId);
+                    queryParams.Add("@ModifyByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@CreatedDate", schoolSubList.CreatedDate);
+                    queryParams.Add("@ModifiedDate", schoolSubList.ModifiedDate);
+                    queryParams.Add("@IsAdded", 1);
+                    await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return 1;
+        }
+
         #endregion
 
         #region Availability
@@ -522,6 +560,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ModifiedBy", availability.ModifiedBy);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
+
         public UserAvailability DeleteAvailability(UserAvailability availability)
         {
             const string query = "[Users].[DeleteAvailability]";

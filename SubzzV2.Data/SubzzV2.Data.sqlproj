@@ -62,6 +62,6 @@
     <Folder Include="Scripts\PostDeployment" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\PostDeployment\04-26-2019.sql" />
+    <None Include="Scripts\PostDeployment\05-02-2019.sql" />
   </ItemGroup>
 </Project>
