@@ -300,5 +300,26 @@ namespace Subzz.Api.Controllers.User
         }
         #endregion
 
+        #region Substitutes
+        [Route("schoolSubList")]
+        [HttpGet]
+        public IEnumerable<SchoolSubList> GetSchoolSubList()
+        {
+            var userId = base.CurrentUser.Id;
+            var districtId = base.CurrentUser.DistrictId;
+            var schoolSubs = _service.GetSchoolSubList(userId, districtId);
+            return schoolSubs;
+        }
+
+        [Route("schoolSubList")]
+        [HttpPatch]
+        public async Task<ActionResult> UpdateSchoolSubList([FromBody]SchoolSubList schoolSubList)
+        {
+            schoolSubList.ModifyByUserId = base.CurrentUser.Id;
+            schoolSubList.DistrictId = base.CurrentUser.DistrictId;
+            var schoolSubs = await _service.UpdateSchoolSubList(schoolSubList);
+            return Ok(schoolSubs);
+        }
+        #endregion
     }
 }

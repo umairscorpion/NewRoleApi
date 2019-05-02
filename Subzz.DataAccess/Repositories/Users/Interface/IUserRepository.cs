@@ -57,6 +57,8 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         PayRateRule InsertPayRateRule(PayRateRule payRateRule);
         IEnumerable<PayRateRule> GetPayRateRules(int districtId);
         IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
+        IEnumerable<SchoolSubList> GetSchoolSubList(string userId, int districtId);
+        Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList);
         #endregion
     }
 }
