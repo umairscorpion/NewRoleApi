@@ -103,13 +103,13 @@ namespace Subzz.Api.Controllers.Absence
                     // Audit Log
                     var audit = new AuditLog
                     {
-                        UserId = CurrentUser.UserId,
+                        UserId = CurrentUser.Id,
                         EntityId = absenceCreation.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Create,
                         PostValue = Serializer.Serialize(model)
                     };
-                    _audit.InsertAuditLog(audit);
+                    //_audit.InsertAuditLog(audit);
 
                     model.AbsenceId = absenceCreation;
                     DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation,

@@ -213,6 +213,17 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.DeletePayRateRule(payRateRule);
         }
+
+        public IEnumerable<SchoolSubList> GetSchoolSubList(string userId, int districtId)
+        {
+            return _repo.GetSchoolSubList(userId, districtId);
+        }
+
+        public async Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList)
+        {
+            return await _repo.UpdateSchoolSubList(schoolSubList);
+        }
+
         #endregion
     }
 }
