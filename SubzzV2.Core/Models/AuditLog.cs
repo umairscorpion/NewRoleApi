@@ -10,7 +10,9 @@ namespace SubzzV2.Core.Models
         public string EntityId { get; set; }
         public string EntityType { get; set; }
         public string ActionType { get; set; }
-        public string   PreValue { get; set; }
-        public string PostValue { get; set; }   
+        public string PreValue { get; set; }
+        public string PostValue { get; set; }
+        public int DistrictId { get; set; }
+        public string OrganizationId { get; set; }
     }
 }

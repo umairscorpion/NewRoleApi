@@ -19,6 +19,7 @@
             public static string Declined = "Declined";
             public static string Release = "Released";
             public static string Assigned = "Assigned";
+            public static string Approved = "Approved";
 
 
             public static string LoggedIn = "LoggedIn";

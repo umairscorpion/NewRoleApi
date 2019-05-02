@@ -48,7 +48,23 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ActionType", model.ActionType);
             queryParams.Add("@PreValue", model.PreValue);
             queryParams.Add("@PostValue", model.PostValue);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@OrganizationId", model.OrganizationId);
             var result = Db.Query<AuditLog>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public List<AuditLog> GetAuditLog(AuditLogFilter model)
+        {
+            var sql = "[Users].[GetAuditLog]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@LoginUserId", model.LoginUserId);
+            queryParams.Add("@SearchByEmployeeId", model.SearchByEmployeeId);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@OrganizationId", model.OrganizationId);
+            queryParams.Add("@StartDate", model.StartDate);
+            queryParams.Add("@EndDate", model.EndDate);
+            var result = Db.Query<AuditLog>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+            return result;
         }
     }
 }

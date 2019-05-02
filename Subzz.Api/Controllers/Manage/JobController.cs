@@ -10,6 +10,7 @@ using Subzz.Integration.Core.Domain;
 using Subzz.Integration.Core.Helper;
 using SubzzAbsence.Business.Absence.Interface;
 using SubzzManage.Business.Manage.Interface;
+using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 
 namespace Subzz.Api.Controllers.Manage
@@ -21,11 +22,13 @@ namespace Subzz.Api.Controllers.Manage
         private readonly IJobService _jobService, IUserService;
         private readonly IAbsenceService _absenceService;
         private readonly IUserService _userService;
-        public JobController(IJobService jobService, IAbsenceService absenceService, IUserService userService)
+        private readonly IAuditingService _audit;
+        public JobController(IJobService jobService, IAbsenceService absenceService, IUserService userService, IAuditingService audit)
         {
             _jobService = jobService;
             _absenceService = absenceService;
             _userService = userService;
+            _audit = audit;
         }
 
         [Route("getAvailableJobs/{StartDate}/{EndDate}/{UserId}/{OrganizationId}/{DistrictId}/{Status}")]
@@ -42,6 +45,18 @@ namespace Subzz.Api.Controllers.Manage
             string AcceptJob = await _jobService.AcceptJob(AbsenceId, SubstituteId, AcceptVia);
             if(AcceptJob == "success")
             {
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Accepted,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 //Send Notification here 
                 //AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
                 //IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
