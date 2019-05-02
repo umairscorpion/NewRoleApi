@@ -463,11 +463,11 @@ namespace Subzz.DataAccess.Repositories.Users
                     queryParams = new DynamicParameters();
                     queryParams.Add("@Id", schoolSubList.Id);
                     queryParams.Add("@DistrictId", schoolSubList.DistrictId);
-                    queryParams.Add("@AddedByUserId", schoolSubList.AddedByUserId);
-                    queryParams.Add("@SubstituteId", schoolSubList.SubstituteId);
+                    queryParams.Add("@AddedByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@SubstituteId", subs.SubstituteId);
                     queryParams.Add("@ModifyByUserId", schoolSubList.ModifyByUserId);
-                    queryParams.Add("@CreatedDate", schoolSubList.CreatedDate);
-                    queryParams.Add("@ModifiedDate", schoolSubList.ModifiedDate);
+                    queryParams.Add("@CreatedDate", DateTime.Now);
+                    queryParams.Add("@ModifiedDate", DateTime.Now);
                     queryParams.Add("@IsAdded", 1);
                     await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
                 }
