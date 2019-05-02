@@ -21,6 +21,7 @@
             public static string Assigned = "Assigned";
             public static string Approved = "Approved";
 
+
             public static string LoggedIn = "LoggedIn";
             public static string LoggedOut = "LoggedOut";
         }
