@@ -103,11 +103,13 @@ namespace Subzz.Api.Controllers.Absence
                     // Audit Log
                     var audit = new AuditLog
                     {
-                        UserId = CurrentUser.UserId,
+                        UserId = CurrentUser.Id,
                         EntityId = absenceCreation.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Create,
-                        PostValue = Serializer.Serialize(model)
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId
                     };
                     _audit.InsertAuditLog(audit);
 
@@ -159,9 +161,33 @@ namespace Subzz.Api.Controllers.Absence
         public ActionResult UpdateAbsenceStatus(int AbsenceId, int statusId, string UpdateStatusDate, string UserId)
         {
             int RowsEffected = _service.UpdateAbsenceStatus(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId);
-            if (RowsEffected > 0)
-                return Json("success");
-            return Json("error");
+            if (statusId == 1)
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Release,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+            }
+            else
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Cancelled,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+            }
+            return Json("success");
         }
 
         [Route("getfile")]
@@ -184,20 +210,22 @@ namespace Subzz.Api.Controllers.Absence
         public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
         {
             model.UpdatedById = base.CurrentUser.Id;
-            var audit = new AuditLog
-            {
-                UserId = CurrentUser.UserId,
-                EntityId = model.AbsenceId.ToString(),
-                EntityType = AuditLogs.EntityType.Absence,
-                ActionType = AuditLogs.ActionType.Update,
-                PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
-                PostValue = Serializer.Serialize(model)
-            };
-            _audit.InsertAuditLog(audit);
-
             int RowsEffected = _service.UpdateAbsence(model);
             if (RowsEffected > 0)
             {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Update,
+                    PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(model.AbsenceId, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
                 Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                 return Json("success");
@@ -214,7 +242,20 @@ namespace Subzz.Api.Controllers.Absence
         {
             int RowsEffected = _service.UpdateAbsenceStatusAndSub(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId, SubstituteId, SubstituteRequired);
             if (RowsEffected > 0)
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Assigned,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Json("success");
+            }
             return Json("error");
         }
 

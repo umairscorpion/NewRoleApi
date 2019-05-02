@@ -11,5 +11,6 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
     {
         void InsertErrorlog(ErrorlogModel model);
         void InsertAuditLog(AuditLog model);
+        List<AuditLog> GetAuditLog(AuditLogFilter model);
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Subzz.Business.Services.Users.Interface;
 using SubzzV2.Core.Entities;
+using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 
 namespace Subzz.Api.Controllers.Authentication
@@ -19,10 +20,12 @@ namespace Subzz.Api.Controllers.Authentication
     {
         private readonly IUserAuthenticationService _service;
         private readonly IUserService _userService;
-        public AuthenticationController(IUserService userService, IUserAuthenticationService service)
+        private readonly IAuditingService _audit;
+        public AuthenticationController(IUserService userService, IUserAuthenticationService service, IAuditingService audit)
         {
             _service = service;
             _userService = userService;
+            _audit = audit;
         }
 
         [HttpPost, Route("login")]
@@ -49,6 +52,16 @@ namespace Subzz.Api.Controllers.Authentication
                     expires: DateTime.Now.AddMinutes(20),
                     signingCredentials: credentials
                 );
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = UserInfo.UserId,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.LoggedIn,
+                    DistrictId = userDetail.DistrictId,
+                    OrganizationId = !string.IsNullOrEmpty(userDetail.OrganizationId) ? userDetail.OrganizationId.ToString() : "-1"
+                };
+                _audit.InsertAuditLog(audit);
 
                 var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
                 return Ok(new { Token = token });
