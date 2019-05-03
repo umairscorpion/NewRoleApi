@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SubzzV2.Core.Models;
 
 namespace SubzzV2.Core.Entities
 {
     public class User
     {
+        public User()
+        {
+            Permissions = new List<Permission>();
+        }
+
         public string Id
         {
             get; set;
@@ -59,5 +65,17 @@ namespace SubzzV2.Core.Entities
         public int PayRate { get; set; }
         public int HourLimit { get; set; }
 
+        public List<Permission> Permissions { get; set; }
+
+    }
+
+    public class UserSummary {
+        public string UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
     }
 }

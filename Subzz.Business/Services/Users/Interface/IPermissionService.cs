@@ -15,11 +15,13 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<User> GetUserRoles();
 
         #region Role Permissions
-        List<PermissionsCategory> GetAllByRole(int roleId, int districtId);
-        PermissionMaster UpdatePermissions(PermissionMaster model);
+        Role GetRolePermissions(int roleId, int districtId);
+        Role UpdatePermissions(Role model);
         RolePermission Post(RolePermission model);
         RolePermission Put(RolePermission model);
         bool Delete(int id);
         #endregion
+
+        List<Role> GetRoleSummaryList(int districtId);
     }
 }

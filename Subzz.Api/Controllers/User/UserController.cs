@@ -20,6 +20,15 @@ namespace Subzz.Api.Controllers.User
         {
             _service = service;
         }
+
+        [Route("list/summary")]
+        [HttpGet]
+        public IActionResult GetUserRoles()
+        {
+            var result = _service.GetUsersSummaryList(CurrentUser.DistrictId);
+            return Ok(result);
+        }
+
         [Route("reference/GetUserClaims")]
         [HttpGet]
         public UserReference GetUserClaims()

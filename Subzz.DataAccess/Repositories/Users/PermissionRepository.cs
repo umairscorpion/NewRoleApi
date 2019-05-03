@@ -54,9 +54,9 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
-        public List<PermissionsCategory> GetAll()
+        public List<PermissionsCategory> GetPermissionCategories()
         {
-            var sql = "[Users].[GetPermissions]";
+            var sql = "[Users].[GetPermissionCategories]";
             var queryParams = new DynamicParameters();
             return Db.Query<PermissionsCategory>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
@@ -67,6 +67,7 @@ namespace Subzz.DataAccess.Repositories.Users
             {
                 var sql = "[Users].[GetRolePermissions]";
                 var queryParams = new DynamicParameters();
+                queryParams.Add("@RoleId", roleId);
                 return Db.Query<RolePermission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
             catch (Exception ex)
@@ -85,7 +86,7 @@ namespace Subzz.DataAccess.Repositories.Users
 
         public RolePermission Put(RolePermission model)
         {
-            var sql = "[Users].[UpdateRolePermission]";
+            var sql = "[Users].[UpdatePermission]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@RoleId", model.RoleId);
             queryParams.Add("@PermissionId", model.PermissionId);
@@ -94,10 +95,57 @@ namespace Subzz.DataAccess.Repositories.Users
 
         public bool Delete(int id)
         {
-            var sql = "[Users].[DeleteRolePermission]";
+            var sql = "[Users].[DeletePermission]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@Id", id);
             return Db.Query<bool>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public List<Role> GetRoleSummaryList(int districtId)
+        {
+            var sql = "[Users].[GetRolesSummary]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<Role>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public Role UpdatePermissions(Role model)
+        {
+            if (model != null)
+            {
+                // Remove previous permissions for role
+                DeleteRolePermissions(model);
+
+                // Insert Permissions for role
+                var sql = "[Users].[InsertRolePermission]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@DistrictId", model.DistrictId);
+                queryParams.Add("@RoleId", model.Role_Id);
+
+                foreach (var cat in model.PermissionsCategories)
+                {
+                    if (cat?.Permissions == null || !cat.Permissions.Any()) continue;
+                    foreach (var pr in cat.Permissions)
+                    {
+                        if (pr.IsChecked)
+                        {
+                            queryParams.Add("@PermissionId", pr.PermissionId);
+                            Db.Query<Role>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                        }
+                    }
+                }
+            }
+
+            return model;
+        }
+
+        private void DeleteRolePermissions(Role model)
+        {
+            var sql = "[Users].[DeleteRolePermission]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@RoleId", model.Role_Id);
+            Db.Query<bool>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
         }
     }
 }

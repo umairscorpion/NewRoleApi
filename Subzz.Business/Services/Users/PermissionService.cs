@@ -31,35 +31,27 @@ namespace Subzz.Business.Services.Users
             return _repo.GetUserRoles();
         }
 
-        public List<PermissionsCategory> GetAllByRole(int roleId, int districtId)
+        public Role GetRolePermissions(int roleId, int districtId)
         {
-            var permissionCategories = _repo.GetAll();
-            if (roleId <= 0) return permissionCategories;
+            var role = new Role();
+            role.Role_Id = roleId;
+            
+            var permissionCategories = _repo.GetPermissionCategories();
+            if (roleId <= 0) return role;
             var rolePermissions = _repo.RolePermissions(roleId);
-            if (rolePermissions == null || rolePermissions.Count <= 0) return permissionCategories;
-            foreach (var item in rolePermissions)
+            if (rolePermissions == null || rolePermissions.Count <= 0) return role;
+            role.Name = rolePermissions.First().RoleName;
+            foreach (var category in permissionCategories)
             {
-                var permissionCategory = permissionCategories.FirstOrDefault(pr => pr.Permissions.Any(p => p.PermissionId == item.PermissionId));
-                if (permissionCategory == null) continue;
-                permissionCategory.IsChecked = true;
-                if (permissionCategory.Permissions == null) continue;
-                RolePermission first = null;
-                foreach (var t in permissionCategory.Permissions)
-                {
-                    if (t.PermissionId != item.PermissionId) continue;
-                    first = t;
-                    break;
-                }
-                if (first != null)
-                    first.IsChecked = true;
+                category.Permissions = rolePermissions.Where(t => t.PermissionCategoryId == category.Id).ToList();
             }
-            return permissionCategories;
+            role.PermissionsCategories = permissionCategories;
+            return role;
         }
 
-        public PermissionMaster UpdatePermissions(PermissionMaster model)
+        public Role UpdatePermissions(Role model)
         {
-            //TODO
-            throw new NotImplementedException();
+            return _repo.UpdatePermissions(model);
         }
 
         public RolePermission Post(RolePermission model)
@@ -75,6 +67,11 @@ namespace Subzz.Business.Services.Users
         public bool Delete(int id)
         {
             return _repo.Delete(id);
+        }
+
+        public List<Role> GetRoleSummaryList(int districtId)
+        {
+            return _repo.GetRoleSummaryList(districtId);
         }
     }
 }

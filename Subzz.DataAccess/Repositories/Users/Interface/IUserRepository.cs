@@ -60,5 +60,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<SchoolSubList> GetSchoolSubList(string userId, int districtId);
         Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList);
         #endregion
+
+        List<UserSummary> GetUsersSummaryList(int districtId);
     }
 }
