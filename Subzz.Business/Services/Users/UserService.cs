@@ -224,6 +224,16 @@ namespace Subzz.Business.Services.Users
             return await _repo.UpdateSchoolSubList(schoolSubList);
         }
 
+        public IEnumerable<SchoolSubList> GetBlockedSchoolSubList(string userId, int districtId)
+        {
+            return _repo.GetBlockedSchoolSubList(userId, districtId);
+        }
+
+        public async Task<int> UpdateBlockedSchoolSubList(SchoolSubList schoolSubList)
+        {
+            return await _repo.UpdateBlockedSchoolSubList(schoolSubList);
+        }
+
         #endregion
     }
 }

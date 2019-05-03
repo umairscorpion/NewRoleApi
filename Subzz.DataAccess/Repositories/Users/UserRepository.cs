@@ -479,6 +479,43 @@ namespace Subzz.DataAccess.Repositories.Users
             return 1;
         }
 
+        public IEnumerable<SchoolSubList> GetBlockedSchoolSubList(string userId, int districtId)
+        {
+            var query = "[Users].[sp_getBlockedSchoolSubList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", userId);
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<SchoolSubList>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public async Task<int> UpdateBlockedSchoolSubList(SchoolSubList schoolSubList)
+        {
+            try
+            {
+                var sql = "[users].[sp_insertBlockedSchoolSubList]";
+                var queryParams = new DynamicParameters();
+                var schoolSubs = JsonConvert.DeserializeObject<List<SchoolSubList>>(schoolSubList.SubstituteId);
+                foreach (var subs in schoolSubs)
+                {
+                    queryParams = new DynamicParameters();
+                    queryParams.Add("@Id", schoolSubList.Id);
+                    queryParams.Add("@DistrictId", schoolSubList.DistrictId);
+                    queryParams.Add("@AddedByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@SubstituteId", subs.SubstituteId);
+                    queryParams.Add("@ModifyByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@CreatedDate", DateTime.Now);
+                    queryParams.Add("@ModifiedDate", DateTime.Now);
+                    queryParams.Add("@IsAdded", 1);
+                    await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return 1;
+        }
+
         #endregion
 
         #region Availability

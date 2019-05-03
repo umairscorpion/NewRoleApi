@@ -59,6 +59,8 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
         IEnumerable<SchoolSubList> GetSchoolSubList(string userId, int districtId);
         Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList);
+        IEnumerable<SchoolSubList> GetBlockedSchoolSubList(string userId, int districtId);
+        Task<int> UpdateBlockedSchoolSubList(SchoolSubList schoolSubList);
         #endregion
     }
 }

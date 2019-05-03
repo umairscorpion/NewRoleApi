@@ -320,6 +320,26 @@ namespace Subzz.Api.Controllers.User
             var schoolSubs = await _service.UpdateSchoolSubList(schoolSubList);
             return Ok(schoolSubs);
         }
+
+        [Route("blockedSchoolSubList")]
+        [HttpGet]
+        public IEnumerable<SchoolSubList> GetBlockedSchoolSubList()
+        {
+            var userId = base.CurrentUser.Id;
+            var districtId = base.CurrentUser.DistrictId;
+            var schoolSubs = _service.GetBlockedSchoolSubList(userId, districtId);
+            return schoolSubs;
+        }
+
+        [Route("blockedSchoolSubList")]
+        [HttpPatch]
+        public async Task<ActionResult> UpdateBlockedSchoolSubList([FromBody]SchoolSubList schoolSubList)
+        {
+            schoolSubList.ModifyByUserId = base.CurrentUser.Id;
+            schoolSubList.DistrictId = base.CurrentUser.DistrictId;
+            var schoolSubs = await _service.UpdateBlockedSchoolSubList(schoolSubList);
+            return Ok(schoolSubs);
+        }
         #endregion
     }
 }
