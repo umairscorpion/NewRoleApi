@@ -33,7 +33,7 @@ namespace Subzz.Api.Controllers.User
         {
             try
             {
-                var result = _service.GetAllByRole(id, CurrentUser.DistrictId);
+                var result = _service.GetRolePermissions(id, CurrentUser.DistrictId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -44,12 +44,11 @@ namespace Subzz.Api.Controllers.User
 
         [HttpPost]
         [Route("bulk/update")]
-        public IActionResult Post(PermissionMaster model)
+        public IActionResult Post([FromBody]Role model)
         {
             try
             {
-                model.CreateUpdateBy = CurrentUser.Id;
-                model.CreateUpdateOn = DateTime.UtcNow;
+                model.DistrictId = 0;
                 var result = _service.UpdatePermissions(model);
                 return Ok(result);
             }

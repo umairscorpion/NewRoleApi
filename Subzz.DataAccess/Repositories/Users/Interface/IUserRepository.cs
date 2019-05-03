@@ -58,5 +58,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<PayRateRule> GetPayRateRules(int districtId);
         IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
         #endregion
+
+        List<UserSummary> GetUsersSummaryList(int districtId);
     }
 }

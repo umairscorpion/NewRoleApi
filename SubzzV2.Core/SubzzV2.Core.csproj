@@ -67,13 +67,14 @@
     <Compile Include="Models\PayRateRule.cs" />
     <Compile Include="Models\PayRateSettings.cs" />
     <Compile Include="Models\PermissionCategory.cs" />
-    <Compile Include="Models\PermissionMaster.cs" />
+    <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\PositionDetail.cs" />
     <Compile Include="Models\PreferredSchoolModel.cs" />
     <Compile Include="Models\PreferredSubstituteModel.cs" />
     <Compile Include="Models\ReportDetail.cs" />
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportSummary.cs" />
+    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\RolePermission.cs" />
     <Compile Include="Models\StateModel.cs" />
     <Compile Include="Models\SubstituteAvailability.cs" />

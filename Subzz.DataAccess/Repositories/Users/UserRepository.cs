@@ -48,8 +48,22 @@ namespace Subzz.DataAccess.Repositories.Users
             var sql = "[Users].[uspGetUserDetail]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@UserId", userId);
-            return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).SingleOrDefault();
+            var userDetail = Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).SingleOrDefault();
+            if (userDetail != null)
+            {
+                userDetail.Permissions = GetUserPermissions(userDetail.RoleId);
+            }
+            return userDetail;
         }
+
+        private List<Permission> GetUserPermissions(int userRoleId)
+        {
+            var sql = "[Users].[GetRolePermission]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@RoleId", userRoleId);
+            return Db.Query<Permission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
         public IEnumerable<UserResource> GetUserResourses(string UserId, int resourceTypeId, int parentResourceTypeId, int IsAdminPortal)
         {
             var sql = "[Users].[GetUserResources]";
@@ -448,6 +462,14 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             const string query = "[Users].[GetSubstituteAvailabilitiesSummary]";
             return Db.Query<SubstituteAvailabilitySummary>(query, null, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public List<UserSummary> GetUsersSummaryList(int districtId)
+        {
+            const string query = "[Users].[GetUsersSummary]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<UserSummary>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)

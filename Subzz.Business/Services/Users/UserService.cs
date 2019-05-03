@@ -134,6 +134,11 @@ namespace Subzz.Business.Services.Users
             return _repo.GetSubstituteAvailabilitySummary(model);
         }
 
+        public List<UserSummary> GetUsersSummaryList(int districtId)
+        {
+            return _repo.GetUsersSummaryList(districtId);
+        }
+
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {
             return _repo.GetSubstituteAvailability(model);

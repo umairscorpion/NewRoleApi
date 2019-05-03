@@ -98,6 +98,9 @@ namespace Subzz.Api
             services.AddTransient<IReportService, ReportService>();
             services.AddTransient<IReportRepository, ReportRepository>();
 
+            services.AddTransient<IPermissionService, PermissionService>();
+            services.AddTransient<IPermissionRepository, PermissionRepository>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>
            {
