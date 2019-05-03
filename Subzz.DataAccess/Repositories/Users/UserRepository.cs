@@ -58,7 +58,7 @@ namespace Subzz.DataAccess.Repositories.Users
 
         private List<Permission> GetUserPermissions(int userRoleId)
         {
-            var sql = "[Users].[GetRolePermission]";
+            var sql = "[Users].[GetRolePermissions]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@RoleId", userRoleId);
             return Db.Query<Permission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
@@ -469,6 +469,7 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             try
             {
+                DeleteSubstituteList(schoolSubList.DistrictId);
                 var sql = "[users].[sp_insertSchoolSubList]";
                 var queryParams = new DynamicParameters();
                 var schoolSubs = JsonConvert.DeserializeObject<List<SchoolSubList>>(schoolSubList.SubstituteId);
@@ -506,6 +507,7 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             try
             {
+                DeleteBlockedSubstituteList(schoolSubList.DistrictId);
                 var sql = "[users].[sp_insertBlockedSchoolSubList]";
                 var queryParams = new DynamicParameters();
                 var schoolSubs = JsonConvert.DeserializeObject<List<SchoolSubList>>(schoolSubList.SubstituteId);
@@ -528,6 +530,28 @@ namespace Subzz.DataAccess.Repositories.Users
 
             }
             return 1;
+        }
+
+        public bool DeleteSubstituteList(int districtId)
+        {
+            int hasSucceeded = 0;
+            var sql = "[users].[sp_deleteSubstituteList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return result;
+        }
+
+        public bool DeleteBlockedSubstituteList(int districtId)
+        {
+            int hasSucceeded = 0;
+            var sql = "[users].[sp_deleteSchoolSubstituteList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return result;
         }
 
         #endregion
