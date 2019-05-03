@@ -13,10 +13,12 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<User> GetResourcesByParentResourceId(int RoleId, int ParentResourceId);
         User InsertUserRole(string RoleName);
         IEnumerable<User> GetUserRoles();
-        List<PermissionsCategory> GetAll();
+        List<PermissionsCategory> GetPermissionCategories();
         List<RolePermission> RolePermissions(int roleId);
         RolePermission Post(RolePermission model);
         RolePermission Put(RolePermission model);
         bool Delete(int id);
+        List<Role> GetRoleSummaryList(int districtId);
+        Role UpdatePermissions(Role model);
     }
 }

@@ -66,5 +66,7 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
 
         #endregion
+
+        List<UserSummary> GetUsersSummaryList(int districtId);
     }
 }
