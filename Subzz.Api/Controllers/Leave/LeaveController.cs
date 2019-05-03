@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
+using Subzz.Business.Services.Users.Interface;
 using SubzzAbsence.Business.Leaves.Interface;
+using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 
 namespace Subzz.Api.Controllers.Leave
@@ -14,9 +16,11 @@ namespace Subzz.Api.Controllers.Leave
     public class LeaveController : BaseApiController
     {
         private readonly ILeaveService _service;
-        public LeaveController(ILeaveService service)
+        private readonly IAuditingService _audit;
+        public LeaveController(ILeaveService service, IAuditingService audit)
         {
             _service = service;
+            _audit = audit;
         }
         [Route("insertLeaveRequest")]
         [HttpPost]
@@ -33,6 +37,34 @@ namespace Subzz.Api.Controllers.Leave
         {
             model.EmployeeId = base.CurrentUser.Id;
             var leaveRequests = _service.UpdateLeaveRequestStatus(model);
+            // Audit Log
+            if (model.IsApproved == true)
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Approved,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+            }
+            else
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Declined,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+            }
+
             return leaveRequests;
         }
         [Route("insertLeaveType")]
