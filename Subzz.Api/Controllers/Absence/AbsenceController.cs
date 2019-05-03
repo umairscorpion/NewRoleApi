@@ -111,7 +111,7 @@ namespace Subzz.Api.Controllers.Absence
                         DistrictId = CurrentUser.DistrictId,
                         OrganizationId = CurrentUser.OrganizationId
                     };
-                    //_audit.InsertAuditLog(audit);
+                    _audit.InsertAuditLog(audit);
 
                     model.AbsenceId = absenceCreation;
                     DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation,

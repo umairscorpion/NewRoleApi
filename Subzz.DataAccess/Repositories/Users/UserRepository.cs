@@ -58,7 +58,7 @@ namespace Subzz.DataAccess.Repositories.Users
 
         private List<Permission> GetUserPermissions(int userRoleId)
         {
-            var sql = "[Users].[GetRolePermission]";
+            var sql = "[Users].[GetRolePermissions]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@RoleId", userRoleId);
             return Db.Query<Permission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
@@ -469,6 +469,7 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             try
             {
+                DeleteSubstituteList(schoolSubList.DistrictId);
                 var sql = "[users].[sp_insertSchoolSubList]";
                 var queryParams = new DynamicParameters();
                 var schoolSubs = JsonConvert.DeserializeObject<List<SchoolSubList>>(schoolSubList.SubstituteId);
@@ -477,11 +478,11 @@ namespace Subzz.DataAccess.Repositories.Users
                     queryParams = new DynamicParameters();
                     queryParams.Add("@Id", schoolSubList.Id);
                     queryParams.Add("@DistrictId", schoolSubList.DistrictId);
-                    queryParams.Add("@AddedByUserId", schoolSubList.AddedByUserId);
-                    queryParams.Add("@SubstituteId", schoolSubList.SubstituteId);
+                    queryParams.Add("@AddedByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@SubstituteId", subs.SubstituteId);
                     queryParams.Add("@ModifyByUserId", schoolSubList.ModifyByUserId);
-                    queryParams.Add("@CreatedDate", schoolSubList.CreatedDate);
-                    queryParams.Add("@ModifiedDate", schoolSubList.ModifiedDate);
+                    queryParams.Add("@CreatedDate", DateTime.Now);
+                    queryParams.Add("@ModifiedDate", DateTime.Now);
                     queryParams.Add("@IsAdded", 1);
                     await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
                 }
@@ -491,6 +492,66 @@ namespace Subzz.DataAccess.Repositories.Users
 
             }
             return 1;
+        }
+
+        public IEnumerable<SchoolSubList> GetBlockedSchoolSubList(string userId, int districtId)
+        {
+            var query = "[Users].[sp_getBlockedSchoolSubList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", userId);
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<SchoolSubList>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public async Task<int> UpdateBlockedSchoolSubList(SchoolSubList schoolSubList)
+        {
+            try
+            {
+                DeleteBlockedSubstituteList(schoolSubList.DistrictId);
+                var sql = "[users].[sp_insertBlockedSchoolSubList]";
+                var queryParams = new DynamicParameters();
+                var schoolSubs = JsonConvert.DeserializeObject<List<SchoolSubList>>(schoolSubList.SubstituteId);
+                foreach (var subs in schoolSubs)
+                {
+                    queryParams = new DynamicParameters();
+                    queryParams.Add("@Id", schoolSubList.Id);
+                    queryParams.Add("@DistrictId", schoolSubList.DistrictId);
+                    queryParams.Add("@AddedByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@SubstituteId", subs.SubstituteId);
+                    queryParams.Add("@ModifyByUserId", schoolSubList.ModifyByUserId);
+                    queryParams.Add("@CreatedDate", DateTime.Now);
+                    queryParams.Add("@ModifiedDate", DateTime.Now);
+                    queryParams.Add("@IsAdded", 1);
+                    await Db.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return 1;
+        }
+
+        public bool DeleteSubstituteList(int districtId)
+        {
+            int hasSucceeded = 0;
+            var sql = "[users].[sp_deleteSubstituteList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return result;
+        }
+
+        public bool DeleteBlockedSubstituteList(int districtId)
+        {
+            int hasSucceeded = 0;
+            var sql = "[users].[sp_deleteSchoolSubstituteList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return result;
         }
 
         #endregion

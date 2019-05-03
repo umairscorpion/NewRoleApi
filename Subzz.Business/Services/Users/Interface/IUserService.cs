@@ -52,6 +52,8 @@ namespace Subzz.Business.Services.Users.Interface
         PayRateRule DeletePayRateRule(PayRateRule payRateRule);
         IEnumerable<SchoolSubList> GetSchoolSubList(string userId, int districtId);
         Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList);
+        IEnumerable<SchoolSubList> GetBlockedSchoolSubList(string userId, int districtId);
+        Task<int> UpdateBlockedSchoolSubList(SchoolSubList schoolSubList);
         #endregion
 
         #region Availability
