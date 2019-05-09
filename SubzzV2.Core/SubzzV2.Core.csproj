@@ -47,6 +47,7 @@
     <Compile Include="Entities\UserProfile.cs" />
     <Compile Include="Enum\AuditLogs.cs" />
     <Compile Include="Enum\MailTemplateEnums.cs" />
+    <Compile Include="Enum\TimeClockActivity.cs" />
     <Compile Include="Models\AbsenceModel.cs" />
     <Compile Include="Models\AbsenceSummary.cs" />
     <Compile Include="Models\Allowance.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Models\ErrorlogModel.cs" />
     <Compile Include="Models\ExternalUser.cs" />
     <Compile Include="Models\FileManager.cs" />
+    <Compile Include="Models\LeaveBalance.cs" />
     <Compile Include="Models\LeaveRequestModel.cs" />
     <Compile Include="Models\LeaveTypeModel.cs" />
     <Compile Include="Models\LocationTime.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="Models\SubstituteAvailabilitySummary.cs" />
     <Compile Include="Models\SubstituteCategoryModel.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
+    <Compile Include="Models\TimeClock.cs" />
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserReference.cs" />
     <Compile Include="Models\UserResource.cs" />

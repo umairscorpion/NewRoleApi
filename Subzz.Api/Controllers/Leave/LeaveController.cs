@@ -113,5 +113,14 @@ namespace Subzz.Api.Controllers.Leave
             var response = _service.GetleaveTypeById(leaveTypeId);
             return Ok(response);
         }
+
+        [Route("getEmployeeLeaveBalance")]
+        [HttpGet]
+        public IActionResult GetEmployeeLeaveBalance()
+        {
+            var districtId = base.CurrentUser.DistrictId;
+            var response = _service.GetEmployeeLeaveBalance(districtId);
+            return Ok(response);
+        }
     }
 }

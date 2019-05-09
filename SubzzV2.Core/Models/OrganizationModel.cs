@@ -23,5 +23,9 @@ namespace SubzzV2.Core.Models
         public TimeSpan SchoolEndTime { get; set; }
         public int SchoolZipCode { get; set; }
         public int SchoolEmployees { get; set; }
+        public string ReleaseJobTime { get; set; }
+        public string NotifyOthersTime { get; set; }
+        public int DailyAbenceLimit { get; set; }
+        public bool IsAbsenceLimit { get; set; }
     }
 }

@@ -54,24 +54,35 @@ namespace SubzzManage.DataAccess.Repositries.Manage
         }
         public OrganizationModel UpdateSchool(OrganizationModel model)
         {
+            try
+            {
+                var sqll = "[Location].[InsertAndUpdateSchool]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SchoolId", model.SchoolId);
+                queryParams.Add("@SchoolName", model.SchoolName);
+                queryParams.Add("@SchoolEmail", model.SchoolEmail);
+                queryParams.Add("@SchoolDistrictId", model.SchoolDistrictId);
+                queryParams.Add("@SchoolAddress", model.SchoolAddress);
+                queryParams.Add("@SchoolEmployees", model.SchoolEmployees);
+                queryParams.Add("@SchoolTimeZone", model.SchoolTimeZone);
+                queryParams.Add("@SchoolStartTime", model.SchoolStartTime);
+                queryParams.Add("@SchoolEndTime", model.SchoolEndTime);
+                queryParams.Add("@School1stHalfEnd", model.School1stHalfEnd);
+                queryParams.Add("@School2ndHalfStart", model.School2ndHalfStart);
+                queryParams.Add("@SchoolCity", model.SchoolCity);
+                queryParams.Add("@SchoolPhone", model.SchoolPhone);
+                queryParams.Add("@SchoolZipCode", model.SchoolZipCode);
+                queryParams.Add("@ReleaseJobTime", model.ReleaseJobTime);
+                queryParams.Add("@NotifyOthersTime", model.NotifyOthersTime);
+                queryParams.Add("@DailyAbenceLimit", model.DailyAbenceLimit);
+                queryParams.Add("@IsAbsenceLimit", model.IsAbsenceLimit);
+                Db.ExecuteScalar<int>(sqll, queryParams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
 
-            var sqll = "[Location].[InsertAndUpdateSchool]";
-            var queryParams = new DynamicParameters();
-            queryParams.Add("@SchoolId", model.SchoolId);
-            queryParams.Add("@SchoolName", model.SchoolName);
-            queryParams.Add("@SchoolEmail", model.SchoolEmail);
-            queryParams.Add("@SchoolDistrictId", model.SchoolDistrictId);
-            queryParams.Add("@SchoolAddress", model.SchoolAddress);
-            queryParams.Add("@SchoolEmployees", model.SchoolEmployees);
-            queryParams.Add("@SchoolTimeZone", model.SchoolTimeZone);
-            queryParams.Add("@SchoolStartTime", model.SchoolStartTime);
-            queryParams.Add("@SchoolEndTime", model.SchoolEndTime);
-            queryParams.Add("@School1stHalfEnd", model.School1stHalfEnd);
-            queryParams.Add("@School2ndHalfStart", model.School2ndHalfStart);
-            queryParams.Add("@SchoolCity", model.SchoolCity);
-            queryParams.Add("@SchoolPhone", model.SchoolPhone);
-            queryParams.Add("@SchoolZipCode", model.SchoolZipCode);
-            Db.ExecuteScalar<int>(sqll, queryParams, commandType: CommandType.StoredProcedure);
+            }
+            
             return model;
         }
         public IEnumerable<OrganizationModel> GetSchools()

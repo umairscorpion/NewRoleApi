@@ -94,6 +94,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             queryParams.Add("@IsSubtractAllowance", model.IsSubtractAllowance);
             queryParams.Add("@IsApprovalRequired", model.IsApprovalRequired);
             queryParams.Add("@IsVisible", model.IsVisible);
+            queryParams.Add("@AllowanceType", model.AllowanceType);
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@OrganizationId", model.OrganizationId);
             queryParams.Add("@CreatedDate", DateTime.Now);
@@ -108,6 +109,14 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             var queryParams = new DynamicParameters();
             queryParams.Add("@leaveTpeId", leaveTypeId);
             return Db.Query<LeaveTypeModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(int districtId)
+        {
+            var sql = "[Leaves].[sp_getEmployeeLeaveBalance]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<LeaveBalance>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
         public int DeleteLeaveType(int leaveTypeId)

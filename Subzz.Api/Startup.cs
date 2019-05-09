@@ -23,6 +23,8 @@ using SubzzAbsence.Business.Leaves;
 using SubzzAbsence.Business.Leaves.Interface;
 using SubzzAbsence.Business.Reports;
 using SubzzAbsence.Business.Reports.Interface;
+using SubzzAbsence.Business.Time;
+using SubzzAbsence.Business.Time.Interface;
 using SubzzAbsence.DataAccess.Repositories.Absence;
 using SubzzAbsence.DataAccess.Repositories.Absence.Interface;
 using SubzzAbsence.DataAccess.Repositories.Base;
@@ -30,6 +32,8 @@ using SubzzAbsence.DataAccess.Repositories.Leaves;
 using SubzzAbsence.DataAccess.Repositories.Leaves.Interface;
 using SubzzAbsence.DataAccess.Repositories.Reports;
 using SubzzAbsence.DataAccess.Repositories.Reports.Interface;
+using SubzzAbsence.DataAccess.Repositories.Time;
+using SubzzAbsence.DataAccess.Repositories.Time.Interface;
 using SubzzLookup.Business.Lookups;
 using SubzzLookup.Business.Lookups.Interface;
 using SubzzLookup.DataAccess.Repositories;
@@ -104,6 +108,9 @@ namespace Subzz.Api
 
             services.AddTransient<IPermissionService, PermissionService>();
             services.AddTransient<IPermissionRepository, PermissionRepository>();
+
+            services.AddTransient<ITimeService, TimeService>();
+            services.AddTransient<ITimeRepository, TimeRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>
