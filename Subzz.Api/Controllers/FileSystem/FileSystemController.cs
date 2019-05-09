@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Subzz.Api.Controllers.Base;
+using Subzz.Business.Services.Users.Interface;
 using SubzzV2.Core.Models;
 
 namespace Subzz.Api.Controllers.FileSystem
@@ -16,10 +17,11 @@ namespace Subzz.Api.Controllers.FileSystem
     public class FileSystemController : BaseApiController
     {
         private IHostingEnvironment _hostingEnvironment;
-
-        public FileSystemController(IHostingEnvironment hostingEnvironment)
+        private readonly IUserService _service;
+        public FileSystemController(IHostingEnvironment hostingEnvironment, IUserService service)
         {
             _hostingEnvironment = hostingEnvironment;
+            _service = service;
         }
 
         [Route("uploadProfilePicture")]
@@ -653,6 +655,102 @@ namespace Subzz.Api.Controllers.FileSystem
         {".z", "application/x-compress"},
         {".zip", "application/x-zip-compressed"},
         };
+
+        [Route("addFiles")]
+        [HttpPost]
+        public IEnumerable<FileManager> AddFiles([FromBody]FileManager fileManager)
+        {
+            fileManager.DistrictId = base.CurrentUser.DistrictId;
+            fileManager.UserId = base.CurrentUser.Id;
+            var Files = _service.AddFiles(fileManager);
+            return Files;
+        }
+
+        [Route("getFiles")]
+        [HttpGet]
+        public IEnumerable<FileManager> GetFiles()
+        {
+            FileManager fileManager = new FileManager();
+            fileManager.DistrictId = base.CurrentUser.DistrictId;
+            fileManager.UserId = base.CurrentUser.Id;
+            var Files = _service.GetFiles(fileManager);
+            return Files;
+        }
+
+        [Route("deleteFiles")]
+        [HttpPatch]
+        public IEnumerable<FileManager> DeleteFiles([FromBody]FileManager fileManager)
+        {
+            fileManager.DistrictId = base.CurrentUser.DistrictId;
+            fileManager.UserId = base.CurrentUser.Id;
+            var Files = _service.DeleteFiles(fileManager);
+
+            string folderName = "SubstituteFiles";
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+            string filePath = Path.Combine(webRootPath, folderName);
+            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.AttachedFileId));
+            System.IO.File.Delete(Path.Combine(filePath, fileManager.AttachedFileId));
+
+            return Files;
+        }
+
+        [Route("uploadFile")]
+        [HttpPost]
+        public IActionResult UploadFile()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                string folderName = "SubstituteFiles";
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                {
+                    webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
+                string filePath = Path.Combine(webRootPath, folderName);
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                string fileName = "";
+                if (file.Length > 0)
+                {
+                    fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fileExtention = new System.IO.FileInfo(fileName).Extension;
+                    fileName = Guid.NewGuid().ToString() + fileExtention;
+                    string fullPath = Path.Combine(filePath, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                }
+                return Json(fileName);
+            }
+            catch (System.Exception ex)
+            {
+                return Json("Upload Failed: " + ex.Message);
+            }
+        }
+
+        [Route("getfile")]
+        [HttpPost]
+        public IActionResult GetFile([FromBody]FileManager fileManager)
+        {
+            string folderName = "SubstituteFiles";
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+            string filePath = Path.Combine(webRootPath, folderName);
+            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.AttachedFileId));
+            return File(bytes, fileManager.FileContentType);
+        }
     }
 
 }

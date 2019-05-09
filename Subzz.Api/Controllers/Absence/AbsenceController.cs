@@ -109,7 +109,7 @@ namespace Subzz.Api.Controllers.Absence
                         ActionType = AuditLogs.ActionType.Create,
                         PostValue = Serializer.Serialize(model),
                         DistrictId = CurrentUser.DistrictId,
-                        OrganizationId = CurrentUser.OrganizationId
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                     };
                     _audit.InsertAuditLog(audit);
 
@@ -127,7 +127,7 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         if (model.IsApprovalRequired)
                         {
-                            Task.Run(() => SendNotifications(model));
+                            //Task.Run(() => SendNotifications(model));
                         }
 
                         return Json("success");
@@ -170,7 +170,7 @@ namespace Subzz.Api.Controllers.Absence
                     EntityType = AuditLogs.EntityType.Absence,
                     ActionType = AuditLogs.ActionType.Release,
                     DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
             }
@@ -183,7 +183,7 @@ namespace Subzz.Api.Controllers.Absence
                     EntityType = AuditLogs.EntityType.Absence,
                     ActionType = AuditLogs.ActionType.Cancelled,
                     DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
             }
@@ -222,7 +222,7 @@ namespace Subzz.Api.Controllers.Absence
                     PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
                     PostValue = Serializer.Serialize(model),
                     DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
 
@@ -250,7 +250,7 @@ namespace Subzz.Api.Controllers.Absence
                     EntityType = AuditLogs.EntityType.Absence,
                     ActionType = AuditLogs.ActionType.Assigned,
                     DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
 

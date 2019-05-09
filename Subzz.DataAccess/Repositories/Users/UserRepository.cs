@@ -554,6 +554,38 @@ namespace Subzz.DataAccess.Repositories.Users
             return result;
         }
 
+        public IEnumerable<FileManager> AddFiles(FileManager fileManager)
+        {
+            var query = "[Users].[InsertSubstituteFiles]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", fileManager.UserId);
+            queryParams.Add("@DistrictId", fileManager.DistrictId);
+            queryParams.Add("@AttachedFileName", fileManager.AttachedFileName);
+            queryParams.Add("@AttachedFileId", fileManager.AttachedFileId);
+            queryParams.Add("@Extension", fileManager.FileExtention);
+            queryParams.Add("@ContentType", fileManager.FileContentType);
+            return Db.Query<FileManager>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<FileManager> GetFiles(FileManager fileManager)
+        {
+            var query = "[Users].[GetSubstituteFiles]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", fileManager.UserId);
+            queryParams.Add("@DistrictId", fileManager.DistrictId);
+            return Db.Query<FileManager>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<FileManager> DeleteFiles(FileManager fileManager)
+        {
+            var query = "[Users].[DeleteSubstituteFiles]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", fileManager.UserId);
+            queryParams.Add("@DistrictId", fileManager.DistrictId);
+            queryParams.Add("@AttachedFileId", fileManager.AttachedFileId);
+            return Db.Query<FileManager>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
         #endregion
 
         #region Availability

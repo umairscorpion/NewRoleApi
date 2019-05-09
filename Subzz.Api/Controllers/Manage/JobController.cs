@@ -53,7 +53,7 @@ namespace Subzz.Api.Controllers.Manage
                     EntityType = AuditLogs.EntityType.Absence,
                     ActionType = AuditLogs.ActionType.Accepted,
                     DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
 

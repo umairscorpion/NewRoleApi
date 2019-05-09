@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -16,9 +19,11 @@ namespace Subzz.Api.Controllers.User
     public class UserController : BaseApiController
     {
         private readonly IUserService _service;
-        public UserController(IUserService service, IUserAuthenticationService authSerive)
+        private IHostingEnvironment _hostingEnvironment;
+        public UserController(IUserService service, IUserAuthenticationService authSerive, IHostingEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [Route("list/summary")]
@@ -349,6 +354,7 @@ namespace Subzz.Api.Controllers.User
             var schoolSubs = await _service.UpdateBlockedSchoolSubList(schoolSubList);
             return Ok(schoolSubs);
         }
+      
         #endregion
     }
 }
