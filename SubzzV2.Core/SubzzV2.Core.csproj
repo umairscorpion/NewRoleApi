@@ -86,6 +86,7 @@
     <Compile Include="Models\SubstituteCategoryModel.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
     <Compile Include="Models\TimeClock.cs" />
+    <Compile Include="Models\TimeclockFilter.cs" />
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserReference.cs" />
     <Compile Include="Models\UserResource.cs" />
