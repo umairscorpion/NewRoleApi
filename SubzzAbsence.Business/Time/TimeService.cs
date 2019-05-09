@@ -16,35 +16,6 @@ namespace SubzzAbsence.Business.Time
 {
     public class TimeService : ITimeService
     {
-        private readonly ITimeRepository _repo;
-        public TimeService()
-        {
-            _repo = new TimeRepository();
-        }
-        int ITimeService.InsertClockInTime(TimeClock model)
-        {
-            var clockin = _repo.InsertClockInTime(model);
-            return clockin;
-        }
-        int ITimeService.InsertClockOutTime(TimeClock model)
-        {
-            var clockout = _repo.InsertClockOutTime(model);
-            return clockout;
-        }
-        int ITimeService.TimeClockBreakStatus(TimeClock model)
-        {
-            var br = _repo.TimeClockBreakStatus(model);
-            return br;
-        }
-        int ITimeService.TimeClockReturnStatus(TimeClock model)
-        {
-            var ret = _repo.TimeClockReturnStatus(model);
-            return ret;
-        }
-        public async Task<IEnumerable<TimeClock>> GetTimeClockData(TimeClock model)
-        {
-            return await _repo.GetTimeClockData(model);
-        }
+        private readonly ITimeRepository _repo;        public TimeService()        {            _repo = new TimeRepository();        }        int ITimeService.InsertClockInTime(TimeClock model)        {            var clockin = _repo.InsertClockInTime(model);            return clockin;        }        int ITimeService.InsertClockOutTime(TimeClock model)        {            var clockout = _repo.InsertClockOutTime(model);            return clockout;        }        int ITimeService.TimeClockBreakStatus(TimeClock model)        {            var br = _repo.TimeClockBreakStatus(model);            return br;        }        int ITimeService.TimeClockReturnStatus(TimeClock model)        {            var ret = _repo.TimeClockReturnStatus(model);            return ret;        }        public async Task<IEnumerable<TimeClock>> GetTimeClockData(TimeClock model)        {            return await _repo.GetTimeClockData(model);        }        string ITimeService.CheckTimeClockStatus(TimeClock model)        {            var ret = _repo.CheckTimeClockStatus(model);            return ret;        }        public async Task<IEnumerable<TimeClock>> GetTimeClockSummaryWithFilter(TimeclockFilter model)        {            return await _repo.GetTimeClockSummaryWithFilter(model);        }        public async Task<IEnumerable<TimeClock>> GetTimeTrackerSummary(TimeclockFilter model)        {            return await _repo.GetTimeTrackerSummary(model);        }
     }
-
 }

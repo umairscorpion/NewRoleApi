@@ -12,10 +12,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Time.Interface
 {
     public interface ITimeRepository
     {
-        int InsertClockInTime(TimeClock model);
-        int InsertClockOutTime(TimeClock model);
-        int TimeClockBreakStatus(TimeClock model);
-        int TimeClockReturnStatus(TimeClock model);
-        Task<IEnumerable<TimeClock>> GetTimeClockData(TimeClock model);
+        int InsertClockInTime(TimeClock model);        int InsertClockOutTime(TimeClock model);        int TimeClockBreakStatus(TimeClock model);        int TimeClockReturnStatus(TimeClock model);        Task<IEnumerable<TimeClock>> GetTimeClockData(TimeClock model);        string CheckTimeClockStatus(TimeClock model);        Task<IEnumerable<TimeClock>> GetTimeClockSummaryWithFilter(TimeclockFilter model);        Task<IEnumerable<TimeClock>> GetTimeTrackerSummary(TimeclockFilter model);
     }
 }
