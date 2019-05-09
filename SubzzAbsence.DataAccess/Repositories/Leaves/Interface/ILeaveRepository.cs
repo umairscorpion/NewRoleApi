@@ -17,5 +17,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves.Interface
         IEnumerable<LeaveTypeModel> GetLeaveTypes(int districtId, string organizationId);
         int DeleteLeaveType(int leaveTypeId);
         LeaveTypeModel GetleaveTypeById(int leaveTypeId);
+        IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(int districtId);
     }
 }

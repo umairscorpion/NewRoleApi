@@ -13,6 +13,7 @@ namespace SubzzV2.Core.Models
         public int StartingBalance { get; set; }
         public bool IsSubtractAllowance { get; set; }
         public bool IsApprovalRequired { get; set; }
+        public int AllowanceType { get; set; }
         public bool IsVisible { get; set; }
         public int DistrictId { get; set; }
         public string OrganizationId { get; set; }
