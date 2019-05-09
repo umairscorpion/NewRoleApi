@@ -23,9 +23,14 @@ namespace Subzz.Business.Services.Users
             _repo.InsertAuditLog(model);
         }
 
-        public List<AuditLog> GetAuditLog(AuditLogFilter model)
+        public List<AuditLogView> GetAuditView(AuditLogFilter model)
         {
-            return _repo.GetAuditLog(model);
+            return _repo.GetAuditView(model);
+        }
+
+        public List<AuditLogAbsenceView> GetAbsencesAuditView(AuditLogFilter model)
+        {
+            return _repo.GetAbsencesAuditView(model);
         }
     }
 }

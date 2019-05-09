@@ -7,6 +7,7 @@ namespace Subzz.Business.Services.Users.Interface
     {
         void InsertErrorlog(ErrorlogModel model);
         void InsertAuditLog(AuditLog model);
-        List<AuditLog> GetAuditLog(AuditLogFilter model);
+        List<AuditLogView> GetAuditView(AuditLogFilter model);
+        List<AuditLogAbsenceView> GetAbsencesAuditView(AuditLogFilter model);
     }
 }

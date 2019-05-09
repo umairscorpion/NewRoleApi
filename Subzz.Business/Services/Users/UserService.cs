@@ -239,6 +239,21 @@ namespace Subzz.Business.Services.Users
             return await _repo.UpdateBlockedSchoolSubList(schoolSubList);
         }
 
+        public IEnumerable<FileManager> AddFiles(FileManager fileManager)
+        {
+            return _repo.AddFiles(fileManager);
+        }
+
+        public IEnumerable<FileManager> GetFiles(FileManager fileManager)
+        {
+            return _repo.GetFiles(fileManager);
+        }
+
+        public IEnumerable<FileManager> DeleteFiles(FileManager fileManager)
+        {
+            return _repo.DeleteFiles(fileManager);
+        }
+
         #endregion
     }
 }

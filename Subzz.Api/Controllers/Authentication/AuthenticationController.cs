@@ -59,7 +59,7 @@ namespace Subzz.Api.Controllers.Authentication
                     EntityType = AuditLogs.EntityType.User,
                     ActionType = AuditLogs.ActionType.LoggedIn,
                     DistrictId = userDetail.DistrictId,
-                    OrganizationId = !string.IsNullOrEmpty(userDetail.OrganizationId) ? userDetail.OrganizationId.ToString() : "-1"
+                    OrganizationId = !string.IsNullOrEmpty(userDetail.OrganizationId) ? userDetail.OrganizationId.ToString() : "null"
                 };
                 _audit.InsertAuditLog(audit);
 

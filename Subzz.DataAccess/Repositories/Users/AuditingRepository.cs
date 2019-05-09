@@ -53,17 +53,31 @@ namespace Subzz.DataAccess.Repositories.Users
             var result = Db.Query<AuditLog>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public List<AuditLog> GetAuditLog(AuditLogFilter model)
+        public List<AuditLogView> GetAuditView(AuditLogFilter model)
         {
             var sql = "[Users].[GetAuditLog]";
             var queryParams = new DynamicParameters();
+            queryParams.Add("@StartDate", model.StartDate);
+            queryParams.Add("@EndDate", model.EndDate);
             queryParams.Add("@LoginUserId", model.LoginUserId);
-            queryParams.Add("@SearchByEmployeeId", model.SearchByEmployeeId);
+            queryParams.Add("@SearchByEmployeeName", model.SearchByEmployeeName);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@OrganizationId", model.OrganizationId);
+            var result = Db.Query<AuditLogView>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+            return result;
+        }
+
+        public List<AuditLogAbsenceView> GetAbsencesAuditView(AuditLogFilter model)
+        {
+            var sql = "[Users].[GetAuditLogAbsences]";
+            var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@OrganizationId", model.OrganizationId);
             queryParams.Add("@StartDate", model.StartDate);
             queryParams.Add("@EndDate", model.EndDate);
-            var result = Db.Query<AuditLog>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+            queryParams.Add("@EntityId", model.EntityId);
+            queryParams.Add("@LoginUserId", model.LoginUserId);
+            var result = Db.Query<AuditLogAbsenceView>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
             return result;
         }
     }

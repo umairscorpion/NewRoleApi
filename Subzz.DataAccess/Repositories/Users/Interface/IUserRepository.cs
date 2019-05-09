@@ -61,6 +61,9 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         Task<int> UpdateSchoolSubList(SchoolSubList schoolSubList);
         IEnumerable<SchoolSubList> GetBlockedSchoolSubList(string userId, int districtId);
         Task<int> UpdateBlockedSchoolSubList(SchoolSubList schoolSubList);
+        IEnumerable<FileManager> AddFiles(FileManager fileManager);
+        IEnumerable<FileManager> GetFiles(FileManager fileManager);
+        IEnumerable<FileManager> DeleteFiles(FileManager fileManager);
         #endregion
 
         List<UserSummary> GetUsersSummaryList(int districtId);
