@@ -114,12 +114,12 @@ namespace Subzz.Api.Controllers.Leave
             return Ok(response);
         }
 
-        [Route("getEmployeeLeaveBalance")]
+        [Route("getEmployeeLeaveBalance/{year}/{userId}")]
         [HttpGet]
-        public IActionResult GetEmployeeLeaveBalance()
+        public IActionResult GetEmployeeLeaveBalance(int year, string userId)
         {
             var districtId = base.CurrentUser.DistrictId;
-            var response = _service.GetEmployeeLeaveBalance(districtId);
+            var response = _service.GetEmployeeLeaveBalance(districtId, year, userId);
             return Ok(response);
         }
     }
