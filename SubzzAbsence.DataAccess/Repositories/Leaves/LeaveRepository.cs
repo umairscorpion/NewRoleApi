@@ -111,11 +111,13 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             return Db.Query<LeaveTypeModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(int districtId)
+        public IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(int districtId, int year, string userId)
         {
             var sql = "[Leaves].[sp_getEmployeeLeaveBalance]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@year", year);
+            queryParams.Add("@userId", userId);
             return Db.Query<LeaveBalance>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 

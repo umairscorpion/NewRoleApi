@@ -127,28 +127,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
             }
         }
 
-        public IEnumerable<LeaveRequestModel> GetActivityReportDetail(ReportFilter filter)
-        {
-            using (var connection = base.GetConnection)
-            {
-                var sql = "[Report].[GetActivityReportDetail]";
-                var queryParams = new DynamicParameters();
-                if (filter.OrganizationId == "-1")
-                {
-                    queryParams.Add("@OrganizationId", null);
-                }
-                else
-                {
-                    queryParams.Add("@OrganizationId", filter.OrganizationId);
-                }
-                queryParams.Add("@FromDate", filter.FromDate);
-                queryParams.Add("@ToDate", filter.ToDate);
-                queryParams.Add("@DistrictId", filter.DistrictId);
-                queryParams.Add("@JobNumber", filter.JobNumber);
-                return connection.Query<LeaveRequestModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
-            }
-        }
-
         public List<ReportDetail> GetPayrollReportDetails(ReportFilter filter)
         {
             using (var connection = base.GetConnection)

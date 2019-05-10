@@ -10,7 +10,7 @@ namespace SubzzV2.Core.Models
     {
         public int Id { get; set; }
         public int Balance { get; set; }
-        public int LeaveTitle { get; set; }
+        public string LeaveTitle { get; set; }
         public int EmployeeName { get; set; }
     }
 }
