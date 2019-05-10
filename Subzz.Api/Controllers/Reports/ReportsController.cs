@@ -50,16 +50,6 @@ namespace Subzz.Api.Controllers.Reports
             return Json("error");
         }
 
-        [Route("getActivityReportDetail")]
-        [HttpPost]
-        public IEnumerable<LeaveRequestModel> GetActivityReportDetail([FromBody]ReportFilter model)
-        {
-            model.DistrictId = base.CurrentUser.DistrictId;
-            model.OrganizationId = base.CurrentUser.OrganizationId;
-            var activityReportDetail = _service.GetActivityReportDetail(model);
-            return activityReportDetail;
-        }
-
         [Route("payrollDetail")]
         [HttpPost]
         public IActionResult GetPayrollDetail([FromBody]ReportFilter model)
