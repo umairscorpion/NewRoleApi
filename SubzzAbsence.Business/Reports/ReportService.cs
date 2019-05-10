@@ -25,11 +25,6 @@ namespace SubzzAbsence.Business.Reports
             return _repo.GetReportDetail(model);
         }
 
-        public IEnumerable<LeaveRequestModel> GetActivityReportDetail(ReportFilter model)
-        {
-            return _repo.GetActivityReportDetail(model);
-        }
-
         public List<ReportDetail> GetPayrollReportDetails(ReportFilter model)
         {
             return _repo.GetPayrollReportDetails(model);

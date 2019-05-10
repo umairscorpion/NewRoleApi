@@ -654,6 +654,7 @@ namespace Subzz.Api.Controllers.FileSystem
         {".xwd", "image/x-xwindowdump"},
         {".z", "application/x-compress"},
         {".zip", "application/x-zip-compressed"},
+        {".sql", "text/plain"},
         };
 
         [Route("addFiles")]

@@ -168,7 +168,7 @@ namespace Subzz.Api.Controllers.Absence
                     UserId = CurrentUser.Id,
                     EntityId = AbsenceId.ToString(),
                     EntityType = AuditLogs.EntityType.Absence,
-                    ActionType = AuditLogs.ActionType.Release,
+                    ActionType = AuditLogs.ActionType.Released,
                     DistrictId = CurrentUser.DistrictId,
                     OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
