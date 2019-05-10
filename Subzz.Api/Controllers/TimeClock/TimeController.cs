@@ -39,5 +39,27 @@ namespace Subzz.Api.Controllers.TimeClock
 
         [Route("timeclockstatus")]        [HttpGet]        public IActionResult CheckTimeClockStatus()        {            var model = new SubzzV2.Core.Models.TimeClock            {                UserId = base.CurrentUser.Id,                Activity = TimeClockActivity.ActionType.Return            };            var Summary = _service.CheckTimeClockStatus(model);            return Json(Summary);        }        [Route("timeclockdatawithfilter")]        [HttpPost]        public async Task<IEnumerable<SubzzV2.Core.Models.TimeClock>> GetTimeClockSummaryWithFilter([FromBody]TimeclockFilter model)        {            model.DistrictId = base.CurrentUser.DistrictId;            model.OrganizationId = base.CurrentUser.OrganizationId;            model.UserId = base.CurrentUser.Id;            return await _service.GetTimeClockSummaryWithFilter(model);
 
-        }        [Route("gettimetrackerdata")]        [HttpPost]        public async Task<IEnumerable<SubzzV2.Core.Models.TimeClock>> GetTimeTrackerSummary([FromBody]TimeclockFilter model)        {            model.DistrictId = base.CurrentUser.DistrictId;            model.OrganizationId = base.CurrentUser.OrganizationId;            model.UserId = base.CurrentUser.Id;            return await _service.GetTimeTrackerSummary(model);        }    }
+        }        [Route("gettimetrackerdata")]        [HttpPost]        public async Task<IEnumerable<SubzzV2.Core.Models.TimeClock>> GetTimeTrackerSummary([FromBody]TimeclockFilter model)        {            model.DistrictId = base.CurrentUser.DistrictId;            model.OrganizationId = base.CurrentUser.OrganizationId;            model.UserId = base.CurrentUser.Id;            return await _service.GetTimeTrackerSummary(model);        }        [Route("timetrackerdatawithfilter")]
+        [HttpPost]
+        public IActionResult GetTimeTrackerDataWithFilter([FromBody]TimeclockFilter model)
+        {
+            model.DistrictId = base.CurrentUser.DistrictId;
+            model.OrganizationId = base.CurrentUser.OrganizationId;
+            model.UserId = base.CurrentUser.Id;
+            var reportDetails = _service.GetTimeTrackerDataWithFilter(model);
+            return Ok(reportDetails);
+        }        //[Route("updateTimeClockData")]
+        //[HttpPatch]
+        //public ActionResult UpdateTimeClockData([FromBody]AbsenceModel model)
+        //{;
+        //    int RowsEffected = _service.UpdateTimeClockData(model);
+        //    if (RowsEffected > 0)
+        //    {
+        //        return Json("success");
+        //    }
+        //    else
+        //    {
+        //        return Json("error");
+        //    }
+        //}    }
 }

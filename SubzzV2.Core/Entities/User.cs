@@ -64,6 +64,7 @@ namespace SubzzV2.Core.Entities
         public string Password { get; set; }
         public int PayRate { get; set; }
         public int HourLimit { get; set; }
+        public DateTime LastActive { get; set; }
 
         public List<Permission> Permissions { get; set; }
 
