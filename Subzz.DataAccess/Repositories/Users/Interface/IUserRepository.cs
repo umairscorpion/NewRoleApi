@@ -67,5 +67,6 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         #endregion
 
         List<UserSummary> GetUsersSummaryList(int districtId);
+        bool VerifyUser(User model);
     }
 }

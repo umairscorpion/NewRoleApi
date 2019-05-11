@@ -100,6 +100,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
+            queryParams.Add("@Password", model.Password);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
@@ -601,6 +602,15 @@ namespace Subzz.DataAccess.Repositories.Users
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", districtId);
             return Db.Query<UserSummary>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public bool VerifyUser(User model)
+        {
+            const string query = "[Users].[VerifyUser]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@Email", model.Email);
+            return Db.Query<bool>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
