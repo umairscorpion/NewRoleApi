@@ -31,6 +31,18 @@ namespace Subzz.Api.Controllers.User
             return Ok(result);
         }
 
+        [Route("bulk/delete")]
+        [HttpPut]
+        public IActionResult RemoveUsers([FromBody]int[] ids)
+        {
+            if (ids.Length <= 0) return NotFound();
+            foreach (var id in ids)
+            {
+                _service.Delete(id);
+            }
+            return Ok();
+        }
+
         [HttpPost]
         [Route("")]
         public SubzzV2.Core.Entities.User InsertUserRole([FromBody]Role model)
