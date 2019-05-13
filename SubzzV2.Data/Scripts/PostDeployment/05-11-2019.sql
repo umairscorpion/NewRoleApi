@@ -45,8 +45,6 @@ ALTER PROCEDURE [Users].[InsertUser]
 @FirstName nvarchar(50),
 @LastName nvarchar(50),
 @UserTypeId nvarchar(50),
-@TeacherLevel int,
-@Speciality nvarchar(50),
 @RoleId nvarchar(50),
 @Gender nvarchar(10),
 @IsCertified BIT,
@@ -58,9 +56,12 @@ ALTER PROCEDURE [Users].[InsertUser]
 @IsSubscribedEmail BIT,
 @Isdeleted BIT,
 @ProfilePicture nvarchar(max),
-@PayRate nvarchar(500) = null,
-@HourLimit INT = null,
+@Speciality nvarchar(50),
+@TeacherLevel int,
+@PayRate nvarchar(10) = "10",
+@HourLimit int = 0,
 @Password nvarchar(50) = null
+
 AS
 Begin Try
 	if(@DistrictId = 0)
@@ -69,10 +70,10 @@ Begin Try
 	End
 	declare @InsertedRecord table ( InsertedId varchar(10) )
 	Insert Into Users.Users ([FirstName],[LastName],  [Gender], [IsCertified],[UserRole_Id], [UserType_Id], [Email], [Password], [Phone],
-	[IsActive],[IsDeleted],[IsSubscribedSMS],[IsSubscribedEmail],[ProfilePicUrl],[District_Id])
+	[IsActive],[IsDeleted],[IsSubscribedSMS],[IsSubscribedEmail],[ProfilePicUrl],[District_Id], [PayRate])
 	output inserted.User_Id into @InsertedRecord
 	values (@FirstName, @LastName, @Gender, @IsCertified, @RoleId,@UserTypeId, @Email, @Password, @PhoneNumber, 1, @Isdeleted, @IsSubscribedSMS
-	,@IsSubscribedEmail, @ProfilePicture,@DistrictId)
+	,@IsSubscribedEmail, @ProfilePicture,@DistrictId, @PayRate)
 
 	--ADD USER ROLE
 	Insert into Users.UserRole (User_Id,Role_Id) select InsertedId, @RoleId from @InsertedRecord
