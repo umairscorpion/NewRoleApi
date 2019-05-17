@@ -31,5 +31,10 @@ namespace SubzzLookup.Business.Lookups
         {
             return _repo.GetAvailabilityStatuses();
         }
+
+        public IEnumerable<LookupModel> GetTeachingSubjects()
+        {
+            return _repo.GetTeachingSubjects();
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace SubzzV2.Core.Entities
         public User()
         {
             Permissions = new List<Permission>();
+            SecondarySchools = new List<string>();
         }
 
         public string Id
@@ -58,6 +59,7 @@ namespace SubzzV2.Core.Entities
         public string UserTypeDescription { get; set; }
         public string UserRoleDesciption { get; set; }
         public string Speciality { get; set; }
+        public int SpecialityTypeId { get; set; }
         public int TeachingLevel { get; set; }
         public int UserLevel { get; set; }
         public int CategoryId { get; set; }
@@ -65,9 +67,8 @@ namespace SubzzV2.Core.Entities
         public int PayRate { get; set; }
         public int HourLimit { get; set; }
         public DateTime LastActive { get; set; }
-
+        public List<string> SecondarySchools = new List<string>();
         public List<Permission> Permissions { get; set; }
-
     }
 
     public class UserSummary {
