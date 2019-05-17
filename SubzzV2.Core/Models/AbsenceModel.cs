@@ -58,6 +58,7 @@ namespace SubzzV2.Core.Models
         public bool IsApprovalRequired { get; set; }
         public string UpdatedById { get; set; }
         public bool Requested { get; set; }
+        public int SpecialityTypeId { get; set; }
     }
 
 }
