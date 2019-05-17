@@ -10,5 +10,6 @@ namespace SubzzLookup.DataAccess.Repositories.Lookups.Interface
         IEnumerable<SubzzV2.Core.Entities.User> GetAllUserRoles();
         IEnumerable<LookupModel> GetTeachingLevels();
         IEnumerable<LookupModel> GetAvailabilityStatuses();
+        IEnumerable<LookupModel> GetTeachingSubjects();
     }
 }

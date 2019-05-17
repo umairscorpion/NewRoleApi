@@ -51,5 +51,12 @@ namespace SubzzLookup.DataAccess.Repositories.Lookups
             var queryParams = new DynamicParameters();
             return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
+
+        public IEnumerable<LookupModel> GetTeachingSubjects()
+        {
+            var sql = "[Lookup].[sp_getTeachingSubjects]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
     }
 }
