@@ -577,33 +577,37 @@ namespace Subzz.DataAccess.Repositories.Users
 
         public IEnumerable<FileManager> AddFiles(FileManager fileManager)
         {
-            var query = "[Users].[InsertSubstituteFiles]";
+            var query = "[Users].[InsertFile]";
             var queryParams = new DynamicParameters();
+            queryParams.Add("@FileName", fileManager.FileName);
+            queryParams.Add("@OriginalFileName", fileManager.OriginalFileName);
+            queryParams.Add("@FileExtentione", fileManager.FileExtention);
+            queryParams.Add("@FileContentType", fileManager.FileContentType);
             queryParams.Add("@UserId", fileManager.UserId);
             queryParams.Add("@DistrictId", fileManager.DistrictId);
-            queryParams.Add("@AttachedFileName", fileManager.AttachedFileName);
-            queryParams.Add("@AttachedFileId", fileManager.AttachedFileId);
-            queryParams.Add("@Extension", fileManager.FileExtention);
-            queryParams.Add("@ContentType", fileManager.FileContentType);
+            queryParams.Add("@OrganizationId", fileManager.OrganizationId);
+            queryParams.Add("@FileType", fileManager.FileType);
             return Db.Query<FileManager>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
         public IEnumerable<FileManager> GetFiles(FileManager fileManager)
         {
-            var query = "[Users].[GetSubstituteFiles]";
+            var query = "[Users].[GetFiles]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@UserId", fileManager.UserId);
             queryParams.Add("@DistrictId", fileManager.DistrictId);
+            queryParams.Add("@FileType", fileManager.FileType);
             return Db.Query<FileManager>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
         public IEnumerable<FileManager> DeleteFiles(FileManager fileManager)
         {
-            var query = "[Users].[DeleteSubstituteFiles]";
+            var query = "[Users].[DeleteFiles]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@UserId", fileManager.UserId);
+            queryParams.Add("@FileName", fileManager.FileName);
             queryParams.Add("@DistrictId", fileManager.DistrictId);
-            queryParams.Add("@AttachedFileId", fileManager.AttachedFileId);
+            queryParams.Add("@FileType", fileManager.FileType);
             return Db.Query<FileManager>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 

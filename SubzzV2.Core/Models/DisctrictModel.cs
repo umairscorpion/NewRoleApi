@@ -32,5 +32,6 @@ namespace SubzzV2.Core.Models
         public bool IsWeeklyLimitApplicable { get; set; }
         public string DeductAfterTime { get; set; }
         public bool IsDeductOnBreak { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -27,5 +27,6 @@ namespace SubzzV2.Core.Models
         public string NotifyOthersTime { get; set; }
         public int DailyAbenceLimit { get; set; }
         public bool IsAbsenceLimit { get; set; }
+        public bool IsActive { get; set; }
     }
 }
