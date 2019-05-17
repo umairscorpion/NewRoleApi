@@ -35,9 +35,7 @@ namespace Subzz.Business.Services.Users
         {
             var role = new Role();
             role.Role_Id = roleId;
-            
             var permissionCategories = _repo.GetPermissionCategories();
-            if (roleId <= 0) return role;
             var rolePermissions = _repo.RolePermissions(roleId);
             if (rolePermissions == null || rolePermissions.Count <= 0) return role;
             role.Name = rolePermissions.First().RoleName;
