@@ -98,6 +98,15 @@ namespace Subzz.Api.Controllers.User
         }
 
         [HttpGet]
+        [Route("searchContent/{orgId}/{districtId}/{searchQuery}")]
+        public IEnumerable<SubzzV2.Core.Entities.User> SearchContent( string orgId, int districtId, string searchQuery)
+        {
+            var UserId = base.CurrentUser.Id;
+            var Users = _service.SearchContent(UserId, districtId, orgId, searchQuery);
+            return Users;
+        }
+
+        [HttpGet]
         [Route("getUserById/{Id}")]
         public IEnumerable<SubzzV2.Core.Entities.User> GetUserById(string Id)
         {

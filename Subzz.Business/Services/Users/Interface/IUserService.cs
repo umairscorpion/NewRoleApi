@@ -22,6 +22,7 @@ namespace Subzz.Business.Services.Users.Interface
         User InsertUser(User model);
         User UpdateEmployee(User model);
         IEnumerable<User> GetUsers(string userId, int userRole, int districtId, string organizationId);
+        IEnumerable<User> SearchContent(string userId, int districtId, string organizationId, string searchQuery);
         IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId);
         bool DeleteUser(string UserId);
         IEnumerable<User> GetEmployee(int id);

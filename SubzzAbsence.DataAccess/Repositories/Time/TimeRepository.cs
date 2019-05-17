@@ -161,10 +161,20 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Subzz_Users].[Users].[CheckTimeClockStatus]";
-                var queryParams = new DynamicParameters();
-                queryParams.Add("@UserId", model.UserId);
-                return connection.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                try
+                {
+                    var sql = "[Subzz_Users].[Users].[CheckTimeClockStatus]";
+                    var queryParams = new DynamicParameters();
+                    queryParams.Add("@UserId", model.UserId);
+                    return connection.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                }
+                catch (Exception ex)
+                {
+                }
+                finally
+                {
+                }
+                return null;
             }
         }
 
@@ -191,6 +201,32 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
                 }
                 return null;
             }
+        }
+
+        public int UpdateTimeClockData(TimeClock model)
+        {
+            using (var connection = base.GetConnection)
+            {
+                try
+                {
+                    var queryParams = new DynamicParameters();
+                    var sql = "[Subzz_Users].[dbo].[UpdateTimeClockData]";
+                    queryParams.Add("@UserId", model.UserId);
+                    queryParams.Add("@TimeClockId", model.TimeClockId);
+                    queryParams.Add("@ClockInDate", model.ClockInDate);
+                    queryParams.Add("@ClockInTime", model.ClockInTime);
+                    queryParams.Add("@ClockOutTime", model.ClockOutTime);
+                    int numberOfEffectedRow = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                    return numberOfEffectedRow;
+                }
+                catch (Exception ex)
+                {
+                }
+                finally {
+                }
+                return 0;
+            }
+
         }
     }
 }

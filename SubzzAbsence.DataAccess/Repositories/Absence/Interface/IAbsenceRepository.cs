@@ -24,5 +24,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
         int UpdateAbsence(AbsenceModel user);
         List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
+        List<AbsenceSummary> GetTopTenTeachers(string userId);
     }
 }

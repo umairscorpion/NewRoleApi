@@ -85,5 +85,9 @@ namespace SubzzAbsence.Business.Absence
         {
             return _repo.GetAbsenceSummary(userId, year);
         }
+        public List<AbsenceSummary> GetTopTenTeachers(string userId)
+        {
+            return _repo.GetTopTenTeachers(userId);
+        }
     }
 }

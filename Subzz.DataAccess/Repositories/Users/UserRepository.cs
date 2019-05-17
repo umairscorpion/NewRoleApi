@@ -155,6 +155,17 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
+        public IEnumerable<User> SearchContent(string userId, int districtId, string organizationId,string searchQuery)
+        {
+            var sql = "[Users].[SearchContent]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@userId", userId);
+            queryParams.Add("@districtId", districtId);
+            queryParams.Add("@organizationId", organizationId);
+            queryParams.Add("@searchQuery", searchQuery);
+            return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
         public IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId)
         {
             var sql = "[Users].[GetEmployeeSuggestions]";

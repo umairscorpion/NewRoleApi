@@ -48,18 +48,18 @@ namespace Subzz.Api.Controllers.TimeClock
             model.UserId = base.CurrentUser.Id;
             var reportDetails = _service.GetTimeTrackerDataWithFilter(model);
             return Ok(reportDetails);
-        }        //[Route("updateTimeClockData")]
-        //[HttpPatch]
-        //public ActionResult UpdateTimeClockData([FromBody]AbsenceModel model)
-        //{;
-        //    int RowsEffected = _service.UpdateTimeClockData(model);
-        //    if (RowsEffected > 0)
-        //    {
-        //        return Json("success");
-        //    }
-        //    else
-        //    {
-        //        return Json("error");
-        //    }
-        //}    }
+        }        [Route("updateTimeClockData")]
+        [HttpPatch]
+        public ActionResult UpdateTimeClockData([FromBody]SubzzV2.Core.Models.TimeClock model)
+        {
+            int RowsEffected = _service.UpdateTimeClockData(model);
+            if (RowsEffected > 0)
+            {
+                return Json("success");
+            }
+            else
+            {
+                return Json("error");
+            }
+        }    }
 }
