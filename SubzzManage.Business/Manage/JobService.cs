@@ -17,9 +17,9 @@ namespace SubzzManage.Business.Manage
             _jobRepository = jobRepository;
         }
 
-        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int status)
+        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int status, bool Requested)
         {
-            return await _jobRepository.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, status);
+            return await _jobRepository.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, status, Requested);
         }
 
         public async Task<string> AcceptJob(int AbsenceId, string SubstituteId, string AcceptVia)

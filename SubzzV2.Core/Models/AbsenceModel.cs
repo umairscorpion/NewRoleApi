@@ -57,6 +57,7 @@ namespace SubzzV2.Core.Models
         public string ProfilePicture { get; set; }
         public bool IsApprovalRequired { get; set; }
         public string UpdatedById { get; set; }
+        public bool Requested { get; set; }
     }
 
 }

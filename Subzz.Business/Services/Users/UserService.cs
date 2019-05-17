@@ -53,6 +53,10 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.GetUsers(userId, userRole, districtId, organizationId);
         }
+        public IEnumerable<User> SearchContent(string userId, int districtId, string organizationId, string searchQuery)
+        {
+            return _repo.SearchContent(userId, districtId, organizationId, searchQuery);
+        }
 
         public IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId)
         {

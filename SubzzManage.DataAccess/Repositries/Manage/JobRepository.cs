@@ -13,7 +13,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
     public class JobRepository : EntityRepository, IJobRepository
     {
         static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int status)
+        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int status, bool Requested)
         {
             using (var connection = base.GetConnection)
             {
@@ -28,6 +28,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
                     queryParams.Add("@DistrictId", DistrictId);
                     queryParams.Add("@Status", status);
                     queryParams.Add("@IsAgainstAllSchool", OrganizationId.Length == 5 ? 0 : 1);
+                    queryParams.Add("@IamRequested", Requested == false ? 0 : 1);
                     return await connection.QueryAsync<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
                 }
                 catch (Exception ex)

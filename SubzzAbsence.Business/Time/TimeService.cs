@@ -21,5 +21,9 @@ namespace SubzzAbsence.Business.Time
         {
             return _repo.GetTimeTrackerDataWithFilter(model);
         }
+        public int UpdateTimeClockData(TimeClock user)
+        {
+            return _repo.UpdateTimeClockData(user);
+        }
     }
 }
