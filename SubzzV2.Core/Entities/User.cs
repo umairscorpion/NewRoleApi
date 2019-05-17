@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SubzzV2.Core.Models;
+using System.Collections.Generic;
 
 namespace SubzzV2.Core.Entities
 {
@@ -11,7 +8,7 @@ namespace SubzzV2.Core.Entities
     {
         public User()
         {
-            Permissions = new List<Permission>();
+            Permissions = new List<RolePermission>();
             SecondarySchools = new List<string>();
         }
 
@@ -68,7 +65,7 @@ namespace SubzzV2.Core.Entities
         public int HourLimit { get; set; }
         public string LastActive { get; set; }
         public List<string> SecondarySchools = new List<string>();
-        public List<Permission> Permissions { get; set; }
+        public List<RolePermission> Permissions { get; set; }
     }
 
     public class UserSummary {
