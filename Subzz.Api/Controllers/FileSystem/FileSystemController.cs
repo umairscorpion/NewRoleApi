@@ -662,17 +662,18 @@ namespace Subzz.Api.Controllers.FileSystem
         public IEnumerable<FileManager> AddFiles([FromBody]FileManager fileManager)
         {
             fileManager.DistrictId = base.CurrentUser.DistrictId;
+            fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
             fileManager.UserId = base.CurrentUser.Id;
             var Files = _service.AddFiles(fileManager);
             return Files;
         }
 
         [Route("getFiles")]
-        [HttpGet]
-        public IEnumerable<FileManager> GetFiles()
+        [HttpPost]
+        public IEnumerable<FileManager> GetFiles([FromBody]FileManager fileManager)
         {
-            FileManager fileManager = new FileManager();
             fileManager.DistrictId = base.CurrentUser.DistrictId;
+            fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
             fileManager.UserId = base.CurrentUser.Id;
             var Files = _service.GetFiles(fileManager);
             return Files;
@@ -683,6 +684,7 @@ namespace Subzz.Api.Controllers.FileSystem
         public IEnumerable<FileManager> DeleteFiles([FromBody]FileManager fileManager)
         {
             fileManager.DistrictId = base.CurrentUser.DistrictId;
+            fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
             fileManager.UserId = base.CurrentUser.Id;
             var Files = _service.DeleteFiles(fileManager);
 
@@ -693,8 +695,8 @@ namespace Subzz.Api.Controllers.FileSystem
                 webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
             }
             string filePath = Path.Combine(webRootPath, folderName);
-            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.AttachedFileId));
-            System.IO.File.Delete(Path.Combine(filePath, fileManager.AttachedFileId));
+            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.FileName));
+            System.IO.File.Delete(Path.Combine(filePath, fileManager.FileName));
 
             return Files;
         }
@@ -738,7 +740,7 @@ namespace Subzz.Api.Controllers.FileSystem
             }
         }
 
-        [Route("getfile")]
+        [Route("getUploadFile")]
         [HttpPost]
         public IActionResult GetFile([FromBody]FileManager fileManager)
         {
@@ -749,7 +751,7 @@ namespace Subzz.Api.Controllers.FileSystem
                 webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
             }
             string filePath = Path.Combine(webRootPath, folderName);
-            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.AttachedFileId));
+            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.FileName));
             return File(bytes, fileManager.FileContentType);
         }
     }

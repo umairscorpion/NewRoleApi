@@ -49,6 +49,11 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@SchoolCity", model.SchoolCity);
             queryParams.Add("@SchoolPhone", model.SchoolPhone);
             queryParams.Add("@SchoolZipCode", model.SchoolZipCode);
+            queryParams.Add("@IsActive", model.IsActive);
+            queryParams.Add("@ReleaseJobTime", model.ReleaseJobTime);
+            queryParams.Add("@NotifyOthersTime", model.NotifyOthersTime);
+            queryParams.Add("@DailyAbenceLimit", model.DailyAbenceLimit);
+            queryParams.Add("@IsAbsenceLimit", model.IsAbsenceLimit);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
@@ -76,6 +81,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
                 queryParams.Add("@NotifyOthersTime", model.NotifyOthersTime);
                 queryParams.Add("@DailyAbenceLimit", model.DailyAbenceLimit);
                 queryParams.Add("@IsAbsenceLimit", model.IsAbsenceLimit);
+                queryParams.Add("@IsActive", model.IsActive);
                 Db.ExecuteScalar<int>(sqll, queryParams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)

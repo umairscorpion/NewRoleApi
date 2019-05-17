@@ -72,5 +72,6 @@ namespace Subzz.Business.Services.Users.Interface
         #endregion
 
         List<UserSummary> GetUsersSummaryList(int districtId);
+        bool VerifyUser(User model);
     }
 }

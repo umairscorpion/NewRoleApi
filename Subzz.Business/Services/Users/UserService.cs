@@ -143,6 +143,11 @@ namespace Subzz.Business.Services.Users
             return _repo.GetUsersSummaryList(districtId);
         }
 
+        public bool VerifyUser(User model)
+        {
+            return _repo.VerifyUser(model);
+        }
+
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {
             return _repo.GetSubstituteAvailability(model);

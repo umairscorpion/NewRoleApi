@@ -184,7 +184,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
             {
                 try
                 {
-                    var sql = "[Subzz_Users].[dbo].[GetTimeTrackerData1122]";
+                    var sql = "[Subzz_Users].[dbo].[GetTimeTrackerData]";
                     var param = new DynamicParameters();
                         param.Add("@FromDate", filter.FromDate);
                     param.Add("@ToDate", filter.ToDate);

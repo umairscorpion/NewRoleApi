@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -28,10 +30,22 @@ namespace Subzz.Api.Controllers.User
 
         [Route("list/summary")]
         [HttpGet]
-        public IActionResult GetUserRoles()
+        public IActionResult GetUsersList()
         {
             var result = _service.GetUsersSummaryList(CurrentUser.DistrictId);
             return Ok(result);
+        }
+
+        [Route("bulk/delete")]
+        [HttpPut]
+        public IActionResult RemoveUsers([FromBody]string[] ids)
+        {
+            if (ids.Length <= 0) return NotFound();
+            foreach (var id in ids)
+            {
+                _service.DeleteUser(id);
+            }
+            return Ok();
         }
 
         [Route("reference/GetUserClaims")]
@@ -65,6 +79,20 @@ namespace Subzz.Api.Controllers.User
             var UserId = base.CurrentUser.Id;
             return _service.GetUserResources(UserId, resourceTypeId, parentResourceTypeId, IsAdminPortal);
         }
+
+        [Route("verify")]
+        [HttpPost]
+        public IActionResult VerifyUser([FromBody]SubzzV2.Core.Entities.User model)
+        {
+            var isExists = _service.VerifyUser(model);
+            if (isExists)
+            {
+                return BadRequest("This email address belongs to another user. Please try with other one.");
+            }
+            
+            return Ok();
+        }
+
         // Functions related to Employees
         [Route("insertUser")]
         [HttpPost]
