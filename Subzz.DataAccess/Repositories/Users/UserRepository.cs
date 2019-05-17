@@ -109,7 +109,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
-            queryParams.Add("@Password", model.PhoneNumber);
+            queryParams.Add("@Password", string.IsNullOrEmpty(model.Password)? model.PhoneNumber: model.Password);
             model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             sql = "[Users].[sp_insertSecondarySchools]";
@@ -150,6 +150,17 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+
+            sql = "[Users].[sp_insertSecondarySchools]";
+            foreach (var schoolId in model.SecondarySchools)
+            {
+                queryParams = new DynamicParameters();
+                queryParams.Add("@UserId", model.UserId);
+                queryParams.Add("@LocationId", schoolId);
+                queryParams.Add("@UserLevel", 3);
+                queryParams.Add("@IsPrimary", 0);
+                Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
             return model;
         }
 
@@ -173,6 +184,17 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@userRole", userRole);
             queryParams.Add("@districtId", districtId);
             queryParams.Add("@organizationId", organizationId);
+            return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<User> SearchContent(string userId, int districtId, string organizationId,string searchQuery)
+        {
+            var sql = "[Users].[SearchContent]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@userId", userId);
+            queryParams.Add("@districtId", districtId);
+            queryParams.Add("@organizationId", organizationId);
+            queryParams.Add("@searchQuery", searchQuery);
             return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 

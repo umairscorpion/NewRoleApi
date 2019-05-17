@@ -241,6 +241,25 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 return connection.Query<AbsenceSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
+        public List<AbsenceSummary> GetTopTenTeachers(string userId)
+        {
+            using (var connection = base.GetConnection)
+            {
+                try
+                {
+                    var sql = "[Subzz_Users].[dbo].[TopTenTeachers]";
+                    var param = new DynamicParameters();
+                    param.Add("@UserId", userId);
+                    return connection.Query<AbsenceSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
+                }
+                catch (Exception ex)
+                {
+                }
+                finally {
+                }
+                return null;
+            }
+        }
 
     }
 }

@@ -122,6 +122,7 @@ namespace Subzz.Api.Controllers.Absence
                         IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes =
                             _userService.GetFavoriteSubstitutes(model.EmployeeId);
                         await _service.CreatePreferredAbsenceHistory(FavSubstitutes, model);
+                        return Json("success");
                     }
                     else
                     {
@@ -267,6 +268,14 @@ namespace Subzz.Api.Controllers.Absence
             var year = DateTime.Now.Year;
             var userId = base.CurrentUser.Id;
             var Summary = _service.GetAbsenceSummary(userId, year);
+            return Ok(Summary);
+        }
+        [Route("getTopTenTeachers")]
+        [HttpGet]
+        public IActionResult GetTopTenTeachers()
+        {
+            var userId = base.CurrentUser.Id;
+            var Summary = _service.GetTopTenTeachers(userId);
             return Ok(Summary);
         }
 
