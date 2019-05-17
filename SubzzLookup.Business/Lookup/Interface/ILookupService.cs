@@ -13,5 +13,6 @@ namespace SubzzLookup.Business.Lookups.Interface
         IEnumerable<User> GetAllUserRoles();
         IEnumerable<LookupModel>  GetTeachingLevels();
         IEnumerable<LookupModel> GetAvailabilityStatuses();
+        IEnumerable<LookupModel> GetTeachingSubjects();
     }
 }

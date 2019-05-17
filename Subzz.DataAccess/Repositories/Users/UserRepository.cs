@@ -51,9 +51,18 @@ namespace Subzz.DataAccess.Repositories.Users
             var userDetail = Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).SingleOrDefault();
             if (userDetail != null)
             {
+                userDetail.SecondarySchools = GetUserSecondarySchools(userId);
                 userDetail.Permissions = GetUserPermissions(userDetail.RoleId);
             }
             return userDetail;
+        }
+
+        private List<string> GetUserSecondarySchools(string userId)
+        {
+            var sql = "[Users].[sp_getUserSecondarySchools]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", userId);
+            return Db.Query<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
         private List<Permission> GetUserPermissions(int userRoleId)
@@ -86,7 +95,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@LastName", model.LastName);
             queryParams.Add("@UserTypeId", model.UserTypeId);
             queryParams.Add("@TeacherLevel", model.TeachingLevel);
-            queryParams.Add("@Speciality", model.Speciality);
+            queryParams.Add("@SpecialityTypeId", model.SpecialityTypeId);
             queryParams.Add("@RoleId", model.RoleId);
             queryParams.Add("@Gender", model.Gender);
             queryParams.Add("@IsCertified", model.IsCertified);
@@ -100,7 +109,19 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
-            Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            queryParams.Add("@Password", model.PhoneNumber);
+            model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+
+            sql = "[Users].[sp_insertSecondarySchools]";
+            foreach(var schoolId in model.SecondarySchools)
+            {
+                queryParams = new DynamicParameters();
+                queryParams.Add("@UserId", model.UserId);
+                queryParams.Add("@LocationId", schoolId);
+                queryParams.Add("@UserLevel", 3);
+                queryParams.Add("@IsPrimary", 0);
+                Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
             return model;
         }
 
@@ -113,7 +134,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@LastName", model.LastName);
             queryParams.Add("@UserTypeId", model.UserTypeId);
             queryParams.Add("@TeacherLevel", model.TeachingLevel);
-            queryParams.Add("@Speciality", model.Speciality);
+            queryParams.Add("@SpecialityTypeId", model.SpecialityTypeId);
             queryParams.Add("@OrganizationId", model.OrganizationId);
             queryParams.Add("@RoleId", model.RoleId);
             queryParams.Add("@Gender", model.Gender);
@@ -605,6 +626,15 @@ namespace Subzz.DataAccess.Repositories.Users
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", districtId);
             return Db.Query<UserSummary>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public bool VerifyUser(User model)
+        {
+            const string query = "[Users].[VerifyUser]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@Email", model.Email);
+            return Db.Query<bool>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
