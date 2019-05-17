@@ -52,6 +52,8 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@District2ndHalfStart", model.District2ndHalfStart);
             queryParams.Add("@DistrictZipCode", model.DistrictZipCode);
             queryParams.Add("@City", model.City);
+            queryParams.Add("@IsActive", model.IsActive);
+            queryParams.Add("@CountryId", model.CountryId);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
@@ -77,6 +79,8 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@District2ndHalfStart", model.District2ndHalfStart);
             queryParams.Add("@DistrictZipCode", model.DistrictZipCode);
             queryParams.Add("@City", model.City);
+            queryParams.Add("@IsActive", model.IsActive);
+            queryParams.Add("@CountryId", model.CountryId);
             model.DistrictId = Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
             return model;
         }
