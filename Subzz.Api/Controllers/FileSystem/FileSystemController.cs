@@ -688,7 +688,7 @@ namespace Subzz.Api.Controllers.FileSystem
             fileManager.UserId = base.CurrentUser.Id;
             var Files = _service.DeleteFiles(fileManager);
 
-            string folderName = "SubstituteFiles";
+            string folderName = "Files";
             string webRootPath = _hostingEnvironment.WebRootPath;
             if (string.IsNullOrWhiteSpace(webRootPath))
             {
@@ -708,7 +708,7 @@ namespace Subzz.Api.Controllers.FileSystem
             try
             {
                 var file = Request.Form.Files[0];
-                string folderName = "SubstituteFiles";
+                string folderName = "Files";
                 string webRootPath = _hostingEnvironment.WebRootPath;
                 if (string.IsNullOrWhiteSpace(webRootPath))
                 {
@@ -744,7 +744,7 @@ namespace Subzz.Api.Controllers.FileSystem
         [HttpPost]
         public IActionResult GetFile([FromBody]FileManager fileManager)
         {
-            string folderName = "SubstituteFiles";
+            string folderName = "Files";
             string webRootPath = _hostingEnvironment.WebRootPath;
             if (string.IsNullOrWhiteSpace(webRootPath))
             {

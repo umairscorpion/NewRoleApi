@@ -1,0 +1,37 @@
+﻿{
+  "Logging": {
+    "IncludeScopes": false,
+    "Debug": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    },
+    "Console": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    }
+  },
+  "ConnectionStrings": {
+<<<<<<< HEAD
+    "MembershipContext": "Data Source=DESKTO-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Users;Integrated Security=True",
+    "LocationsContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Locations;Integrated Security=True",
+    "LookupsContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Lookups;Integrated Security=True",
+    "LeaveContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Leaves;Integrated Security=True",
+    "SettingContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"
+=======
+    "MembershipContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Users;Integrated Security=True",
+    "LocationsContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Locations;Integrated Security=True",
+    "LookupsContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Lookups;Integrated Security=True",
+    "LeaveContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Leaves;Integrated Security=True",
+    "SettingContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"
+>>>>>>> 1ffa3fb2ee9d3a56ae6ec05c9f629304a6547a0f
+  }
+  //"connectionstrings": {
+  //  "membershipcontext": "data source=162.241.138.178;initial catalog=subzz_users;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
+  //  "locationscontext": "data source=162.241.138.178;initial catalog=subzz_locations;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
+  //  "lookupscontext": "data source=162.241.138.178;initial catalog=subzz_lookups;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
+  //  "leavecontext": "data source=162.241.138.178;initial catalog=subzz_leaves;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
+  //  "SettingContext": "data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"
+  //}
+}
