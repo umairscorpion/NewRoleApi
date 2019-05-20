@@ -65,12 +65,12 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
-        private List<Permission> GetUserPermissions(int userRoleId)
+        private List<RolePermission> GetUserPermissions(int userRoleId)
         {
             var sql = "[Users].[GetRolePermissions]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@RoleId", userRoleId);
-            return Db.Query<Permission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            return Db.Query<RolePermission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
         public IEnumerable<UserResource> GetUserResourses(string UserId, int resourceTypeId, int parentResourceTypeId, int IsAdminPortal)

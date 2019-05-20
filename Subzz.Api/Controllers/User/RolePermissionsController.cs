@@ -49,6 +49,12 @@ namespace Subzz.Api.Controllers.User
             try
             {
                 model.DistrictId = 0;
+                if (model.Role_Id == 0)
+                {
+                    var user = _service.InsertUserRole(model.Name);
+                    model.Role_Id = user.RoleId;
+                }
+
                 var result = _service.UpdatePermissions(model);
                 return Ok(result);
             }
