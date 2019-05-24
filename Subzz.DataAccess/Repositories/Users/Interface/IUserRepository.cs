@@ -25,6 +25,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         User InsertUser(User model);
         User UpdateEmployee(User model);
         User UpdatePassword(User user);
+        User UpdatePasswordUsingActivationLink(User user);
         IEnumerable<User> GetUsers(string userId, int userRole, int districtId, string organizationId);
         IEnumerable<User> SearchContent(string userId, int districtId, string organizationId, string searchQuery);
         IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId);
@@ -35,7 +36,6 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId);
         int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
-
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
 
         IEnumerable<User> GetFavoriteSubstitutes(string UserId);

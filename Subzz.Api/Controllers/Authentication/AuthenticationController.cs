@@ -96,15 +96,24 @@ namespace Subzz.Api.Controllers.Authentication
             if (Convert.ToBoolean(exist))
             {
                 var resetPassKey = System.Guid.NewGuid().ToString() + user.Email;
-                var updated = _userService.UpdatePasswordResetKey(user);
                 user.ActivationCode = resetPassKey;
+                var updated = _userService.UpdatePasswordResetKey(user);
                 Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
                 message.ActivationCode = resetPassKey;
-                message.Email = user.Email;
-                message.TemplateId = 4;
+                message.SendTo = user.Email;
+                message.TemplateId = 9;
                 CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                return Ok(true);
             }
             return Ok(false);
         }
+
+        [HttpPost, Route("updatePasswordByActivationCode")]
+        public IActionResult UpdatePasswordByActivationCode([FromBody]SubzzV2.Core.Entities.User user)
+        {
+            var userModel = _userService.UpdatePasswordUsingActivationLink(user);
+            return Ok();
+        }
+
     }
 }

@@ -49,6 +49,7 @@
     <Compile Include="Enum\MailTemplateEnums.cs" />
     <Compile Include="Enum\TimeClockActivity.cs" />
     <Compile Include="Models\AbsenceModel.cs" />
+    <Compile Include="Models\AbsenceScope.cs" />
     <Compile Include="Models\AbsenceSummary.cs" />
     <Compile Include="Models\Allowance.cs" />
     <Compile Include="Models\AuditLog.cs" />

@@ -134,6 +134,23 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             return Db.Query<LocationTime>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
+        public IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel)
+        {
+            var sql = "[Location].[GetAbsenceScopes]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@districtId", organizationModel.SchoolDistrictId);
+            return Db.Query<AbsenceScope>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope)
+        {
+            var sql = "[Location].[UpdateAbsenceScope]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Visibility", absenceScope.Visibility);
+            queryParams.Add("@Id", absenceScope.Id);
+            return Db.Query<AbsenceScope>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
         public bool Delete(string sql, DynamicParameters param, CommandType commandType)
         {
             Db.Execute(sql, param: param, commandType: commandType);

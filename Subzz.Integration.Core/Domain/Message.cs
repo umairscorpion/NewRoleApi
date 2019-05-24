@@ -51,6 +51,7 @@ namespace Subzz.Integration.Core.Domain
         public string SubstituteName { get; set; }
         public string AcceptUrl { get; set; }
         public string Password { get; set; }
+        public string resetPassUrl { get; set; }
 
     }
 

@@ -96,6 +96,16 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.ExecuteScalar<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
         }
 
+        public User UpdatePasswordUsingActivationLink(User user)
+        {
+            var sql = "[Users].[sp_updatePasswordByActivationLink]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@ResetPassKey", user.ActivationCode);
+            queryParams.Add("@Email", user.Email);
+            queryParams.Add("@Password", user.Password);
+            return Db.ExecuteScalar<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
         public User InsertUser(User model)
         {
             var sql = "[Users].[InsertUser]";

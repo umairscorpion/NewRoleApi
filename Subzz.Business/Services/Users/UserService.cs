@@ -48,6 +48,11 @@ namespace Subzz.Business.Services.Users
             return _repo.UpdatePassword(user);
         }
 
+        public User UpdatePasswordUsingActivationLink(User user)
+        {
+            return _repo.UpdatePasswordUsingActivationLink(user);
+        }
+
         public User InsertUser(User model)
         {
             return _repo.InsertUser(model);
