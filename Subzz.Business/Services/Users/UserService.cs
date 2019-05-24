@@ -88,6 +88,11 @@ namespace Subzz.Business.Services.Users
             return _repo.GetSubstituteCategories(SubstituteId);
         }
 
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId)
+        {
+            return _repo.GetSubstituteNotificationEvents(SubstituteId);
+        }
+
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)
         {
             return _repo.UpdateUserCategories(substituteCategoryModel);

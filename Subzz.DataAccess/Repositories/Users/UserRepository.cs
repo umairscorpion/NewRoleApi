@@ -246,6 +246,24 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId)
+        {
+            try
+            {
+                var sql = "[users].[GetSubstituteNotificationEvents]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", SubstituteId);
+                return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally {
+            }
+            return null;
+            
+        }
+
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)
         {
             var sql = "[users].[UpdateUserCategories]";

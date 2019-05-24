@@ -72,8 +72,17 @@ namespace Subzz.Api.Controllers.Manage
         [HttpGet]
         public IEnumerable<DistrictModel> GetDistrict(int id)
         {
-            var district = _service.GetDistrict(id);
-            return district;
+            try
+            {
+                var district = _service.GetDistrict(id);
+                return district;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally {
+            }
+            return null;
         }
 
         [Route("updateSettings")]

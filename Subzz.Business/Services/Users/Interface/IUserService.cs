@@ -30,6 +30,7 @@ namespace Subzz.Business.Services.Users.Interface
 
         #region User Settings
         IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId);
+        IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId);
         int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
