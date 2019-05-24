@@ -38,5 +38,6 @@ namespace SubzzV2.Core.Models
         public int AbsenceScope { get; set; }
         public string EmployeeId { get; set; }
         public bool IsApproved { get; set; }
+        public string OriginalFileName { get; set; }
     }
 }

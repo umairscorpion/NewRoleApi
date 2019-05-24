@@ -32,6 +32,7 @@ namespace Subzz.Api.Controllers.FileSystem
             {
                 var file = Request.Form.Files[0];
                 string folderName = "Profile";
+                var userId = Request.Form["UserId"][0];
                 string webRootPath = _hostingEnvironment.WebRootPath;
                 if (string.IsNullOrWhiteSpace(webRootPath))
                 {
@@ -47,13 +48,12 @@ namespace Subzz.Api.Controllers.FileSystem
                 {
                     fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fileExtention = new System.IO.FileInfo(fileName).Extension;
-                    fileName = base.CurrentUser.Id + fileExtention;
+                    fileName = userId + fileExtention;
                     string fullPath = Path.Combine(filePath, fileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
                         file.CopyTo(stream);
                     }
-
                 }
                 return Json(fileName);
             }
@@ -688,7 +688,7 @@ namespace Subzz.Api.Controllers.FileSystem
             fileManager.UserId = base.CurrentUser.Id;
             var Files = _service.DeleteFiles(fileManager);
 
-            string folderName = "SubstituteFiles";
+            string folderName = "Files";
             string webRootPath = _hostingEnvironment.WebRootPath;
             if (string.IsNullOrWhiteSpace(webRootPath))
             {
@@ -708,7 +708,7 @@ namespace Subzz.Api.Controllers.FileSystem
             try
             {
                 var file = Request.Form.Files[0];
-                string folderName = "SubstituteFiles";
+                string folderName = "Files";
                 string webRootPath = _hostingEnvironment.WebRootPath;
                 if (string.IsNullOrWhiteSpace(webRootPath))
                 {
@@ -744,7 +744,7 @@ namespace Subzz.Api.Controllers.FileSystem
         [HttpPost]
         public IActionResult GetFile([FromBody]FileManager fileManager)
         {
-            string folderName = "SubstituteFiles";
+            string folderName = "Files";
             string webRootPath = _hostingEnvironment.WebRootPath;
             if (string.IsNullOrWhiteSpace(webRootPath))
             {

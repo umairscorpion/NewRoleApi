@@ -16,6 +16,7 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<LookupModel> GetUserTypes();
         LocationTime GetUserLocationTime(string userId, int userLevel);
         User UpdateUser(User user);
+        User UpdateUserStatus(User user);
 
         // functions related to Employee
         #region Employee

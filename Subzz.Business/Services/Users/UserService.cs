@@ -36,7 +36,12 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.UpdateUser(user);
         }
-        
+
+        public User UpdateUserStatus(User user)
+        {
+            return _repo.UpdateUserStatus(user);
+        }
+
         // functions related to Employee
 
         public User InsertUser(User model)

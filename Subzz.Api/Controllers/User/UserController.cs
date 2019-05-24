@@ -125,6 +125,12 @@ namespace Subzz.Api.Controllers.User
             var Users = _service.GetUsers(UserId, roleId, districtId, orgId);
             return Users;
         }
+        [Route("updateUserStatus")]
+        [HttpPatch]
+        public SubzzV2.Core.Entities.User UpdateUserStatus([FromBody]SubzzV2.Core.Entities.User model)
+        {
+            return _service.UpdateUserStatus(model);
+        }
 
         [HttpGet]
         [Route("searchContent/{orgId}/{districtId}/{searchQuery}")]
