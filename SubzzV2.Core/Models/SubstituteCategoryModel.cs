@@ -14,5 +14,14 @@ namespace SubzzV2.Core.Models
         public string UserId { get; set; }
         public bool IsNotificationSend { get; set; }
         public string Date { get; set; }
+
+        //Notification Events for Substitute
+        public int NotificationId { get; set; }
+        public int EventId { get; set; }
+        public bool EmailAlert { get; set; }
+        public bool TextAlert { get; set; }
+        public string EventName { get; set; }
+        public string SubstituteId { get; set; }
+
     }
 }

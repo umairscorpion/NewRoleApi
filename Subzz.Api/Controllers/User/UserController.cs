@@ -188,6 +188,15 @@ namespace Subzz.Api.Controllers.User
             return Categories;
         }
 
+        [Route("getSubstituteNotificationEvents")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents()
+        {
+            var UserId = base.CurrentUser.Id;
+            var events = _service.GetSubstituteNotificationEvents(UserId);
+            return events;
+        }
+
         [Route("updateUserCategories")]
         [HttpPatch]
         public int UpdateUserCategories([FromBody]SubstituteCategoryModel substituteCategoryModel)
