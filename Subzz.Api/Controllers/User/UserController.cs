@@ -68,7 +68,8 @@ namespace Subzz.Api.Controllers.User
                 ProfilePicture = userModel.ProfilePicture,
                 OrganizationId = userModel.OrganizationId,
                 DistrictId = userModel.DistrictId,
-                UserLevel = userModel.UserLevel
+                UserLevel = userModel.UserLevel,
+                Permissions = userModel.Permissions
             };
             return referenceModel;
         }

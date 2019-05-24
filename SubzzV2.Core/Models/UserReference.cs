@@ -25,5 +25,6 @@ namespace SubzzV2.Core.Models
         public int DistrictId { get; set; }
         public string OrganizationId { get; set; }
         public int UserLevel { get; set; }
+        public List<RolePermission> Permissions { get; set; }
     }
 }
