@@ -20,6 +20,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
 
         User GetUserDetail(string userId);
         User UpdateUser(User user);
+        User UpdateUserStatus(User user);
         // functions related to Employee
         User InsertUser(User model);
         User UpdateEmployee(User model);
@@ -31,6 +32,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<User> GetEmployee(int id);
 
         IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId);
+        IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId);
         int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
 

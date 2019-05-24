@@ -65,7 +65,11 @@ namespace SubzzV2.Core.Entities
         public int HourLimit { get; set; }
         public string LastActive { get; set; }
         public List<string> SecondarySchools = new List<string>();
-        public List<RolePermission> Permissions { get; set; }
+        public List<Permission> Permissions { get; set; }
+        public DateTime StartDate { get; set; }
+        public int JobNumber { get; set; }
+        public int SearchType { get; set; }
+        public int ReportType { get; set; }
     }
 
     public class UserSummary {

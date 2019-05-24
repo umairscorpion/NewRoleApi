@@ -121,16 +121,19 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@Password", string.IsNullOrEmpty(model.Password)? model.PhoneNumber: model.Password);
             model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
-            sql = "[Users].[sp_insertSecondarySchools]";
-            foreach(var schoolId in model.SecondarySchools)
+            if (model.SecondarySchools != null)
             {
-                queryParams = new DynamicParameters();
-                queryParams.Add("@UserId", model.UserId);
-                queryParams.Add("@LocationId", schoolId);
-                queryParams.Add("@UserLevel", 3);
-                queryParams.Add("@IsPrimary", 0);
-                Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
-            }
+                sql = "[Users].[sp_insertSecondarySchools]";
+                foreach (var schoolId in model.SecondarySchools)
+                {
+                    queryParams = new DynamicParameters();
+                    queryParams.Add("@UserId", model.UserId);
+                    queryParams.Add("@LocationId", schoolId);
+                    queryParams.Add("@UserLevel", 3);
+                    queryParams.Add("@IsPrimary", 0);
+                    Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                }
+            }           
             return model;
         }
 
@@ -160,16 +163,29 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@HourLimit", model.HourLimit);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
-            sql = "[Users].[sp_insertSecondarySchools]";
-            foreach (var schoolId in model.SecondarySchools)
+            if(model.SecondarySchools != null)
             {
-                queryParams = new DynamicParameters();
-                queryParams.Add("@UserId", model.UserId);
-                queryParams.Add("@LocationId", schoolId);
-                queryParams.Add("@UserLevel", 3);
-                queryParams.Add("@IsPrimary", 0);
-                Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
-            }
+                sql = "[Users].[sp_insertSecondarySchools]";
+                foreach (var schoolId in model.SecondarySchools)
+                {
+                    queryParams = new DynamicParameters();
+                    queryParams.Add("@UserId", model.UserId);
+                    queryParams.Add("@LocationId", schoolId);
+                    queryParams.Add("@UserLevel", 3);
+                    queryParams.Add("@IsPrimary", 0);
+                    Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                }
+            }            
+            return model;
+        }
+
+        public User UpdateUserStatus(User model)
+        {
+            var sql = "[Users].[UpdateUserStatus]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@IsActive", model.IsActive);
+            Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
 
@@ -282,6 +298,24 @@ namespace Subzz.DataAccess.Repositories.Users
             var queryParams = new DynamicParameters();
             queryParams.Add("@SubstituteId", SubstituteId);
             return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId)
+        {
+            try
+            {
+                var sql = "[users].[GetSubstituteNotificationEvents]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", SubstituteId);
+                return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally {
+            }
+            return null;
+            
         }
 
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)

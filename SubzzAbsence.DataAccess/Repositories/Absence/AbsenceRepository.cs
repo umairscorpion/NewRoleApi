@@ -54,6 +54,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                     queryParams = new DynamicParameters();
                     queryParams.Add("@AbsenceId", model.AbsenceId);
                     queryParams.Add("@AttachedFileName", model.AttachedFileName);
+                    queryParams.Add("@OriginalFileName", model.OriginalFileName);
                     queryParams.Add("@CreateDate", DateTime.Now);
                     queryParams.Add("@Extension", model.FileExtention);
                     queryParams.Add("@ContentType", model.FileContentType);
@@ -119,7 +120,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@AbsenceId", AbsenceId);
                 queryParams.Add("@statusId", statusId);
-                queryParams.Add("@UpdateStatusDate", UpdateStatusDate);
                 queryParams.Add("@UserId", UserId);
                 return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             }
@@ -204,6 +204,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                     queryParams = new DynamicParameters();
                     queryParams.Add("@AbsenceId", model.AbsenceId);
                     queryParams.Add("@AttachedFileName", model.AttachedFileName);
+                    queryParams.Add("@OriginalFileName", model.OriginalFileName);
                     queryParams.Add("@CreateDate", DateTime.Now);
                     queryParams.Add("@Extension", model.FileExtention);
                     queryParams.Add("@ContentType", model.FileContentType);

@@ -147,6 +147,12 @@ namespace Subzz.Api.Controllers.User
             var Users = _service.GetUsers(UserId, roleId, districtId, orgId);
             return Users;
         }
+        [Route("updateUserStatus")]
+        [HttpPatch]
+        public SubzzV2.Core.Entities.User UpdateUserStatus([FromBody]SubzzV2.Core.Entities.User model)
+        {
+            return _service.UpdateUserStatus(model);
+        }
 
         [HttpGet]
         [Route("searchContent/{orgId}/{districtId}/{searchQuery}")]
@@ -208,6 +214,15 @@ namespace Subzz.Api.Controllers.User
             var UserId = base.CurrentUser.Id;
             var Categories = _service.GetSubstituteCategories(UserId);
             return Categories;
+        }
+
+        [Route("getSubstituteNotificationEvents")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents()
+        {
+            var UserId = base.CurrentUser.Id;
+            var events = _service.GetSubstituteNotificationEvents(UserId);
+            return events;
         }
 
         [Route("updateUserCategories")]

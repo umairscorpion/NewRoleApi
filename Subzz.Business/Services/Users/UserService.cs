@@ -36,6 +36,10 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.UpdateUser(user);
         }
+        public User UpdateUserStatus(User user)
+        {
+            return _repo.UpdateUserStatus(user);
+        }
 
         // functions related to Employee
 
@@ -101,6 +105,11 @@ namespace Subzz.Business.Services.Users
         public IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId)
         {
             return _repo.GetSubstituteCategories(SubstituteId);
+        }
+
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId)
+        {
+            return _repo.GetSubstituteNotificationEvents(SubstituteId);
         }
 
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)
