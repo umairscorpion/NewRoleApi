@@ -81,4 +81,67 @@ Alter Table Users.Users
 ADD LinkValidUpto DateTime 
 Go
 
+--Drop table Absence Type
+Drop Table [Subzz_Leaves].[Absence].[AbsenceType]
+
+--Create Table Absence Type
+USE [Subzz_Leaves]
+GO
+
+/****** Object:  Table [Absence].[AbsenceType]    Script Date: 5/24/2019 6:15:39 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [Absence].[AbsenceType](
+	[AbsenceType_Id] [int] NOT NULL,
+	[Title] [nvarchar](50) NULL
+) ON [PRIMARY]
+
+GO
+
+USE [Subzz_Leaves]
+GO
+INSERT [Absence].[AbsenceType] ([AbsenceType_Id], [Title]) VALUES (5, N'No Substitute')
+INSERT [Absence].[AbsenceType] ([AbsenceType_Id], [Title]) VALUES (4, N'All Subs')
+INSERT [Absence].[AbsenceType] ([AbsenceType_Id], [Title]) VALUES (1, N'My Favorites')
+INSERT [Absence].[AbsenceType] ([AbsenceType_Id], [Title]) VALUES (3, N'Preferred Sub')
+INSERT [Absence].[AbsenceType] ([AbsenceType_Id], [Title]) VALUES (2, N'Direct Assign')
+Go
+
+Create PROCEDURE [Users].[sp_updatePasswordResetKey] 
+	@EmailId nvarchar(50),
+	@ResetPassKey nvarchar(200),
+	@validUpTo Datetime
+AS
+BEGIN
+	Update Users.Users 
+	Set ResetPasswordKey = @ResetPassKey,
+		LinkValidUpto = @validUpTo
+	Where @EmailId = @EmailId
+END
+Go
+
+Create PROCEDURE [Users].[sp_updatePasswordByActivationLink] 
+	@ResetPassKey nvarchar(100),
+	@Email nvarchar(100),
+	@Password nvarchar(100)
+AS
+BEGIN
+	Update Users.Users 
+	Set Password = @Password
+	Where Email = @Email And ResetPasswordKey = @ResetPassKey
+END
+
+Go
+
+--insert Data in email Template
+
+
+
+
+
+
 

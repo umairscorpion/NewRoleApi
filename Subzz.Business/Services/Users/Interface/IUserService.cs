@@ -19,6 +19,7 @@ namespace Subzz.Business.Services.Users.Interface
         LocationTime GetUserLocationTime(string userId, int userLevel);
         User UpdateUser(User user);
         User UpdatePassword(User user);
+        User UpdatePasswordUsingActivationLink(User user);
         User UpdateUserStatus(User user);
 
         // functions related to Employee

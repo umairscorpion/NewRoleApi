@@ -16,5 +16,7 @@ namespace SubzzManage.Business.Manage.Interface
         IEnumerable<OrganizationModel> GetSchool(string schoolId);
         IEnumerable<OrganizationModel> GetOrganizationsByDistrictId(int districtId);
         LocationTime GetOrganizationTimeByOrganizationId(string OrganizationId);
+        IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel);
+        AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope);
     }
 }

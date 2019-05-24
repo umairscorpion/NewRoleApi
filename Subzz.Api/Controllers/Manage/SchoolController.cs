@@ -69,5 +69,24 @@ namespace Subzz.Api.Controllers.Manage
         {
             return _service.GetOrganizationTimeByOrganizationId(OrganizationId);
         }
+
+        [Route("getAbsenceScopes")]
+        [HttpGet]
+        public IActionResult GetAbsenceScopes([FromBody]OrganizationModel organizationModel)
+        {
+            var scopes = _service.GetAbsenceScopes(organizationModel);
+            return Ok(scopes);
+        }
+
+        [Route("updateAbsenceScopes")]
+        [HttpGet]
+        public IActionResult UpdateAbsenceScopes([FromBody]List<AbsenceScope> absenceScopes)
+        {
+            foreach (AbsenceScope ab in absenceScopes)
+            {
+                _service.UpdateAbsenceScope(ab);
+            }
+            return Ok();
+        }
     }
 }
