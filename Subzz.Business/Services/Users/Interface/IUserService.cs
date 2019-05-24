@@ -13,9 +13,12 @@ namespace Subzz.Business.Services.Users.Interface
         User GetUserDetail(string userId);
         IEnumerable<UserResource> GetUserResources(string userId , int resourceTypeId, int parentResourceTypeId, int IsAdminPortal);
         int InsertExternalUser(ExternalUser externalUser);
+        int CheckEmailExistance(string emailId);
+        int UpdatePasswordResetKey(User user);
         IEnumerable<LookupModel> GetUserTypes();
         LocationTime GetUserLocationTime(string userId, int userLevel);
         User UpdateUser(User user);
+        User UpdatePassword(User user);
 
         // functions related to Employee
         #region Employee

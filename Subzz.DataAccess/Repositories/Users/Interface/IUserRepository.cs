@@ -13,6 +13,8 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserLogin GetUserByCredentials(string userName, string password);
         IEnumerable<UserResource> GetUserResourses(string userId, int resourceTypeId, int parentResourceTypeId, int IsAdminPortal);
         int InsertExternalUser(ExternalUser externalUser);
+        int CheckEmailExistance(string emailId);
+        int UpdatePasswordResetKey(User user);
         IEnumerable<LookupModel> GetUserTypes();
         LocationTime GetUserLocationTime(string userId, int userLevel);
 
@@ -21,6 +23,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         // functions related to Employee
         User InsertUser(User model);
         User UpdateEmployee(User model);
+        User UpdatePassword(User user);
         IEnumerable<User> GetUsers(string userId, int userRole, int districtId, string organizationId);
         IEnumerable<User> SearchContent(string userId, int districtId, string organizationId, string searchQuery);
         IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId);

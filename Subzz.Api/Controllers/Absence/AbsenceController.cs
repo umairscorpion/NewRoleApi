@@ -322,7 +322,6 @@ namespace Subzz.Api.Controllers.Absence
                     }
                     catch (Exception ex)
                     {
-
                     }
                 }
             }
