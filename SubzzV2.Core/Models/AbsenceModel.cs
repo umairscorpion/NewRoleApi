@@ -59,6 +59,7 @@ namespace SubzzV2.Core.Models
         public string UpdatedById { get; set; }
         public bool Requested { get; set; }
         public int SpecialityTypeId { get; set; }
+        public string OriginalFileName { get; set; }
     }
 
 }

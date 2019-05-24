@@ -32,6 +32,7 @@ namespace Subzz.Api.Controllers.FileSystem
             {
                 var file = Request.Form.Files[0];
                 string folderName = "Profile";
+                var userId = Request.Form["UserId"][0];
                 string webRootPath = _hostingEnvironment.WebRootPath;
                 if (string.IsNullOrWhiteSpace(webRootPath))
                 {
@@ -47,13 +48,12 @@ namespace Subzz.Api.Controllers.FileSystem
                 {
                     fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fileExtention = new System.IO.FileInfo(fileName).Extension;
-                    fileName = base.CurrentUser.Id + fileExtention;
+                    fileName = userId + fileExtention;
                     string fullPath = Path.Combine(filePath, fileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
                         file.CopyTo(stream);
                     }
-
                 }
                 return Json(fileName);
             }
