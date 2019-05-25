@@ -357,5 +357,26 @@ namespace Subzz.Api.Controllers.Absence
             
         }
 
+        [Route("views/calendar/{StartDate}/{EndDate}/{UserId}")]
+        [HttpGet]
+        public IActionResult CalendarView(DateTime StartDate, DateTime EndDate, string UserId)
+        {
+            var result = _service.GetAbsences(StartDate, EndDate, UserId);
+            var calendarEvents = CalendarEvents(result);
+            return Ok(calendarEvents);
+        }
+
+        private List<CalendarEvent> CalendarEvents(IEnumerable<AbsenceModel> absences)
+        {
+            var events = absences.Select(a => new CalendarEvent
+            {
+                id = a.AbsenceId,
+                title = a.StartTime + " " + a.CreatedByUser,
+                description = a.PayrollNotes,
+                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+            }).ToList();
+            return events;
+        }
     }
 }
