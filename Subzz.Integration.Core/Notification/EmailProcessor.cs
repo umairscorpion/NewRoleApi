@@ -17,6 +17,7 @@ namespace SubzzV2.Integration.Core.Notification
     {
         private const string registrationConfirmedPath = "registrationConfirmed/";
         private const string url = "http://162.241.138.178/plesk-site-preview/sv2.loginsubzz.com";
+        private const string localUrl = "http://localhost:4200";
 
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
@@ -34,6 +35,10 @@ namespace SubzzV2.Integration.Core.Notification
                 if(message.TemplateId == 1)
                 {
                     message.AcceptUrl = url + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId;
+                }
+                if (message.TemplateId == 9)
+                {
+                    message.resetPassUrl = url + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
@@ -122,17 +127,18 @@ namespace SubzzV2.Integration.Core.Notification
             Dictionary<string, string> param = new Dictionary<string, string>()
             {
                 ["{User Name}"] = message.UserName ?? "",
-                ["{Confirmation}"] = message.AbsenceId.ToString() ,
+                ["{Confirmation}"] = message.AbsenceId > 0 ? message.AbsenceId.ToString():  "",
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Position}"] = message.Position ?? "",
                 ["{Subject}"] = !string.IsNullOrEmpty(message.Subject) ? message.Subject + "-" : "N/A-",
                 ["{Grade}"] = !string.IsNullOrEmpty(message.Grade) ? message.Grade : "N/A",
-                ["{StartDateAndTime}"] = message.StartTime + " " + message.StartDate,
-                ["{EndDateAndTime}"] = message.EndTime + " " + message.EndDate,
-                ["{Location}"] = message.Location,
+                ["{StartDateAndTime}"] = !string.IsNullOrEmpty(message.StartTime)? message.StartTime + " " + message.StartDate : "",
+                ["{EndDateAndTime}"] = !string.IsNullOrEmpty(message.EndTime) ? message.EndTime + " " + message.EndDate: "",
+                ["{Location}"] = !string.IsNullOrEmpty(message.Location) ? message.Location: "",
                 ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "N/A",
-                ["{Duration}"] = message.Duration ,
-                ["{AcceptUrl}"] = message.AcceptUrl,
+                ["{Duration}"] = message.Duration ?? "",
+                ["{AcceptUrl}"] = message.AcceptUrl ?? "",
+                ["{resetPasswordKey}"] = !string.IsNullOrEmpty(message.resetPassUrl) ? message.resetPassUrl: "",
             };
             return param;
         }

@@ -36,13 +36,22 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.UpdateUser(user);
         }
-
         public User UpdateUserStatus(User user)
         {
             return _repo.UpdateUserStatus(user);
         }
 
         // functions related to Employee
+
+        public User UpdatePassword(User user)
+        {
+            return _repo.UpdatePassword(user);
+        }
+
+        public User UpdatePasswordUsingActivationLink(User user)
+        {
+            return _repo.UpdatePasswordUsingActivationLink(user);
+        }
 
         public User InsertUser(User model)
         {
@@ -88,9 +97,24 @@ namespace Subzz.Business.Services.Users
             return _repo.InsertExternalUser(externalUser);
         }
 
+        public int CheckEmailExistance(string emailId)
+        {
+            return _repo.CheckEmailExistance(emailId);
+        }
+
+        public int UpdatePasswordResetKey(User user)
+        {
+            return _repo.UpdatePasswordResetKey(user);
+        }
+
         public IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId)
         {
             return _repo.GetSubstituteCategories(SubstituteId);
+        }
+
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId)
+        {
+            return _repo.GetSubstituteNotificationEvents(SubstituteId);
         }
 
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)

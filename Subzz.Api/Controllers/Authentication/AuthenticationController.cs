@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Subzz.Business.Services.Users.Interface;
+using Subzz.Integration.Core.Container;
 using SubzzV2.Core.Entities;
 using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
@@ -26,6 +27,15 @@ namespace Subzz.Api.Controllers.Authentication
             _service = service;
             _userService = userService;
             _audit = audit;
+        }
+
+        private CommunicationContainer _communicationContainer;
+        public virtual CommunicationContainer CommunicationContainer
+        {
+            get
+            {
+                return _communicationContainer ?? (_communicationContainer = new CommunicationContainer());
+            }
         }
 
         [HttpPost, Route("login")]
@@ -71,11 +81,39 @@ namespace Subzz.Api.Controllers.Authentication
                 return Unauthorized();
             }
         }
+
         [HttpPost, Route("insertExternalUser")]
         public IActionResult InsertExternalUser([FromBody]ExternalUser externalUser)
         {
             var userModel = _userService.InsertExternalUser(externalUser);
             return Ok(new { Token = "sdsd"});
         }
+
+        [HttpPost, Route("forgotPassword")]
+        public IActionResult ForgotPassword([FromBody]SubzzV2.Core.Entities.User user)
+        {
+            var exist = _userService.CheckEmailExistance(user.Email);
+            if (Convert.ToBoolean(exist))
+            {
+                var resetPassKey = System.Guid.NewGuid().ToString() + user.Email;
+                user.ActivationCode = resetPassKey;
+                var updated = _userService.UpdatePasswordResetKey(user);
+                Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
+                message.ActivationCode = resetPassKey;
+                message.SendTo = user.Email;
+                message.TemplateId = 9;
+                CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+
+        [HttpPost, Route("updatePasswordByActivationCode")]
+        public IActionResult UpdatePasswordByActivationCode([FromBody]SubzzV2.Core.Entities.User user)
+        {
+            var userModel = _userService.UpdatePasswordUsingActivationLink(user);
+            return Ok();
+        }
+
     }
 }

@@ -15,6 +15,8 @@ namespace SubzzManage.DataAccess.Repositries.Manage.Interface
         bool DeleteSchool(string schoolId);
         IEnumerable<OrganizationModel> GetSchool(string schoolId);
         IEnumerable<OrganizationModel> GetOrganizationsByDistrictId(int districtId);
-        LocationTime GetOrganizationTimeByOrganizationId(string OrganizationId);    
+        LocationTime GetOrganizationTimeByOrganizationId(string OrganizationId);
+        IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel);
+        AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope);
     }
 }

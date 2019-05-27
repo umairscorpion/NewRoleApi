@@ -87,6 +87,25 @@ namespace Subzz.DataAccess.Repositories.Users
 
         // functions related to User
 
+        public User UpdatePassword(User user)
+        {
+            var sql = "[Users].[sp_updatePassword]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", user.UserId);
+            queryParams.Add("@Password", user.Password);
+            return Db.ExecuteScalar<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public User UpdatePasswordUsingActivationLink(User user)
+        {
+            var sql = "[Users].[sp_updatePasswordByActivationLink]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@ResetPassKey", user.ActivationCode);
+            queryParams.Add("@Email", user.Email);
+            queryParams.Add("@Password", user.Password);
+            return Db.ExecuteScalar<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
         public User InsertUser(User model)
         {
             var sql = "[Users].[InsertUser]";
@@ -265,12 +284,48 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
         }
 
+        public int CheckEmailExistance(string emailId)
+        {
+            var sql = "[users].[sp_checkEmailExistance]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@EmailId", emailId);
+            return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
+        }
+
+        public int UpdatePasswordResetKey(User user)
+        {
+            var sql = "[users].[sp_updatePasswordResetKey]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@EmailId", user.Email);
+            queryParams.Add("@ResetPassKey", user.ActivationCode);
+            queryParams.Add("@validUpTo", System.DateTime.Now.AddDays(2));
+            return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
+        }
+
         public IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId)
         {
             var sql = "[users].[GetSubstituteCategories]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@SubstituteId", SubstituteId);
             return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId)
+        {
+            try
+            {
+                var sql = "[users].[GetSubstituteNotificationEvents]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", SubstituteId);
+                return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally {
+            }
+            return null;
+            
         }
 
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)

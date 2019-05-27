@@ -52,5 +52,15 @@ namespace SubzzManage.Business.Manage
         {
             return _repo.GetOrganizationTimeByOrganizationId(OrganizationId);
         }
+
+        public IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel)
+        {
+            return _repo.GetAbsenceScopes(organizationModel);
+        }
+
+        public AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope)
+        {
+            return _repo.UpdateAbsenceScope(absenceScope);
+        }
     }
 }

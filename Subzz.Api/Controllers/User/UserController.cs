@@ -22,10 +22,12 @@ namespace Subzz.Api.Controllers.User
     {
         private readonly IUserService _service;
         private IHostingEnvironment _hostingEnvironment;
-        public UserController(IUserService service, IUserAuthenticationService authSerive, IHostingEnvironment hostingEnvironment)
+        private IUserAuthenticationService _authService;
+        public UserController(IUserService service, IUserAuthenticationService authService, IHostingEnvironment hostingEnvironment)
         {
             _service = service;
             _hostingEnvironment = hostingEnvironment;
+            _authService = authService;
         }
 
         [Route("list/summary")]
@@ -92,6 +94,26 @@ namespace Subzz.Api.Controllers.User
             }
             
             return Ok();
+        }
+
+        [Route("updatePassword")]
+        [HttpPost]
+        public IActionResult UpdatePassword([FromBody]SubzzV2.Core.Entities.User model)
+        {
+            var user = _service.UpdatePassword(model);
+            return Ok();
+        }
+
+        [Route("checkUserPassword/{emailId}/{Password}")]
+        [HttpGet]
+        public IActionResult CheckUserPassword(string emailId, string Password)
+        {
+            var User = _authService.GetUserByCredentials(emailId, Password);
+            if (User == null)
+            {
+                return Ok(false);
+            }
+            return Ok(true);
         }
 
         // Functions related to Employees
@@ -192,6 +214,15 @@ namespace Subzz.Api.Controllers.User
             var UserId = base.CurrentUser.Id;
             var Categories = _service.GetSubstituteCategories(UserId);
             return Categories;
+        }
+
+        [Route("getSubstituteNotificationEvents")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents()
+        {
+            var UserId = base.CurrentUser.Id;
+            var events = _service.GetSubstituteNotificationEvents(UserId);
+            return events;
         }
 
         [Route("updateUserCategories")]

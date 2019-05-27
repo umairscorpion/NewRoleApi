@@ -13,9 +13,13 @@ namespace Subzz.Business.Services.Users.Interface
         User GetUserDetail(string userId);
         IEnumerable<UserResource> GetUserResources(string userId , int resourceTypeId, int parentResourceTypeId, int IsAdminPortal);
         int InsertExternalUser(ExternalUser externalUser);
+        int CheckEmailExistance(string emailId);
+        int UpdatePasswordResetKey(User user);
         IEnumerable<LookupModel> GetUserTypes();
         LocationTime GetUserLocationTime(string userId, int userLevel);
         User UpdateUser(User user);
+        User UpdatePassword(User user);
+        User UpdatePasswordUsingActivationLink(User user);
         User UpdateUserStatus(User user);
 
         // functions related to Employee
@@ -31,6 +35,7 @@ namespace Subzz.Business.Services.Users.Interface
 
         #region User Settings
         IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId);
+        IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId);
         int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
