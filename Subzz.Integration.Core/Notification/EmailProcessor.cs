@@ -38,7 +38,7 @@ namespace SubzzV2.Integration.Core.Notification
                 }
                 if (message.TemplateId == 9)
                 {
-                    message.resetPassUrl = localUrl + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
+                    message.resetPassUrl = url + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
