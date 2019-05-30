@@ -18,6 +18,7 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<LookupModel> GetUserTypes();
         LocationTime GetUserLocationTime(string userId, int userLevel);
         User UpdateUser(User user);
+        UserReference UpdateUserProfile(UserReference user);
         User UpdatePassword(User user);
         User UpdatePasswordUsingActivationLink(User user);
         User UpdateUserStatus(User user);

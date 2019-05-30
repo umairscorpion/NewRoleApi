@@ -20,6 +20,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
 
         User GetUserDetail(string userId);
         User UpdateUser(User user);
+        UserReference UpdateUserProfile(UserReference user);
         User UpdateUserStatus(User user);
         // functions related to Employee
         User InsertUser(User model);

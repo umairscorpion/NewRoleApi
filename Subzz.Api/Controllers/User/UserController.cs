@@ -75,6 +75,7 @@ namespace Subzz.Api.Controllers.User
             };
             return referenceModel;
         }
+
         [HttpGet]
         [Route("GetUserResources/{resourceTypeId}/{parentResourceTypeId}/{IsAdminPortal}")]
         public IEnumerable<UserResource> GetUserResourses(int resourceTypeId, int parentResourceTypeId, int IsAdminPortal)
@@ -90,10 +91,9 @@ namespace Subzz.Api.Controllers.User
             var isExists = _service.VerifyUser(model);
             if (isExists)
             {
-                return BadRequest("This email address belongs to another user. Please try with other one.");
+                return Ok(true);
             }
-            
-            return Ok();
+            return Ok(false);
         }
 
         [Route("updatePassword")]
@@ -137,6 +137,13 @@ namespace Subzz.Api.Controllers.User
         public SubzzV2.Core.Entities.User UpdateUser([FromBody]SubzzV2.Core.Entities.User model)
         {
             return _service.UpdateUser(model);
+        }
+
+        [Route("updateUserProfile")]
+        [HttpPatch]
+        public UserReference UpdateUserProfile([FromBody]UserReference model)
+        {
+            return _service.UpdateUserProfile(model);
         }
 
         [HttpGet]
