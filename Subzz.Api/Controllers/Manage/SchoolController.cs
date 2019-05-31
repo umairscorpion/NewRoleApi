@@ -71,7 +71,7 @@ namespace Subzz.Api.Controllers.Manage
         }
 
         [Route("getAbsenceScopes")]
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetAbsenceScopes([FromBody]OrganizationModel organizationModel)
         {
             var scopes = _service.GetAbsenceScopes(organizationModel);
@@ -79,7 +79,7 @@ namespace Subzz.Api.Controllers.Manage
         }
 
         [Route("updateAbsenceScopes")]
-        [HttpGet]
+        [HttpPost]
         public IActionResult UpdateAbsenceScopes([FromBody]List<AbsenceScope> absenceScopes)
         {
             foreach (AbsenceScope ab in absenceScopes)

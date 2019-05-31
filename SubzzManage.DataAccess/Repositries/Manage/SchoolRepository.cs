@@ -136,18 +136,22 @@ namespace SubzzManage.DataAccess.Repositries.Manage
 
         public IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel)
         {
-            var sql = "[Location].[GetAbsenceScopes]";
+            var sql = "[Location].[sp_getAbsenceTypes]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@districtId", organizationModel.SchoolDistrictId);
+            queryParams.Add("@OrgId", organizationModel.SchoolId);
             return Db.Query<AbsenceScope>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
         public AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope)
         {
-            var sql = "[Location].[UpdateAbsenceScope]";
+            var sql = "[Location].[sp_updateAbsenceTypes]";
             var queryParams = new DynamicParameters();
+            queryParams.Add("@OrgId", absenceScope.OrganizatonId);
+            queryParams.Add("@DistrictId", absenceScope.DistrictId);
             queryParams.Add("@Visibility", absenceScope.Visibility);
             queryParams.Add("@Id", absenceScope.Id);
+            queryParams.Add("@absenceType", absenceScope.AbsenceType);
             return Db.Query<AbsenceScope>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
