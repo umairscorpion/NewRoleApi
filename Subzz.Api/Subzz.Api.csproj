@@ -6,6 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\noimage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\noimage.png">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\Attachment\" />
     <Folder Include="wwwroot\SubstituteFiles\" />
     <Folder Include="wwwroot\Profile\" />
