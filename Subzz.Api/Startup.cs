@@ -141,7 +141,6 @@ namespace Subzz.Api
             }
             app.UseCors("EnableCORS");
             app.UseAuthentication();
-
             app.UseStaticFiles();// For the wwwroot folder
 
             app.UseStaticFiles(new StaticFileOptions
@@ -156,7 +155,6 @@ namespace Subzz.Api
             Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Profile")),
                 RequestPath = "/Profile"
             });
-
             app.UseMvc();
         }
     }

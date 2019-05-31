@@ -36,6 +36,12 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.UpdateUser(user);
         }
+
+        public UserReference UpdateUserProfile(UserReference user)
+        {
+            return _repo.UpdateUserProfile(user);
+        }
+
         public User UpdateUserStatus(User user)
         {
             return _repo.UpdateUserStatus(user);

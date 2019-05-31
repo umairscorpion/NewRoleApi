@@ -189,6 +189,21 @@ namespace Subzz.DataAccess.Repositories.Users
             return model;
         }
 
+        public UserReference UpdateUserProfile(UserReference model)
+        {
+            var sql = "[Users].[UpdateUserProfile]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@FirstName", model.FirstName);
+            queryParams.Add("@LastName", model.LastName);
+            queryParams.Add("@Email", model.Email);
+            queryParams.Add("@PhoneNumber", model.PhoneNumber);
+            queryParams.Add("@ProfilePicture", model.ProfilePicture);
+            Db.Query<UserReference>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).SingleOrDefault();
+
+            return model;
+        }
+
         public User UpdateUserStatus(User model)
         {
             var sql = "[Users].[UpdateUserStatus]";

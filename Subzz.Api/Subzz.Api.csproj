@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Attachment\" />
-    <Folder Include="wwwroot\SubstituteFiles\" />
+    <Folder Include="wwwroot\Files\" />
     <Folder Include="wwwroot\Profile\" />
     <Folder Include="wwwroot\Upload\" />
   </ItemGroup>
