@@ -22,6 +22,7 @@ namespace Subzz.Api.Controllers.Leave
             _service = service;
             _audit = audit;
         }
+
         [Route("insertLeaveRequest")]
         [HttpPost]
         public LeaveRequestModel InsertLeaveRequest([FromBody]LeaveRequestModel model)
@@ -67,6 +68,7 @@ namespace Subzz.Api.Controllers.Leave
 
             return leaveRequests;
         }
+
         [Route("insertLeaveType")]
         [HttpPost]
         public LeaveTypeModel InsertLeaveType([FromBody]LeaveTypeModel model)
@@ -74,6 +76,7 @@ namespace Subzz.Api.Controllers.Leave
             var leaveTypeModel = _service.InsertLeaveType(model);
             return leaveTypeModel;
         }
+
         [Route("getLeaveRequests/{districtId}/{organizationId}")]
         [HttpGet]
         public IEnumerable<LeaveRequestModel> GetLeaveRequests(int districtId, string organizationId)
