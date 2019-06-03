@@ -241,6 +241,20 @@ namespace Subzz.Api.Controllers.User
             return Categories;
         }
 
+        [Route("updateNotificationEvents")]
+        [HttpPatch]
+        public int UpdateNotificationEvents([FromBody] List<SubstituteCategoryModel> substituteEventModel)
+        {
+            foreach (SubstituteCategoryModel cat in substituteEventModel)
+            {
+                cat.SubstituteId = base.CurrentUser.Id;
+                var events = _service.UpdateNotificationEvents(cat);
+                
+            }
+            return 1;
+
+        }
+
         [Route("getUserLocationTime/{userId}/{userLevel}")]
         [HttpGet]
         public LocationTime GetUserLocationTime(string userId, int userLevel)
