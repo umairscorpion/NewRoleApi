@@ -8,9 +8,13 @@ namespace SubzzV2.Core.Models
 {
     public class LeaveBalance
     {
-        public int Id { get; set; }
-        public int Balance { get; set; }
-        public string LeaveTitle { get; set; }
-        public int EmployeeName { get; set; }
+        public string UserId { get; set; }
+        public string Personal { get; set; }
+        public string Sick { get; set; }
+        public string Vacation { get; set; }
+        public string UserName { get; set; }
+        public string OrganizationId { get; set; }
+        public int DistrictId { get; set; }
+        public int Year { get; set; }
     }
 }

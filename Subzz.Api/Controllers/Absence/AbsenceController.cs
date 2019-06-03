@@ -128,7 +128,7 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         if (model.IsApprovalRequired)
                         {
-                            //Task.Run(() => SendNotifications(model));
+                            Task.Run(() => SendNotifications(model));
                         }
 
                         return Json("success");
@@ -312,13 +312,14 @@ namespace Subzz.Api.Controllers.Absence
                         if (User.RoleId == 4)
                         {
                             message.TemplateId = 1;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
                         //For Admins
                         else
                         {
                             message.TemplateId = 2;
                         }
-                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        
                     }
                     catch (Exception ex)
                     {

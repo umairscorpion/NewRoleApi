@@ -52,9 +52,9 @@ namespace SubzzAbsence.Business.Leaves
             return _repo.GetleaveTypeById(leaveTypeId);
         }
 
-        public IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(int districtId, int year, string userId)
+        public IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(LeaveBalance leaveBalance)
         {
-            return _repo.GetEmployeeLeaveBalance(districtId, year, userId);
+            return _repo.GetEmployeeLeaveBalance(leaveBalance);
         }
     }
 }
