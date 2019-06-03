@@ -35,5 +35,6 @@ namespace SubzzV2.Core.Models
         public string DeniedBy { get; set; }
         public string CancelledDate { get; set; }
         public string CancelledBy { get; set; }
+        public string EmployeeProfilePicUrl { get; set; }
     }
 }
