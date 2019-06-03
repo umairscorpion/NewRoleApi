@@ -128,6 +128,11 @@ namespace Subzz.Business.Services.Users
             return _repo.UpdateUserCategories(substituteCategoryModel);
         }
 
+        public int UpdateNotificationEvents(SubstituteCategoryModel substituteEventModel)
+        {
+            return _repo.UpdateNotificationEvents(substituteEventModel);
+        }
+
         public LocationTime GetUserLocationTime(string userId, int userLevel)
         {
             return _repo.GetUserLocationTime(userId, userLevel);
