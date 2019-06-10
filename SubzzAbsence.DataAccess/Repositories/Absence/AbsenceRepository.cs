@@ -235,7 +235,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[dbo].[GetAbsenceSummary]";
+                var sql = "[Absence].[GetAbsenceSummary]";
                 var param = new DynamicParameters();
                 param.Add("@UserId", userId);
                 param.Add("@Year", year);
@@ -248,7 +248,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             {
                 try
                 {
-                    var sql = "[Subzz_Users].[dbo].[TopTenTeachers]";
+                    var sql = "[Subzz_Users].[Users].[TopTenTeachers]";
                     var param = new DynamicParameters();
                     param.Add("@UserId", userId);
                     return connection.Query<AbsenceSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();

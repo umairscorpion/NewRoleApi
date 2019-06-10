@@ -20,7 +20,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Subzz_Users].[dbo].[InsertClockInInfo]";
+                var sql = "[Subzz_Users].[Users].[InsertClockInInfo]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@UserId", model.UserId);
                 queryParams.Add("@Date", model.ClockInDate);
@@ -37,7 +37,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Subzz_Users].[dbo].[InsertClockInInfo]";
+                var sql = "[Subzz_Users].[Users].[InsertClockInInfo]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@UserId", model.UserId);
                 queryParams.Add("@Date", null);
@@ -54,7 +54,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Subzz_Users].[dbo].[InsertClockInInfo]";
+                var sql = "[Subzz_Users].[Users].[InsertClockInInfo]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@UserId", model.UserId);
                 queryParams.Add("@Date", null);
@@ -71,7 +71,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Subzz_Users].[dbo].[InsertClockInInfo]";
+                var sql = "[Subzz_Users].[Users].[InsertClockInInfo]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@UserId", model.UserId);
                 queryParams.Add("@Date", null);
@@ -90,7 +90,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
             {
                 try
                 {
-                    var sql = "[Subzz_Users].[dbo].[GetTimeClockData]";
+                    var sql = "[Subzz_Users].[Users].[GetTimeClockData]";
                     var queryParams = new DynamicParameters();
                     queryParams.Add("@UserId", model.UserId);
                     return await connection.QueryAsync<TimeClock>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
@@ -113,7 +113,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
             {
                 try
                 {
-                    var sql = "[Subzz_Users].[dbo].[GetTimeClockData]";
+                    var sql = "[Subzz_Users].[Users].[GetTimeClockData]";
                     var queryParams = new DynamicParameters();
                     queryParams.Add("@StartDate", model.StartDate);
                     queryParams.Add("@EndDate", model.EndDate);
@@ -138,7 +138,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
             {
                 try
                 {
-                    var sql = "[Subzz_Users].[dbo].[GetTimeTrackerData]";
+                    var sql = "[Subzz_Users].[Users].[GetTimeTrackerData]";
                     var queryParams = new DynamicParameters();
                     queryParams.Add("@StartDate", model.StartDate);
                     queryParams.Add("@EndDate", model.EndDate);
@@ -184,7 +184,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
             {
                 try
                 {
-                    var sql = "[Subzz_Users].[dbo].[GetTimeTrackerData]";
+                    var sql = "[Subzz_Users].[Users].[GetTimeTrackerData]";
                     var param = new DynamicParameters();
                         param.Add("@FromDate", filter.FromDate);
                     param.Add("@ToDate", filter.ToDate);
@@ -210,7 +210,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Time
                 try
                 {
                     var queryParams = new DynamicParameters();
-                    var sql = "[Subzz_Users].[dbo].[UpdateTimeClockData]";
+                    var sql = "[Subzz_Users].[Users].[UpdateTimeClockData]";
                     queryParams.Add("@UserId", model.UserId);
                     queryParams.Add("@TimeClockId", model.TimeClockId);
                     queryParams.Add("@ClockInDate", model.ClockInDate);
