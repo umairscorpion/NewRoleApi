@@ -232,24 +232,35 @@ namespace Subzz.Api.Controllers.User
             return events;
         }
 
+        //[Route("updateUserCategories")]
+        //[HttpPatch]
+        //public int UpdateUserCategories([FromBody]SubstituteCategoryModel substituteCategoryModel)
+        //{
+        //    var UserId = base.CurrentUser.Id;
+        //    var Categories = _service.UpdateUserCategories(substituteCategoryModel);
+        //    return Categories;
+        //}
+
         [Route("updateUserCategories")]
         [HttpPatch]
-        public int UpdateUserCategories([FromBody]SubstituteCategoryModel substituteCategoryModel)
+        public int UpdateUserCategories([FromBody] List<SubstituteCategoryModel> substituteCategoryModel)
         {
-            var UserId = base.CurrentUser.Id;
-            var Categories = _service.UpdateUserCategories(substituteCategoryModel);
-            return Categories;
+            foreach (SubstituteCategoryModel cat in substituteCategoryModel)
+            {
+                var UserId = base.CurrentUser.Id;
+                var Categories = _service.UpdateUserCategories(cat);
+            }
+            return 1;
         }
 
         [Route("updateNotificationEvents")]
         [HttpPatch]
         public int UpdateNotificationEvents([FromBody] List<SubstituteCategoryModel> substituteEventModel)
         {
-            foreach (SubstituteCategoryModel cat in substituteEventModel)
+            foreach (SubstituteCategoryModel cate in substituteEventModel)
             {
-                cat.SubstituteId = base.CurrentUser.Id;
-                var events = _service.UpdateNotificationEvents(cat);
-                
+                cate.SubstituteId = base.CurrentUser.Id;
+                var events = _service.UpdateNotificationEvents(cate);
             }
             return 1;
 
@@ -292,12 +303,25 @@ namespace Subzz.Api.Controllers.User
             return _service.GetSubstitutePreferredSchools(UserId);
         }
 
+        //[Route("updateEnabledSchools")]
+        //[HttpPatch]
+        //public async Task<IActionResult> UpdateEnabledSchools([FromBody]PreferredSchoolModel preferredSchoolModel)
+        //{
+        //    await _service.UpdateEnabledSchools(preferredSchoolModel);
+        //    return Json("success");
+        //}
+
         [Route("updateEnabledSchools")]
         [HttpPatch]
-        public async Task<IActionResult> UpdateEnabledSchools([FromBody]PreferredSchoolModel preferredSchoolModel)
+        public async Task<IActionResult> UpdateEnabledSchools([FromBody] List<PreferredSchoolModel> preferredSchoolModel)
         {
-            await _service.UpdateEnabledSchools(preferredSchoolModel);
+            foreach (PreferredSchoolModel cat in preferredSchoolModel)
+            {
+                cat.UserId = base.CurrentUser.Id;
+                await _service.UpdateEnabledSchools(cat);
+            }
             return Json("success");
+
         }
 
         [HttpPost]
