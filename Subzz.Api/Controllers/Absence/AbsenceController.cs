@@ -126,11 +126,7 @@ namespace Subzz.Api.Controllers.Absence
                     }
                     else
                     {
-                        if (model.IsApprovalRequired)
-                        {
-                            Task.Run(() => SendNotifications(model));
-                        }
-
+                        Task.Run(() => SendJobPostEmails(model));
                         return Json("success");
                     }
                 }
@@ -141,6 +137,156 @@ namespace Subzz.Api.Controllers.Absence
             }
 
             return Json("error");
+        }
+
+        async Task SendJobPostEmails(AbsenceModel absenceModel)
+        {
+            Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
+            //SubstituteId Contains All Substitute Ids in case Of Request specific Substitute.
+            var DataForEmails = _userService.GetUsersForSendingAbsenceNotificationOnEntireSub(absenceModel.DistrictId, absenceModel.OrganizationId, absenceModel.AbsenceId, absenceModel.SubstituteId);
+            message.AbsenceId = absenceModel.AbsenceId;
+            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceModel.StartTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.StartDate = Convert.ToDateTime(absenceModel.StartDate).ToString("D");
+            message.EndDate = Convert.ToDateTime(absenceModel.EndDate).ToString("D");
+            message.EmployeeName = DataForEmails.EmployeeName;
+            message.Position = DataForEmails.PositionDescription;
+            message.Subject = DataForEmails.SubjectDescription;
+            message.Grade = DataForEmails.Grade;
+            message.Location = DataForEmails.AbsenceLocation;
+            message.Notes = DataForEmails.SubstituteNotes;
+            message.Duration = DataForEmails.DurationType == 1 ? "Full Day" : DataForEmails.DurationType == 2 ? "First Half" : DataForEmails.DurationType == 3 ? "Second Half" : "Custom";
+            //Entire Sustitute Pool or Request Specifc Sub
+            if (absenceModel.IsApprovalRequired)
+            {
+                if (absenceModel.AbsenceScope == 4 || absenceModel.AbsenceScope == 1)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.Password = User.Password;
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+                            //For Substitutes
+                            if (User.RoleId == 4)
+                            {
+                                message.TemplateId = 1;
+                                //await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            if (User.RoleId == 3)
+                            {
+                                message.TemplateId = 10;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 2;
+                                //  await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+                //Direct Assign
+                else if (absenceModel.AbsenceScope == 2)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+                            //For Substitutes
+                            if (User.RoleId == 4)
+                            {
+                                message.TemplateId = 7;
+
+                            }
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 8;
+                                message.SubstituteName = DataForEmails.SubstituteName;
+                            }
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (absenceModel.AbsenceScope == 4 || absenceModel.AbsenceScope == 1)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.Password = User.Password;
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+
+                            if (User.RoleId == 3)
+                            {
+                                message.TemplateId = 13;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 14;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+                //Direct Assign
+                else if (absenceModel.AbsenceScope == 2)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+                            //For Substitutes
+                            if (User.RoleId == 4)
+                            {
+                                message.TemplateId = 7;
+
+                            }
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 8;
+                                message.SubstituteName = DataForEmails.SubstituteName;
+                            }
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            }
         }
 
         [Route("getAbsences/{StartDate}/{EndDate}/{UserId}")]
@@ -277,85 +423,6 @@ namespace Subzz.Api.Controllers.Absence
             var userId = base.CurrentUser.Id;
             var Summary = _service.GetTopTenTeachers(userId);
             return Ok(Summary);
-        }
-
-        async Task SendNotifications(AbsenceModel absenceModel)
-        {
-            Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
-            //SubstituteId Contains All Substitute Ids in case Of Request specific Substitute.
-            var DataForEmails = _userService.GetUsersForSendingAbsenceNotificationOnEntireSub(absenceModel.DistrictId, absenceModel.OrganizationId, absenceModel.AbsenceId, absenceModel.SubstituteId);
-            message.AbsenceId = absenceModel.AbsenceId;
-            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceModel.StartTime), "HH:mm:ss",
-                                        CultureInfo.InvariantCulture).ToSubzzTime();
-            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
-                                        CultureInfo.InvariantCulture).ToSubzzTime();
-            message.StartDate = Convert.ToDateTime(absenceModel.StartDate).ToString("D");
-            message.EndDate = Convert.ToDateTime(absenceModel.EndDate).ToString("D");
-            message.EmployeeName = DataForEmails.EmployeeName;
-            message.Position = DataForEmails.PositionDescription;
-            message.Subject = DataForEmails.SubjectDescription;
-            message.Grade = DataForEmails.Grade;
-            message.Location = DataForEmails.AbsenceLocation;
-            message.Notes = DataForEmails.SubstituteNotes;
-            message.Duration = DataForEmails.DurationType == 1 ? "Full Day" : DataForEmails.DurationType == 2 ? "First Half" : DataForEmails.DurationType == 3 ? "Second Half" : "Custom";
-            //Entire Sustitute Pool or Request Specifc Sub
-            if (absenceModel.AbsenceScope == 4 || absenceModel.AbsenceScope == 1)
-            {
-                foreach (var User in DataForEmails.Users)
-                {
-                    try
-                    {
-                        message.Password = User.Password;
-                        message.UserName = User.FirstName;
-                        message.SendTo = User.Email;
-                        //For Substitutes
-                        if (User.RoleId == 4)
-                        {
-                            message.TemplateId = 1;
-                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                        }
-                        //For Admins
-                        else
-                        {
-                            message.TemplateId = 2;
-                        }
-                        
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-                }
-            }
-            //Direct Assign
-            else if (absenceModel.AbsenceScope == 2)
-            {
-                foreach (var User in DataForEmails.Users)
-                {
-                    try
-                    {
-                        message.UserName = User.FirstName;
-                        message.SendTo = User.Email;
-                        //For Substitutes
-                        if (User.RoleId == 4)
-                        {
-                            message.TemplateId = 7;
-                            
-                        }
-                        //For Admins
-                        else
-                        {
-                            message.TemplateId = 8;
-                            message.SubstituteName = DataForEmails.SubstituteName;
-                        }
-                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-            
         }
 
         [Route("views/calendar/{StartDate}/{EndDate}/{UserId}")]

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
 using SubzzAbsence.Business.Leaves.Interface;
+using SubzzManage.Business.District.Interface;
 using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 
@@ -17,10 +18,12 @@ namespace Subzz.Api.Controllers.Leave
     {
         private readonly ILeaveService _service;
         private readonly IAuditingService _audit;
-        public LeaveController(ILeaveService service, IAuditingService audit)
+        private readonly IDistrictService _disService;
+        public LeaveController(ILeaveService service, IAuditingService audit, IDistrictService disService)
         {
             _service = service;
             _audit = audit;
+            _disService = disService;
         }
 
         [Route("insertLeaveRequest")]
@@ -117,12 +120,26 @@ namespace Subzz.Api.Controllers.Leave
             return Ok(response);
         }
 
+        //For Leave Balance Report
         [Route("getEmployeeLeaveBalance")]
         [HttpPost]
         public IActionResult GetEmployeeLeaveBalance([FromBody]LeaveBalance leaveBalance)
         {
+            var Value = 10;
             var districtId = base.CurrentUser.DistrictId;
+            var allowances = _disService.GetAllowances(Convert.ToString(districtId));
             var response = _service.GetEmployeeLeaveBalance(leaveBalance);
+            response.Where(x => x.Personal == null).ToList().ForEach(x => { x.Personal = Value.ToString(); });
+            return Ok(response);
+        }
+
+        //For Absence Page to check remaining Balance
+        [Route("getLeaveBalance")]
+        [HttpPost]
+        public IActionResult GetLeaveBalance([FromBody]LeaveBalance leaveBalance)
+        {
+            var districtId = base.CurrentUser.DistrictId;
+            var response = _service.GetLeaveBalance(leaveBalance);
             return Ok(response);
         }
     }

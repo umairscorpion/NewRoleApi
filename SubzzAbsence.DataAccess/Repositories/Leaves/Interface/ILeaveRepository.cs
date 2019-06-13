@@ -18,5 +18,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves.Interface
         int DeleteLeaveType(int leaveTypeId);
         LeaveTypeModel GetleaveTypeById(int leaveTypeId);
         IEnumerable<LeaveBalance> GetEmployeeLeaveBalance(LeaveBalance leaveBalance);
+        IEnumerable<LeaveBalance> GetLeaveBalance(LeaveBalance leaveBalance);
     }
 }

@@ -56,5 +56,10 @@ namespace SubzzAbsence.Business.Leaves
         {
             return _repo.GetEmployeeLeaveBalance(leaveBalance);
         }
+
+        public IEnumerable<LeaveBalance> GetLeaveBalance(LeaveBalance leaveBalance)
+        {
+            return _repo.GetLeaveBalance(leaveBalance);
+        }
     }
 }
