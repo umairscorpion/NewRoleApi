@@ -55,26 +55,11 @@ namespace SubzzV2.Core.Models
         public int TotalAbsences { get; set; }
         public int TotalFilled { get; set; }
         public int TotalUnfilled { get; set; }
-        public int gradeSix { get; set; }
-        public int gradeSeven { get; set; }
-        public int gradeEight { get; set; }
-        public int gradeNine { get; set; }
-        public int gradeTen { get; set; }
-        public int gradeEleven { get; set; }
         public int WeekDayMonday { get; set; }
         public int WeekDayTuesday { get; set; }
         public int WeekDayWednesday { get; set; }
         public int WeekDayThursday { get; set; }
         public int WeekDayFriday { get; set; }
-        public int SubjectMath { get; set; }
-        public int SubjectScience { get; set; }
-        public int SubjectReading { get; set; }
-        public int SubjectSocial { get; set; }
-        public int SubjectEnglish { get; set; }
-        public int SubjectSpecial { get; set; }
-        public int SubjectPhysical { get; set; }
-        public int SubjectCareer { get; set; }
-        public int SubjectArt { get; set; }
         public int TotalAbsence { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

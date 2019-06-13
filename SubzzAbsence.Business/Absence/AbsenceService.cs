@@ -81,10 +81,16 @@ namespace SubzzAbsence.Business.Absence
             return _repo.UpdateAbsenceStatusAndSub(AbsenceId, statusId, UpdateStatusDate, UserId, SubstituteId, SubstituteRequired);
         }
 
-        public List<AbsenceSummary> GetAbsenceSummary(string userId, int year)
+        //public List<AbsenceSummary> GetAbsenceSummary(string userId, int year)
+        //{
+        //    return _repo.GetAbsenceSummary(userId, year);
+        //}
+
+        public DashboardSummary GetAbsenceSummary(string userId, int year)
         {
             return _repo.GetAbsenceSummary(userId, year);
         }
+
         public List<AbsenceSummary> GetTopTenTeachers(string userId)
         {
             return _repo.GetTopTenTeachers(userId);

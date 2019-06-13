@@ -23,7 +23,8 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         IEnumerable<PreferredSubstituteModel> GetFavSubsForSendingSms(DateTime date);
         int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
         int UpdateAbsence(AbsenceModel user);
-        List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
+        //List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
+        DashboardSummary GetAbsenceSummary(string userId, int year);
         List<AbsenceSummary> GetTopTenTeachers(string userId);
         List<Event> GetEvents(DateTime startDate, DateTime endDate, string userId);
     }

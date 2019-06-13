@@ -232,15 +232,35 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
-        public List<AbsenceSummary> GetAbsenceSummary(string userId, int year)
+        //public List<AbsenceSummary> GetAbsenceSummary(string userId, int year)
+        //{
+        //    using (var connection = base.GetConnection)
+        //    {
+        //        var sql = "[Absence].[GetAbsenceSummary]";
+        //        var param = new DynamicParameters();
+        //        param.Add("@UserId", userId);
+        //        param.Add("@Year", year);
+        //        return connection.Query<AbsenceSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        //    }
+        //}
+
+        public DashboardSummary GetAbsenceSummary(string userId, int year)
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Absence].[GetAbsenceSummary]";
+                var sql = "[Subzz_Users].[Users].[DashboardSummary]";
                 var param = new DynamicParameters();
                 param.Add("@UserId", userId);
                 param.Add("@Year", year);
-                return connection.Query<AbsenceSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
+                var Results = connection.QueryMultiple(sql, param, commandType: CommandType.StoredProcedure);
+                DashboardSummary dasboardSummary = new DashboardSummary();
+                dasboardSummary.AbsenceSummary = Results.Read<AbsenceSummary>().ToList();
+                dasboardSummary.TopTenTeachers.AddRange(Results.Read<TopTenTeachers>().ToList());
+                dasboardSummary.AbsenceBySubject.AddRange(Results.Read<AbsenceBySubject>().ToList());
+                dasboardSummary.AbsenceByGradeLevel.AddRange(Results.Read<AbsenceByGradeLevel>().ToList());
+                dasboardSummary.TopFourAbsenceReasons.AddRange(Results.Read<TopFourAbsenceReasons>().ToList());
+                return dasboardSummary;
+
             }
         }
         public List<AbsenceSummary> GetTopTenTeachers(string userId)
