@@ -22,6 +22,17 @@ namespace Subzz.Api.Controllers.Settings
             _service = service;
             _userService = userService;
         }
+
+        [Route("version")]
+        [HttpGet]
+        public IActionResult GetLatestVersionUpdate()
+        {
+            var userId = base.CurrentUser.Id;
+            var versionUpdates = _service.GetLatestVersionDetails();
+            return Ok(versionUpdates);
+        }
+
+
         [Route("getNotificationSettings")]
         [HttpGet]
         public NoticationSettingsModel GetNotificationSettings()

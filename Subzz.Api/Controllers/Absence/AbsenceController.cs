@@ -293,7 +293,7 @@ namespace Subzz.Api.Controllers.Absence
         [HttpGet]
         public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId)
         {
-           return _service.GetAbsences(StartDate, EndDate, UserId);
+           return _service.GetAbsences(StartDate, EndDate, UserId, null);
         }
 
         [Route("getAbsencesScheduleEmployee/{StartDate}/{EndDate}/{UserId}")]
@@ -425,13 +425,16 @@ namespace Subzz.Api.Controllers.Absence
             return Ok(Summary);
         }
 
-        [Route("views/calendar/{StartDate}/{EndDate}/{UserId}")]
+        [Route("views/calendar/{StartDate}/{EndDate}/{UserId}/{CampusId}")]
         [HttpGet]
-        public IActionResult CalendarView(DateTime StartDate, DateTime EndDate, string UserId)
+        public IActionResult CalendarView(DateTime StartDate, DateTime EndDate, string UserId, string CampusId)
         {
-            var result = _service.GetAbsences(StartDate, EndDate, UserId);
-            var calendarEvents = CalendarEvents(result);
-            return Ok(calendarEvents);
+            var result = _service.GetAbsences(StartDate, EndDate, UserId, CampusId);
+            var events = _service.GetEvents(StartDate, EndDate, UserId);
+            var absencesCalendarView = CalendarEvents(result);
+            var eventsCalendarView = CalendarEvents(events);
+            absencesCalendarView.AddRange(eventsCalendarView);
+            return Ok(absencesCalendarView);
         }
 
         private List<CalendarEvent> CalendarEvents(IEnumerable<AbsenceModel> absences)
@@ -445,6 +448,19 @@ namespace Subzz.Api.Controllers.Absence
                 end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
             }).ToList();
             return events;
+        }
+
+        private List<CalendarEvent> CalendarEvents(IEnumerable<Event> events)
+        {
+            var cEvents = events.Select(a => new CalendarEvent
+            {
+                id = a.EventId,
+                title = a.StartTime + " " + a.UserId,
+                description = a.Notes,
+                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+            }).ToList();
+            return cEvents;
         }
     }
 }

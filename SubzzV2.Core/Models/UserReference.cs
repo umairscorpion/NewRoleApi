@@ -26,5 +26,6 @@ namespace SubzzV2.Core.Models
         public string OrganizationId { get; set; }
         public int UserLevel { get; set; }
         public List<RolePermission> Permissions { get; set; }
+        public bool IsViewedNewVersion { get; set; }
     }
 }

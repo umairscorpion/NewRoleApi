@@ -66,5 +66,6 @@
     <None Include="Scripts\PostDeployment\05-11-2019.sql" />
     <None Include="Scripts\PostDeployment\05-18-2019.sql" />
     <None Include="Scripts\PostDeployment\05-25-2019.sql" />
+    <None Include="Scripts\PostDeployment\06-13-2019.sql" />
   </ItemGroup>
 </Project>

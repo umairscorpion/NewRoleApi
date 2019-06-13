@@ -75,7 +75,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             return 1;
         }
 
-        public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId)
+        public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId)
         {
             using (var connection = base.GetConnection)
             {
@@ -84,6 +84,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@StartDate", StartDate);
                 queryParams.Add("@EndDate", EndDate);
                 queryParams.Add("@UserId", UserId);
+                queryParams.Add("@CampusId", CampusId);
                 return connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
@@ -262,5 +263,17 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
+        public List<Event> GetEvents(DateTime startDate, DateTime endDate, string userId)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Subzz_Users].[Users].[GetEvents]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@StartDate", startDate);
+                queryParams.Add("@EndDate", endDate);
+                queryParams.Add("@UserId", userId);
+                return connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
     }
 }

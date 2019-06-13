@@ -34,5 +34,12 @@ namespace SubzzSettings.DataAccess.Settings
             queryParams.Add("@UserId", UserId);
             return Db.Query<NoticationSettingsModel>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
+
+        public SubzzVersion GetLatestVersionDetails()
+        {
+            var sql = "[Settings].[GetLatestVersion]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<SubzzVersion>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
     }
 }

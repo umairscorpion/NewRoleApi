@@ -769,6 +769,7 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<bool>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
+        
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {
             const string query = "[Users].[GetSubstituteAvailabilities]";
@@ -849,6 +850,23 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@AvailabilityId", availability.AvailabilityId);
             queryParams.Add("@ArchivedBy", availability.ArchivedBy);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+        #endregion
+
+        #region Event
+        public Event InsertEvent(Event model)
+        {
+            const string query = "[Users].[InsertEvent]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@Title", model.Title);
+            queryParams.Add("@StartDate", model.StartDate);
+            queryParams.Add("@EndDate", model.EndDate);
+            queryParams.Add("@StartTime", model.StartTime);
+            queryParams.Add("@EndTime", model.EndTime);
+            queryParams.Add("@Notes", model.Notes);
+            queryParams.Add("@CreatedBy", model.CreatedBy);
+            return Db.Query<Event>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
         #endregion
     }

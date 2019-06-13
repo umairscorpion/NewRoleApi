@@ -304,5 +304,10 @@ namespace Subzz.Business.Services.Users
         }
 
         #endregion
+
+        public Event InsertEvent(Event model)
+        {
+            return _repo.InsertEvent(model);
+        }
     }
 }
