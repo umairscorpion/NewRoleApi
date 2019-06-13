@@ -103,35 +103,30 @@ namespace Subzz.Api.Controllers.Absence
                     // Audit Log
                     var audit = new AuditLog
                     {
-                        UserId = CurrentUser.UserId,
+                        UserId = CurrentUser.Id,
                         EntityId = absenceCreation.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Create,
-                        PostValue = Serializer.Serialize(model)
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                     };
                     _audit.InsertAuditLog(audit);
 
                     model.AbsenceId = absenceCreation;
-<<<<<<< HEAD
-                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1": model.SubstituteId, model.Status);
-=======
                     DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation,
-                        model.StartDate, model.EndDate, model.StartTime, model.EndTime);
->>>>>>> 87ceb4dd057ae78edce8efb0a8cc296dbcbcfea5
+                        model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                     if (model.AbsenceScope == 3)
                     {
                         IEnumerable<SubzzV2.Core.Entities.User> FavSubstitutes =
                             _userService.GetFavoriteSubstitutes(model.EmployeeId);
                         await _service.CreatePreferredAbsenceHistory(FavSubstitutes, model);
+                        return Json("success");
                     }
                     else
                     {
-                        if (model.IsApprovalRequired)
-                        {
-                            Task.Run(() => SendNotifications(model));
-                        }
-
+                        Task.Run(() => SendJobPostEmails(model));
                         return Json("success");
                     }
                 }
@@ -144,11 +139,161 @@ namespace Subzz.Api.Controllers.Absence
             return Json("error");
         }
 
+        async Task SendJobPostEmails(AbsenceModel absenceModel)
+        {
+            Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
+            //SubstituteId Contains All Substitute Ids in case Of Request specific Substitute.
+            var DataForEmails = _userService.GetUsersForSendingAbsenceNotificationOnEntireSub(absenceModel.DistrictId, absenceModel.OrganizationId, absenceModel.AbsenceId, absenceModel.SubstituteId);
+            message.AbsenceId = absenceModel.AbsenceId;
+            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceModel.StartTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.StartDate = Convert.ToDateTime(absenceModel.StartDate).ToString("D");
+            message.EndDate = Convert.ToDateTime(absenceModel.EndDate).ToString("D");
+            message.EmployeeName = DataForEmails.EmployeeName;
+            message.Position = DataForEmails.PositionDescription;
+            message.Subject = DataForEmails.SubjectDescription;
+            message.Grade = DataForEmails.Grade;
+            message.Location = DataForEmails.AbsenceLocation;
+            message.Notes = DataForEmails.SubstituteNotes;
+            message.Duration = DataForEmails.DurationType == 1 ? "Full Day" : DataForEmails.DurationType == 2 ? "First Half" : DataForEmails.DurationType == 3 ? "Second Half" : "Custom";
+            //Entire Sustitute Pool or Request Specifc Sub
+            if (absenceModel.IsApprovalRequired)
+            {
+                if (absenceModel.AbsenceScope == 4 || absenceModel.AbsenceScope == 1)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.Password = User.Password;
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+                            //For Substitutes
+                            if (User.RoleId == 4)
+                            {
+                                message.TemplateId = 1;
+                                //await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            if (User.RoleId == 3)
+                            {
+                                message.TemplateId = 10;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 2;
+                                //  await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+                //Direct Assign
+                else if (absenceModel.AbsenceScope == 2)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+                            //For Substitutes
+                            if (User.RoleId == 4)
+                            {
+                                message.TemplateId = 7;
+
+                            }
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 8;
+                                message.SubstituteName = DataForEmails.SubstituteName;
+                            }
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (absenceModel.AbsenceScope == 4 || absenceModel.AbsenceScope == 1)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.Password = User.Password;
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+
+                            if (User.RoleId == 3)
+                            {
+                                message.TemplateId = 13;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 14;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+                //Direct Assign
+                else if (absenceModel.AbsenceScope == 2)
+                {
+                    foreach (var User in DataForEmails.Users)
+                    {
+                        try
+                        {
+                            message.UserName = User.FirstName;
+                            message.SendTo = User.Email;
+                            //For Substitutes
+                            if (User.RoleId == 4)
+                            {
+                                message.TemplateId = 7;
+
+                            }
+                            //For Admins
+                            else
+                            {
+                                message.TemplateId = 8;
+                                message.SubstituteName = DataForEmails.SubstituteName;
+                            }
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
         [Route("getAbsences/{StartDate}/{EndDate}/{UserId}")]
         [HttpGet]
         public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId)
         {
-           return _service.GetAbsences(StartDate, EndDate, UserId);
+           return _service.GetAbsences(StartDate, EndDate, UserId, null);
         }
 
         [Route("getAbsencesScheduleEmployee/{StartDate}/{EndDate}/{UserId}")]
@@ -163,9 +308,33 @@ namespace Subzz.Api.Controllers.Absence
         public ActionResult UpdateAbsenceStatus(int AbsenceId, int statusId, string UpdateStatusDate, string UserId)
         {
             int RowsEffected = _service.UpdateAbsenceStatus(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId);
-            if (RowsEffected > 0)
-                return Json("success");
-            return Json("error");
+            if (statusId == 1)
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Released,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+            }
+            else
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Cancelled,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+            }
+            return Json("success");
         }
 
         [Route("getfile")]
@@ -187,11 +356,23 @@ namespace Subzz.Api.Controllers.Absence
         [HttpPatch]
         public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
         {
-<<<<<<< HEAD
             model.UpdatedById = base.CurrentUser.Id;
             int RowsEffected = _service.UpdateAbsence(model);
             if (RowsEffected > 0)
             {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Update,
+                    PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(model.AbsenceId, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
                 Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                 return Json("success");
@@ -200,26 +381,6 @@ namespace Subzz.Api.Controllers.Absence
             {
                 return Json("error");
             }
-=======
-            // Audit Log
-            var audit = new AuditLog
-            {
-                UserId = CurrentUser.UserId,
-                EntityId = model.AbsenceId.ToString(),
-                EntityType = AuditLogs.EntityType.Absence,
-                ActionType = AuditLogs.ActionType.Update,
-                PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
-                PostValue = Serializer.Serialize(model)
-            };
-            _audit.InsertAuditLog(audit);
-
-            int RowsEffected = _service.UpdateAbsence(model);
-            if (RowsEffected > 0)
-            {
-                return Json("success");
-            }
-            return Json("error");
->>>>>>> 87ceb4dd057ae78edce8efb0a8cc296dbcbcfea5
         }
 
         [Route("updateAbseceStatusAndSub/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
@@ -228,7 +389,20 @@ namespace Subzz.Api.Controllers.Absence
         {
             int RowsEffected = _service.UpdateAbsenceStatusAndSub(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId, SubstituteId, SubstituteRequired);
             if (RowsEffected > 0)
+            {
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Assigned,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Json("success");
+            }
             return Json("error");
         }
 
@@ -242,7 +416,18 @@ namespace Subzz.Api.Controllers.Absence
             var Summary = _service.GetAbsenceSummary(userId, year);
             return Ok(Summary);
         }
+        [Route("getTopTenTeachers")]
+        [HttpGet]
+        public IActionResult GetTopTenTeachers()
+        {
+            var userId = base.CurrentUser.Id;
+            var Summary = _service.GetTopTenTeachers(userId);
+            return Ok(Summary);
+        }
 
+<<<<<<< HEAD
+        [Route("views/calendar/{StartDate}/{EndDate}/{UserId}")]
+=======
         async Task SendNotifications(AbsenceModel absenceModel)
         {
             Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
@@ -286,7 +471,6 @@ namespace Subzz.Api.Controllers.Absence
                     }
                     catch (Exception ex)
                     {
-
                     }
                 }
             }
@@ -322,5 +506,43 @@ namespace Subzz.Api.Controllers.Absence
             
         }
 
+        [Route("views/calendar/{StartDate}/{EndDate}/{UserId}/{CampusId}")]
+>>>>>>> edb294ee1abf6e6489aef2a5970449288934f355
+        [HttpGet]
+        public IActionResult CalendarView(DateTime StartDate, DateTime EndDate, string UserId, string CampusId)
+        {
+            var result = _service.GetAbsences(StartDate, EndDate, UserId, CampusId);
+            var events = _service.GetEvents(StartDate, EndDate, UserId);
+            var absencesCalendarView = CalendarEvents(result);
+            var eventsCalendarView = CalendarEvents(events);
+            absencesCalendarView.AddRange(eventsCalendarView);
+            return Ok(absencesCalendarView);
+        }
+
+        private List<CalendarEvent> CalendarEvents(IEnumerable<AbsenceModel> absences)
+        {
+            var events = absences.Select(a => new CalendarEvent
+            {
+                id = a.AbsenceId,
+                title = a.StartTime + " " + a.CreatedByUser,
+                description = a.PayrollNotes,
+                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+            }).ToList();
+            return events;
+        }
+
+        private List<CalendarEvent> CalendarEvents(IEnumerable<Event> events)
+        {
+            var cEvents = events.Select(a => new CalendarEvent
+            {
+                id = a.EventId,
+                title = a.StartTime + " " + a.UserId,
+                description = a.Notes,
+                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+            }).ToList();
+            return cEvents;
+        }
     }
 }
