@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Extensions.Configuration;
 using Subzz.Integration.Core.Container;
 using Subzz.Integration.Core.Domain;
 using Subzz.Integration.Core.Helper;
@@ -6,6 +7,7 @@ using SubzzV2.Core.Enum;
 using SubzzV2.Integration.Core.Notification.Interface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,8 +17,6 @@ namespace SubzzV2.Integration.Core.Notification
 {
     public class EmailProcessor : IEmailProcessor
     {
-        private const string registrationConfirmedPath = "registrationConfirmed/";
-        private const string url = "http://162.241.138.178/plesk-site-preview/sv2.loginsubzz.com";
         private const string localUrl = "http://localhost:4200";
 
         private CommunicationContainer _communicationContainer;
@@ -32,7 +32,12 @@ namespace SubzzV2.Integration.Core.Notification
         {
             try
             {
-                if(message.TemplateId == 1)
+                var configurationBuilder = new ConfigurationBuilder();
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+                configurationBuilder.AddJsonFile(path, false);
+                var root = configurationBuilder.Build();
+                string url = root.GetSection("URL").GetSection("LiveSiteUrl").Value;
+                if (message.TemplateId == 1)
                 {
                     message.AcceptUrl = url + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId;
                 }
@@ -129,6 +134,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{User Name}"] = message.UserName ?? "",
                 ["{Confirmation}"] = message.AbsenceId > 0 ? message.AbsenceId.ToString():  "",
                 ["{Employee Name}"] = message.EmployeeName ?? "",
+                ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
                 ["{Subject}"] = !string.IsNullOrEmpty(message.Subject) ? message.Subject + "-" : "N/A-",
                 ["{Grade}"] = !string.IsNullOrEmpty(message.Grade) ? message.Grade : "N/A",

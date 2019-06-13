@@ -1,15 +1,40 @@
 ﻿using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
+using Subzz.Business.Services.Users.Interface;
+using Subzz.Integration.Core.Container;
+using Subzz.Integration.Core.Domain;
+using Subzz.Integration.Core.Helper;
+using SubzzAbsence.Business.Absence.Interface;
+using SubzzV2.Core.Entities;
+using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Subzz.Api.Custom
 {
-    public sealed class Notification
+    public class Notification
     {
+        private readonly IUserService _userService;
+        public Notification()
+        {
+        }
+        public Notification(IUserService userService)
+        {
+            _userService = userService;
+        }
+        private CommunicationContainer _communicationContainer;
+        public virtual CommunicationContainer CommunicationContainer
+        {
+            get
+            {
+                return _communicationContainer ?? (_communicationContainer = new CommunicationContainer());
+            }
+        }
+
         public delegate string SendEmail(AbsenceModel absenceModel);
         public static string ProcessRequest(AbsenceModel absenceModel)
         {
