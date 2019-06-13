@@ -10,5 +10,9 @@ namespace SubzzV2.Core.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        //For Time Zone
+        public int StateId { get; set; }
+        public string TimeZone_Title { get; set; }
+        public int Timezone_Value { get; set; }
     }
 }

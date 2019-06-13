@@ -16,13 +16,20 @@ namespace SubzzLookup.Business.Lookups
         {
             _repo = repo;
         }
+
         public IEnumerable<CountryModel> GetCountries()
         {
             return _repo.GetCountries();
         }
+
         public IEnumerable<StateModel> GetStateByCountryId(int counrtyId)
         {
             return _repo.GetStateByCountryId(counrtyId);
+        }
+
+        public IEnumerable<LookupModel> GetTimeZone()
+        {
+            return _repo.GetTimeZone();
         }
     }
 }

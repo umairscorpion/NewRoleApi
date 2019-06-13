@@ -45,5 +45,12 @@ namespace SubzzLookup.DataAccess.Repositories
             queryParams.Add("@counrtyId", counrtyId);
             return Db.Query<StateModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
+
+        public IEnumerable<LookupModel> GetTimeZone()
+        {
+            var sql = "[Lookup].[GetTimeZones]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
     }
 }
