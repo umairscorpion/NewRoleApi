@@ -8,5 +8,6 @@ namespace SubzzSetting.Business.Setting.Interface
     public interface IUserSettingsService
     {
         NoticationSettingsModel GetNotificationSettings(string UserId);
+        SubzzVersion GetLatestVersionDetails();
     }
 }

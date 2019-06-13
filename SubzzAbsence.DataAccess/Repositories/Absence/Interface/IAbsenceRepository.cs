@@ -14,7 +14,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
     {
         int CreateAbsence(AbsenceModel model);
         Task<int> SaveAsSingleDayAbsence(DataTable absences);
-        IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId);
+        IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId);
         IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId);
         int UpdateAbsenceStatus(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId);
         IEnumerable<AbsenceModel> GetAbsencesByStatus(int StatusId);
@@ -25,5 +25,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         int UpdateAbsence(AbsenceModel user);
         List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
         List<AbsenceSummary> GetTopTenTeachers(string userId);
+        List<Event> GetEvents(DateTime startDate, DateTime endDate, string userId);
     }
 }

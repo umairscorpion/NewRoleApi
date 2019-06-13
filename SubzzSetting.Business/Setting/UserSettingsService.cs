@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SubzzSetting.Business.Setting
 {
-    class UserSettingsService : IUserSettingsService
+    public class UserSettingsService : IUserSettingsService
     {
         private readonly IUserSettingsRepository _repo;
         public UserSettingsService(IUserSettingsRepository repo)
@@ -18,6 +18,11 @@ namespace SubzzSetting.Business.Setting
         public NoticationSettingsModel GetNotificationSettings(string UserId)
         {
             return _repo.GetNotificationSettings(UserId);
+        }
+
+        public SubzzVersion GetLatestVersionDetails()
+        {
+            return _repo.GetLatestVersionDetails();
         }
     }
 }

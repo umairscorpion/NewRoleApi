@@ -70,6 +70,7 @@ namespace SubzzV2.Core.Entities
         public int JobNumber { get; set; }
         public int SearchType { get; set; }
         public int ReportType { get; set; }
+        public bool IsViewedNewVersion { get; set; }
     }
 
     public class UserSummary {
