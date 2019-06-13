@@ -8,5 +8,6 @@ namespace SubzzSettings.DataAccess.Settings.Interface
     public interface IUserSettingsRepository
     {
         NoticationSettingsModel GetNotificationSettings( string UserId);
+        SubzzVersion GetLatestVersionDetails();
     }
 }

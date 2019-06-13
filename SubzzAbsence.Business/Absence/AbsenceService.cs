@@ -36,9 +36,9 @@ namespace SubzzAbsence.Business.Absence
             return await _repo.SaveAsSingleDayAbsence(absences);
         }
 
-        public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId)
+        public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId)
         {
-             return _repo.GetAbsences(StartDate, EndDate, UserId);
+             return _repo.GetAbsences(StartDate, EndDate, UserId, CampusId);
         }
 
         public IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId)
@@ -88,6 +88,11 @@ namespace SubzzAbsence.Business.Absence
         public List<AbsenceSummary> GetTopTenTeachers(string userId)
         {
             return _repo.GetTopTenTeachers(userId);
+        }
+
+        public List<Event> GetEvents(DateTime startDate, DateTime endDate, string userId)
+        {
+            return _repo.GetEvents(startDate, endDate, userId);
         }
     }
 }
