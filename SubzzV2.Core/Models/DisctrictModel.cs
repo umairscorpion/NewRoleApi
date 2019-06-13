@@ -33,5 +33,6 @@ namespace SubzzV2.Core.Models
         public string DeductAfterTime { get; set; }
         public bool IsDeductOnBreak { get; set; }
         public bool IsActive { get; set; }
+        public string DistrictTimeZoneTitle { get; set; }
     }
 }

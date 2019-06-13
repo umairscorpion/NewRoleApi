@@ -11,5 +11,6 @@ namespace SubzzLookup.DataAccess.Repositories.Interface
     {
         IEnumerable<CountryModel> GetCountries();
         IEnumerable<StateModel> GetStateByCountryId(int counrtyId);
+        IEnumerable<LookupModel> GetTimeZone();
     }
 }

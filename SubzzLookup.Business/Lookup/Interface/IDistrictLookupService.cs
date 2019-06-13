@@ -11,5 +11,6 @@ namespace SubzzLookup.Business.Lookups.Interface
     {
         IEnumerable<CountryModel> GetCountries();
         IEnumerable<StateModel> GetStateByCountryId(int counrtyId);
+        IEnumerable<LookupModel> GetTimeZone();
     }
 }

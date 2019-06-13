@@ -35,5 +35,13 @@ namespace Subzz.Api.Controllers.Lookup
             var states = _service.GetStateByCountryId(counrtyId);
             return states;
         }
+
+        [Route("getTimeZone")]
+        [HttpGet]
+        public IEnumerable<LookupModel> GetTimeZone()
+        {
+            var List_Of_TimeZones = _service.GetTimeZone();
+            return List_Of_TimeZones;
+        }
     }
 }
