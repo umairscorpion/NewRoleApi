@@ -1,7 +1,7 @@
-﻿using GlobalErrorHandling.Models;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using SubzzV2.Core.Models;
 using System.Net;
 
 namespace Subzz.Api.Custom
@@ -20,7 +20,7 @@ namespace Subzz.Api.Custom
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
                     {
-                        await context.Response.WriteAsync(new GlobalErrorHandling.Models.ErrorDetails()
+                        await context.Response.WriteAsync(new ErrorDetails()
                         {
                             StatusCode = context.Response.StatusCode,
                             Message = "Internal Server Error."
