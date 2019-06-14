@@ -49,8 +49,20 @@ namespace Subzz.Api.Controllers.Absence
         [HttpGet]
         public IActionResult Get(int id)
         {
-            var result = _service.GetAbsenceDetailByAbsenceId(id);
-            return Ok(result);
+            try
+            {
+                var result = _service.GetAbsenceDetailByAbsenceId(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+            }
+            return null;
+            
         }
 
         [Route("uploadFile")]
@@ -127,7 +139,7 @@ namespace Subzz.Api.Controllers.Absence
                     }
                     else
                     {
-                        Task.Run(() => SendJobPostEmails(model));
+                        //Task.Run(() => SendJobPostEmails(model));
                         return Json("success");
                     }
                 }
@@ -294,118 +306,180 @@ namespace Subzz.Api.Controllers.Absence
         [HttpGet]
         public IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId)
         {
-           return _service.GetAbsences(StartDate, EndDate, UserId, null);
+            try
+            {
+                return _service.GetAbsences(StartDate, EndDate, UserId, null);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+           
         }
 
         [Route("getAbsencesScheduleEmployee/{StartDate}/{EndDate}/{UserId}")]
         [HttpGet]
         public IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId)
         {
-            return _service.GetAbsencesScheduleEmployee(StartDate, EndDate, UserId);
+            try
+            {
+                return _service.GetAbsencesScheduleEmployee(StartDate, EndDate, UserId);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+            
         }
 
         [Route("updateAbseceStatus/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}")]
         [HttpGet]
         public ActionResult UpdateAbsenceStatus(int AbsenceId, int statusId, string UpdateStatusDate, string UserId)
         {
-            int RowsEffected = _service.UpdateAbsenceStatus(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId);
-            if (statusId == 1)
+            try
             {
-                var audit = new AuditLog
+                int RowsEffected = _service.UpdateAbsenceStatus(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId);
+                if (statusId == 1)
                 {
-                    UserId = CurrentUser.Id,
-                    EntityId = AbsenceId.ToString(),
-                    EntityType = AuditLogs.EntityType.Absence,
-                    ActionType = AuditLogs.ActionType.Released,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = AbsenceId.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Released,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
 
-            }
-            else
-            {
-                var audit = new AuditLog
+                }
+                else
                 {
-                    UserId = CurrentUser.Id,
-                    EntityId = AbsenceId.ToString(),
-                    EntityType = AuditLogs.EntityType.Absence,
-                    ActionType = AuditLogs.ActionType.Cancelled,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = AbsenceId.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Cancelled,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                return Json("success");
             }
-            return Json("success");
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getfile")]
         [HttpPost]
         public IActionResult GetFile([FromBody]AbsenceModel model)
         {
-            string folderName = "Attachment";
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRootPath))
+            try
             {
-                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                string folderName = "Attachment";
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                {
+                    webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
+                string filePath = Path.Combine(webRootPath, folderName);
+                byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, model.AttachedFileName));
+                return File(bytes, model.FileContentType);
             }
-            string filePath = Path.Combine(webRootPath, folderName);
-            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, model.AttachedFileName));
-            return File(bytes, model.FileContentType);
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("updateAbsence")]
         [HttpPatch]
         public ActionResult UpdateAbsence([FromBody]AbsenceModel model)
         {
-            model.UpdatedById = base.CurrentUser.Id;
-            int RowsEffected = _service.UpdateAbsence(model);
-            if (RowsEffected > 0)
+            try
             {
-                var audit = new AuditLog
+                model.UpdatedById = base.CurrentUser.Id;
+                int RowsEffected = _service.UpdateAbsence(model);
+                if (RowsEffected > 0)
                 {
-                    UserId = CurrentUser.Id,
-                    EntityId = model.AbsenceId.ToString(),
-                    EntityType = AuditLogs.EntityType.Absence,
-                    ActionType = AuditLogs.ActionType.Update,
-                    PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
-                    PostValue = Serializer.Serialize(model),
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.AbsenceId.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Update,
+                        PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
 
-                DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(model.AbsenceId, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
-                Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
-                return Json("success");
+                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(model.AbsenceId, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
+                    Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
+                    return Json("success");
+                }
+                else
+                {
+                    return Json("error");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json("error");
             }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("updateAbseceStatusAndSub/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
         [HttpGet]
         public ActionResult UpdateAbseceStatusAndSub(int AbsenceId, int statusId, string UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
         {
-            int RowsEffected = _service.UpdateAbsenceStatusAndSub(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId, SubstituteId, SubstituteRequired);
-            if (RowsEffected > 0)
+            try
             {
-                var audit = new AuditLog
+                int RowsEffected = _service.UpdateAbsenceStatusAndSub(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId, SubstituteId, SubstituteRequired);
+                if (RowsEffected > 0)
                 {
-                    UserId = CurrentUser.Id,
-                    EntityId = AbsenceId.ToString(),
-                    EntityType = AuditLogs.EntityType.Absence,
-                    ActionType = AuditLogs.ActionType.Assigned,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = AbsenceId.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Assigned,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
 
-                return Json("success");
+                    return Json("success");
+                }
+                return Json("error");
             }
-            return Json("error");
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         //For Dashboard Chart
@@ -413,56 +487,99 @@ namespace Subzz.Api.Controllers.Absence
         [HttpGet]
         public IActionResult GetSummary()
         {
-            var year = DateTime.Now.Year;
-            var userId = base.CurrentUser.Id;
-            var Summary = _service.GetAbsenceSummary(userId, year);
-            return Ok(Summary);
+            try
+            {
+                var year = DateTime.Now.Year;
+                var userId = base.CurrentUser.Id;
+                var Summary = _service.GetAbsenceSummary(userId, year);
+                return Ok(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
+
         [Route("getTopTenTeachers")]
         [HttpGet]
         public IActionResult GetTopTenTeachers()
         {
-            var userId = base.CurrentUser.Id;
-            var Summary = _service.GetTopTenTeachers(userId);
-            return Ok(Summary);
+            try
+            {
+                var userId = base.CurrentUser.Id;
+                var Summary = _service.GetTopTenTeachers(userId);
+                return Ok(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("views/calendar/{StartDate}/{EndDate}/{UserId}/{CampusId}")]
         [HttpGet]
         public IActionResult CalendarView(DateTime StartDate, DateTime EndDate, string UserId, string CampusId)
         {
-            var result = _service.GetAbsences(StartDate, EndDate, UserId, CampusId);
-            var events = _service.GetEvents(StartDate, EndDate, UserId);
-            var absencesCalendarView = CalendarEvents(result);
-            var eventsCalendarView = CalendarEvents(events);
-            absencesCalendarView.AddRange(eventsCalendarView);
-            return Ok(absencesCalendarView);
+            try
+            {
+                var result = _service.GetAbsences(StartDate, EndDate, UserId, CampusId);
+                var events = _service.GetEvents(StartDate, EndDate, UserId);
+                var absencesCalendarView = CalendarEvents(result);
+                var eventsCalendarView = CalendarEvents(events);
+                absencesCalendarView.AddRange(eventsCalendarView);
+                return Ok(absencesCalendarView);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         private List<CalendarEvent> CalendarEvents(IEnumerable<AbsenceModel> absences)
         {
-            var events = absences.Select(a => new CalendarEvent
+            try
             {
-                id = a.AbsenceId,
-                title = a.StartTime + " " + a.CreatedByUser,
-                description = a.PayrollNotes,
-                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-            }).ToList();
-            return events;
+                var events = absences.Select(a => new CalendarEvent
+                {
+                    id = a.AbsenceId,
+                    title = a.StartTime + " " + a.CreatedByUser,
+                    description = a.PayrollNotes,
+                    start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                }).ToList();
+                return events;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         private List<CalendarEvent> CalendarEvents(IEnumerable<Event> events)
         {
-            var cEvents = events.Select(a => new CalendarEvent
+            try
             {
-                id = a.EventId,
-                title = a.StartTime + " " + a.UserId,
-                description = a.Notes,
-                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-            }).ToList();
-            return cEvents;
+                var cEvents = events.Select(a => new CalendarEvent
+                {
+                    id = a.EventId,
+                    title = a.StartTime + " " + a.UserId,
+                    description = a.Notes,
+                    start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                }).ToList();
+                return cEvents;
         }
 
         async Task SendNotificationsOnJobCancelled(int AbsenceId)

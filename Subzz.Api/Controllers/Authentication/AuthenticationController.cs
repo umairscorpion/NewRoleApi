@@ -41,58 +41,80 @@ namespace Subzz.Api.Controllers.Authentication
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody]UserLogin user)
         {
-            var UserInfo = _service.GetUserByCredentials(user.UserName, user.Password);
-            if (user == null)
+            try
             {
-                return BadRequest("Invalid client request");
-            }
+                var UserInfo = _service.GetUserByCredentials(user.UserName, user.Password);
+                if (user == null)
+                {
+                    return BadRequest("Invalid client request");
+                }
 
-            if (UserInfo != null)
-            {
-                var userDetail = _userService.GetUserDetail(UserInfo.UserId);
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("P@$sw0rd123Ki@Keysec"));
-                var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                if (UserInfo != null)
+                {
+                    var userDetail = _userService.GetUserDetail(UserInfo.UserId);
+                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("P@$sw0rd123Ki@Keysec"));
+                    var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-                var tokeOptions = new JwtSecurityToken(
-                    //issuer: "http://localhost:56412",
-                    //audience: "http://localhost:56412",
-                    claims: new List<Claim> { new Claim("UserId", UserInfo.UserId.ToString()),
+                    var tokeOptions = new JwtSecurityToken(
+                        //issuer: "http://localhost:56412",
+                        //audience: "http://localhost:56412",
+                        claims: new List<Claim> { new Claim("UserId", UserInfo.UserId.ToString()),
                     new Claim("districtId", userDetail.DistrictId.ToString()),
                     new Claim("organizationId", !string.IsNullOrEmpty(userDetail.OrganizationId)  ? userDetail.OrganizationId.ToString(): "-1")},
-                    expires: DateTime.Now.AddMinutes(20),
-                    signingCredentials: credentials
-                );
-                // Audit Log
-                var audit = new AuditLog
-                {
-                    UserId = UserInfo.UserId,
-                    EntityType = AuditLogs.EntityType.User,
-                    ActionType = AuditLogs.ActionType.LoggedIn,
-                    DistrictId = userDetail.DistrictId,
-                    OrganizationId = !string.IsNullOrEmpty(userDetail.OrganizationId) ? userDetail.OrganizationId.ToString() : "null"
-                };
-                _audit.InsertAuditLog(audit);
+                        expires: DateTime.Now.AddMinutes(20),
+                        signingCredentials: credentials
+                    );
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = UserInfo.UserId,
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.LoggedIn,
+                        DistrictId = userDetail.DistrictId,
+                        OrganizationId = !string.IsNullOrEmpty(userDetail.OrganizationId) ? userDetail.OrganizationId.ToString() : "null"
+                    };
+                    _audit.InsertAuditLog(audit);
 
-                var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { Token = token });
+                    var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                    return Ok(new { Token = token });
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Unauthorized();
             }
+            finally
+            {
+            }
+            return null;
         }
 
         [HttpPost, Route("insertExternalUser")]
         public IActionResult InsertExternalUser([FromBody]ExternalUser externalUser)
         {
-            var userModel = _userService.InsertExternalUser(externalUser);
-            return Ok(new { Token = "sdsd"});
+            try
+            {
+                var userModel = _userService.InsertExternalUser(externalUser);
+                return Ok(new { Token = "sdsd" });
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [HttpPost, Route("forgotPassword")]
         public IActionResult ForgotPassword([FromBody]SubzzV2.Core.Entities.User user)
         {
-            var exist = _userService.CheckEmailExistance(user.Email);
+            try
+            {
+                var exist = _userService.CheckEmailExistance(user.Email);
             if (Convert.ToBoolean(exist))
             {
                 var resetPassKey = System.Guid.NewGuid().ToString() + user.Email;
@@ -106,13 +128,32 @@ namespace Subzz.Api.Controllers.Authentication
                 return Ok(true);
             }
             return Ok(false);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [HttpPost, Route("updatePasswordByActivationCode")]
         public IActionResult UpdatePasswordByActivationCode([FromBody]SubzzV2.Core.Entities.User user)
         {
-            var userModel = _userService.UpdatePasswordUsingActivationLink(user);
-            return Ok();
+            try
+            {
+                var userModel = _userService.UpdatePasswordUsingActivationLink(user);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+
         }
 
     }

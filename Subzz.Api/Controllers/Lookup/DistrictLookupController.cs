@@ -24,24 +24,54 @@ namespace Subzz.Api.Controllers.Lookup
         [HttpGet]
         public IEnumerable<CountryModel> GetCountries()
         {
-            var countries = _service.GetCountries();
-            return countries;
+            try
+            {
+                var countries = _service.GetCountries();
+                return countries;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getStateByCountryId/{counrtyId}")]
         [HttpGet]
         public IEnumerable<StateModel> GetStateByCountryId(int counrtyId)
         {
-            var states = _service.GetStateByCountryId(counrtyId);
-            return states;
+            try
+            {
+                var states = _service.GetStateByCountryId(counrtyId);
+                return states;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getTimeZone")]
         [HttpGet]
         public IEnumerable<LookupModel> GetTimeZone()
         {
-            var List_Of_TimeZones = _service.GetTimeZone();
-            return List_Of_TimeZones;
+            try
+            {
+                var List_Of_TimeZones = _service.GetTimeZone();
+                return List_Of_TimeZones;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
     }
 }

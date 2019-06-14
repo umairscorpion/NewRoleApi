@@ -41,21 +41,33 @@ namespace Subzz.Api.Controllers.TimeClock
         [HttpPost]
         public IActionResult InsertClockInTime(string userId)
         {
-            var model = new SubzzV2.Core.Models.TimeClock
+            try
             {
-                UserId = CurrentUser.Id,
-                ClockInDate = DateTime.Now,
-                ClockInTime = DateTime.Now.TimeOfDay,
-                Activity = TimeClockActivity.ActionType.Clockin
-            };
-            var Summary = _service.InsertClockInTime(model);
-            return Ok(Summary);
+                var model = new SubzzV2.Core.Models.TimeClock
+                {
+                    UserId = CurrentUser.Id,
+                    ClockInDate = DateTime.Now,
+                    ClockInTime = DateTime.Now.TimeOfDay,
+                    Activity = TimeClockActivity.ActionType.Clockin
+                };
+                var Summary = _service.InsertClockInTime(model);
+                return Ok(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("clockout")]
         [HttpPost]
         public IActionResult InsertClockOutTime(string userId)
         {
+            try
+            { 
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
@@ -65,12 +77,22 @@ namespace Subzz.Api.Controllers.TimeClock
             };
             var Summary = _service.InsertClockOutTime(model);
             return Ok(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("break")]
         [HttpPost]
         public IActionResult TimeClockBreakStatus(string userId)
         {
+            try
+            {
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
@@ -78,12 +100,22 @@ namespace Subzz.Api.Controllers.TimeClock
             };
             var Summary = _service.TimeClockBreakStatus(model);
             return Ok(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("return")]
         [HttpPost]
         public IActionResult TimeClockReturnStatus(string userId)
         {
+            try
+            { 
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
@@ -91,24 +123,44 @@ namespace Subzz.Api.Controllers.TimeClock
             };
             var Summary = _service.TimeClockReturnStatus(model);
             return Ok(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("timeclockdata")]
         [HttpGet]
         public async Task<IEnumerable<SubzzV2.Core.Models.TimeClock>> GetTimeClockData(string userId)
         {
+            try
+            { 
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
                 Activity = TimeClockActivity.ActionType.Return
             };
             return await _service.GetTimeClockData(model);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
 
         }
         [Route("timeclockstatus")]
         [HttpGet]
         public IActionResult CheckTimeClockStatus()
         {
+            try
+            { 
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
@@ -116,16 +168,34 @@ namespace Subzz.Api.Controllers.TimeClock
             };
             var Summary = _service.CheckTimeClockStatus(model);
             return Json(Summary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("timeclockdatawithfilter")]
         [HttpPost]
         public async Task<IEnumerable<SubzzV2.Core.Models.TimeClock>> GetTimeClockSummaryWithFilter([FromBody]TimeclockFilter model)
         {
+            try
+            { 
             model.DistrictId = base.CurrentUser.DistrictId;
             model.OrganizationId = base.CurrentUser.OrganizationId;
             model.UserId = base.CurrentUser.Id;
             return await _service.GetTimeClockSummaryWithFilter(model);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
 
         }
 
@@ -133,10 +203,20 @@ namespace Subzz.Api.Controllers.TimeClock
         [HttpPost]
         public async Task<IEnumerable<SubzzV2.Core.Models.TimeClock>> GetTimeTrackerSummary([FromBody]TimeclockFilter model)
         {
+            try
+            { 
             model.DistrictId = base.CurrentUser.DistrictId;
             model.OrganizationId = base.CurrentUser.OrganizationId;
             model.UserId = base.CurrentUser.Id;
             return await _service.GetTimeTrackerSummary(model);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
 
         }
 
@@ -144,17 +224,29 @@ namespace Subzz.Api.Controllers.TimeClock
         [HttpPost]
         public IActionResult GetTimeTrackerDataWithFilter([FromBody]TimeclockFilter model)
         {
+            try
+            { 
             model.DistrictId = base.CurrentUser.DistrictId;
             model.OrganizationId = base.CurrentUser.OrganizationId;
             model.UserId = base.CurrentUser.Id;
             var reportDetails = _service.GetTimeTrackerDataWithFilter(model);
             return Ok(reportDetails);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("updateTimeClockData")]
         [HttpPatch]
         public ActionResult UpdateTimeClockData([FromBody]SubzzV2.Core.Models.TimeClock model)
         {
+            try
+            { 
             int RowsEffected = _service.UpdateTimeClockData(model);
             if (RowsEffected > 0)
             {
@@ -164,6 +256,14 @@ namespace Subzz.Api.Controllers.TimeClock
             {
                 return Json("error");
             }
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
     }
 }
