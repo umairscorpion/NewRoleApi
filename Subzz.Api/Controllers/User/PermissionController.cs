@@ -25,24 +25,54 @@ namespace Subzz.Api.Controllers.User
         [HttpGet]
         public IEnumerable<SubzzV2.Core.Entities.User> GetResourcesByParentResourceId(int RoleId, int ParentResourceId)
         {
-            var ParentResources = _service.GetResourcesByParentResourceId(RoleId, ParentResourceId);
-            return ParentResources;
+            try
+            {
+                var ParentResources = _service.GetResourcesByParentResourceId(RoleId, ParentResourceId);
+                return ParentResources;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("insertUserRole/{RoleName}")]
         [HttpGet]
         public SubzzV2.Core.Entities.User InsertUserRole(string RoleName)
         {
-            var ParentResources = _service.InsertUserRole(RoleName);
-            return ParentResources;
+            try
+            {
+                var ParentResources = _service.InsertUserRole(RoleName);
+                return ParentResources;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("GetUserRoles")]
         [HttpGet]
         public IEnumerable<SubzzV2.Core.Entities.User> GetUserRoles()
         {
-            var UserRoles = _service.GetUserRoles();
-            return UserRoles;
+            try
+            {
+                var UserRoles = _service.GetUserRoles();
+                return UserRoles;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
     }

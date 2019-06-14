@@ -24,32 +24,71 @@ namespace Subzz.Api.Controllers.Lookup
         [HttpGet]
         public IEnumerable<SubzzV2.Core.Entities.User> GetUserRoles()
         {
-            var countries = _service.GetAllUserRoles();
-            return countries;
+            try
+            {
+                var countries = _service.GetAllUserRoles();
+                return countries;
+            }
+            catch(Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getTeachingLevels")]
         [HttpGet]
         public IEnumerable<LookupModel> GetTeachingLevels()
         {
-            var countries = _service.GetTeachingLevels();
-            return countries;
+            try
+            {
+                var countries = _service.GetTeachingLevels();
+                return countries;
+            }
+            catch(Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("availability-status")]
         [HttpGet]
         public IEnumerable<LookupModel> GetAvailabilityStatuses()
         {
-            var result = _service.GetAvailabilityStatuses();
-            return result;
+            try
+            {
+                var result = _service.GetAvailabilityStatuses();
+                return result;
+            }
+            catch(Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("teachingSubjects")]
         [HttpGet]
         public IEnumerable<LookupModel> GetTeachingSubjects()
         {
-            var countries = _service.GetTeachingSubjects();
-            return countries;
-        }
+            try
+            {
+                var countries = _service.GetTeachingSubjects();
+                return countries;
+            }
+            catch(Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;        }
     }
 }

@@ -30,12 +30,22 @@ namespace Subzz.Api.Controllers.Communication
         [HttpPost]
         public IActionResult SendWellcomeLetter(SubzzV2.Core.Entities.User user)
         {
-            Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
-            message.Email = user.Email;
-            message.EmployeeName = user.FirstName;
-            message.PhoneNumber = user.PhoneNumber;
-            //CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-            return Ok();
+            try
+            {
+                Subzz.Integration.Core.Domain.Message message = new Integration.Core.Domain.Message();
+                message.Email = user.Email;
+                message.EmployeeName = user.FirstName;
+                message.PhoneNumber = user.PhoneNumber;
+                //CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
     }
 }

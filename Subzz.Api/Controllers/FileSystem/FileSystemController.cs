@@ -67,30 +67,50 @@ namespace Subzz.Api.Controllers.FileSystem
         [HttpPost]
         public IActionResult GetProfilePic([FromBody]FileManager model)
         {
-            string folderName = "Profile";
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRootPath))
+            try
             {
-                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                string folderName = "Profile";
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                {
+                    webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
+                string mimeType = GetMimeType(model.FileContentType);
+                string filePath = Path.Combine(webRootPath, folderName);
+                byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, model.AttachedFileName));
+                return File(bytes, mimeType);
             }
-            string mimeType = GetMimeType(model.FileContentType);
-            string filePath = Path.Combine(webRootPath, folderName);
-            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, model.AttachedFileName));
-            return File(bytes, mimeType);
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         public static string GetMimeType(string extension)
         {
-            if (extension == null)
+            try
             {
-                throw new ArgumentNullException("extension");
+                if (extension == null)
+                {
+                    throw new ArgumentNullException("extension");
+                }
+                if (!extension.StartsWith("."))
+                {
+                    extension = "." + extension;
+                }
+                string mime;
+                return _mappings.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
             }
-            if (!extension.StartsWith("."))
+            catch (Exception ex)
             {
-                extension = "." + extension;
             }
-            string mime;
-            return _mappings.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
+            finally
+            {
+            }
+            return null;
         }
 
         private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
@@ -661,44 +681,74 @@ namespace Subzz.Api.Controllers.FileSystem
         [HttpPost]
         public IEnumerable<FileManager> AddFiles([FromBody]FileManager fileManager)
         {
-            fileManager.DistrictId = base.CurrentUser.DistrictId;
-            fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
-            fileManager.UserId = base.CurrentUser.Id;
-            var Files = _service.AddFiles(fileManager);
-            return Files;
+            try
+            {
+                fileManager.DistrictId = base.CurrentUser.DistrictId;
+                fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
+                fileManager.UserId = base.CurrentUser.Id;
+                var Files = _service.AddFiles(fileManager);
+                return Files;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getFiles")]
         [HttpPost]
         public IEnumerable<FileManager> GetFiles([FromBody]FileManager fileManager)
         {
-            fileManager.DistrictId = base.CurrentUser.DistrictId;
-            fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
-            fileManager.UserId = base.CurrentUser.Id;
-            var Files = _service.GetFiles(fileManager);
-            return Files;
+            try
+            {
+                fileManager.DistrictId = base.CurrentUser.DistrictId;
+                fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
+                fileManager.UserId = base.CurrentUser.Id;
+                var Files = _service.GetFiles(fileManager);
+                return Files;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("deleteFiles")]
         [HttpPatch]
         public IEnumerable<FileManager> DeleteFiles([FromBody]FileManager fileManager)
         {
-            fileManager.DistrictId = base.CurrentUser.DistrictId;
-            fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
-            fileManager.UserId = base.CurrentUser.Id;
-            var Files = _service.DeleteFiles(fileManager);
-
-            string folderName = "Files";
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRootPath))
+            try
             {
-                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            }
-            string filePath = Path.Combine(webRootPath, folderName);
-            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.FileName));
-            System.IO.File.Delete(Path.Combine(filePath, fileManager.FileName));
+                fileManager.DistrictId = base.CurrentUser.DistrictId;
+                fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
+                fileManager.UserId = base.CurrentUser.Id;
+                var Files = _service.DeleteFiles(fileManager);
 
-            return Files;
+                string folderName = "Files";
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                {
+                    webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
+                string filePath = Path.Combine(webRootPath, folderName);
+                byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.FileName));
+                System.IO.File.Delete(Path.Combine(filePath, fileManager.FileName));
+
+                return Files;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("uploadFile")]
@@ -744,15 +794,25 @@ namespace Subzz.Api.Controllers.FileSystem
         [HttpPost]
         public IActionResult GetFile([FromBody]FileManager fileManager)
         {
-            string folderName = "Files";
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRootPath))
+            try
             {
-                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                string folderName = "Files";
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                {
+                    webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
+                string filePath = Path.Combine(webRootPath, folderName);
+                byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.FileName));
+                return File(bytes, fileManager.FileContentType);
             }
-            string filePath = Path.Combine(webRootPath, folderName);
-            byte[] bytes = System.IO.File.ReadAllBytes(Path.Combine(filePath, fileManager.FileName));
-            return File(bytes, fileManager.FileContentType);
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
     }
 }
