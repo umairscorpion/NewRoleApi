@@ -580,6 +580,12 @@ namespace Subzz.Api.Controllers.Absence
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
                 }).ToList();
                 return cEvents;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         async Task SendNotificationsOnJobCancelled(int AbsenceId)

@@ -42,11 +42,6 @@ namespace Subzz.Api.Controllers.User
             {
 
             }
-            return null;
-            }
-            catch(Exception ex)
-            {
-            }
             finally
             {
             }
@@ -208,25 +203,36 @@ namespace Subzz.Api.Controllers.User
                     backgroundColor = a.AvailabilityContentBackgroundColor,
                     allDay = a.IsAllDayOut,
                     className = new string[] { a.AvailabilityIconCss }
-            }).ToList();
-            return events;
-        }
-
-        private List<CalendarEvent> AbsencesToEvents(IEnumerable<AbsenceModel> availabilities)
-        {
-            var events = availabilities.Select(a => new CalendarEvent
-            {
-                id = 0,
-                title =  "for" + " " + a.EmployeeName,
-                description = a.SubstituteNotes,
-                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-                backgroundColor = "",
-                allDay = false,
-                className = new string[] { "" }
                 }).ToList();
                 return events;
             }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
+
+        private List<CalendarEvent> AbsencesToEvents(IEnumerable<AbsenceModel> availabilities)
+            {
+                try
+                {
+
+
+                    var events = availabilities.Select(a => new CalendarEvent
+                    {
+                        id = 0,
+                        title = "for" + " " + a.EmployeeName,
+                        description = a.SubstituteNotes,
+                        start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                        end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                        backgroundColor = "",
+                        allDay = false,
+                        className = new string[] { "" }
+                    }).ToList();
+                    return events;
+                }
+                
             catch (Exception ex)
             {
             }
