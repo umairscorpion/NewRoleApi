@@ -1,0 +1,31 @@
+<<<<<<< HEAD
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+
+namespace SubzzV2.Core.Models
+=======
+﻿using Newtonsoft.Json;
+
+namespace GlobalErrorHandling.Models
+>>>>>>> 4dd08071372633b98987088dad2b11602f4db507
+{
+    public class ErrorDetails
+    {
+        public int StatusCode { get; set; }
+        public string Message { get; set; }
+
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 4dd08071372633b98987088dad2b11602f4db507
