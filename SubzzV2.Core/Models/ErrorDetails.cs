@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GlobalErrorHandling.Models
+namespace SubzzV2.Core.Models
 {
     public class ErrorDetails
     {
