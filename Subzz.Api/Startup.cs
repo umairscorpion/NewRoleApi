@@ -14,6 +14,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Subzz.Api.Custom;
 using Subzz.Api.Validators;
 using Subzz.Business.Services.Users;
 using Subzz.Business.Services.Users.Interface;
@@ -50,6 +51,8 @@ using SubzzManage.DataAccess.Repositries.Manage;
 using SubzzManage.DataAccess.Repositries.Manage.Interface;
 using SubzzSetting.Business.Setting;
 using SubzzSetting.Business.Setting.Interface;
+using SubzzSettings.DataAccess.Settings;
+using SubzzSettings.DataAccess.Settings.Interface;
 
 namespace Subzz.Api
 {
@@ -118,6 +121,7 @@ namespace Subzz.Api
             services.AddTransient<ITimeRepository, TimeRepository>();
 
             services.AddTransient<IUserSettingsService, UserSettingsService>();
+            services.AddTransient<IUserSettingsRepository, UserSettingsRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>
@@ -145,6 +149,8 @@ namespace Subzz.Api
             }
             app.UseCors("EnableCORS");
             app.UseAuthentication();
+            app.ConfigureExceptionHandler();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();// For the wwwroot folder
 
             app.UseStaticFiles(new StaticFileOptions
