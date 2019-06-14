@@ -14,6 +14,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Subzz.Api.Custom;
 using Subzz.Api.Validators;
 using Subzz.Business.Services.Users;
 using Subzz.Business.Services.Users.Interface;
@@ -148,6 +149,8 @@ namespace Subzz.Api
             }
             app.UseCors("EnableCORS");
             app.UseAuthentication();
+            app.ConfigureExceptionHandler();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();// For the wwwroot folder
 
             app.UseStaticFiles(new StaticFileOptions

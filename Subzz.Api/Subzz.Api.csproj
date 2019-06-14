@@ -17,6 +17,7 @@
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.7.29" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="Quartz" Version="3.0.7" />
   </ItemGroup>
