@@ -50,6 +50,8 @@ using SubzzManage.DataAccess.Repositries.Manage;
 using SubzzManage.DataAccess.Repositries.Manage.Interface;
 using SubzzSetting.Business.Setting;
 using SubzzSetting.Business.Setting.Interface;
+using SubzzSettings.DataAccess.Settings;
+using SubzzSettings.DataAccess.Settings.Interface;
 
 namespace Subzz.Api
 {
@@ -118,6 +120,7 @@ namespace Subzz.Api
             services.AddTransient<ITimeRepository, TimeRepository>();
 
             services.AddTransient<IUserSettingsService, UserSettingsService>();
+            services.AddTransient<IUserSettingsRepository, UserSettingsRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>

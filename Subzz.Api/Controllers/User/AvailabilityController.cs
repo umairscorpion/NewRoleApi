@@ -5,6 +5,8 @@ using SubzzV2.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
+using SubzzManage.Business.Manage.Interface;
+using System.Threading.Tasks;
 
 namespace Subzz.Api.Controllers.User
 {
@@ -12,20 +14,35 @@ namespace Subzz.Api.Controllers.User
     public class AvailabilityController : BaseApiController
     {
         private readonly IUserService _service;
-
-        public AvailabilityController(IUserService service)
+        private readonly IJobService _jobService;
+        public AvailabilityController(IUserService service, IJobService jobService)
         {
             _service = service;
+            _jobService = jobService;
         }
 
-        [Route("")]
-        [HttpGet]
-        public IActionResult Get()
+        [Route("events")]
+        [HttpPost]
+        public async Task<IActionResult> Get([FromBody]UserAvailability model)
         {
-            var model = new UserAvailability { UserId = base.CurrentUser.Id };
-            var result = _service.GetAvailabilities(model);
-            var calendarEvents = CalendarEvents(result);
-            return Ok(calendarEvents);
+            try
+            {
+                model.UserId = base.CurrentUser.Id;
+                var acceptedAbsences = await _jobService.GetAvailableJobs(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId, base.CurrentUser.OrganizationId, base.CurrentUser.DistrictId, 2, false);
+                //Set this to null after getting absences beacause it generates error in stored Procedure
+                model.StartDate = null;
+                model.EndDate = null;
+                var result = _service.GetAvailabilities(model);
+                var calendarEvents = CalendarEvents(result);
+                var absenceEvents = AbsencesToEvents(acceptedAbsences);
+                var allEvents = calendarEvents.Concat(absenceEvents);
+                return Ok(allEvents);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         [Route("substitutes/summary")]
@@ -118,6 +135,22 @@ namespace Subzz.Api.Controllers.User
                 backgroundColor = a.AvailabilityContentBackgroundColor,
                 allDay = a.IsAllDayOut,
                 className = new string[] { a.AvailabilityIconCss }
+            }).ToList();
+            return events;
+        }
+
+        private List<CalendarEvent> AbsencesToEvents(IEnumerable<AbsenceModel> availabilities)
+        {
+            var events = availabilities.Select(a => new CalendarEvent
+            {
+                id = 0,
+                title =  "for" + " " + a.EmployeeName,
+                description = a.SubstituteNotes,
+                start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                backgroundColor = "",
+                allDay = false,
+                className = new string[] { "" }
             }).ToList();
             return events;
         }

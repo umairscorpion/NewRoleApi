@@ -115,13 +115,13 @@ namespace Subzz.Api.Controllers.Manage
                     if (User.RoleId == 4)
                     {
                         message.TemplateId = 1;
-                        //await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                         await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
 
                     if (User.RoleId == 3)
                     {
                         message.TemplateId = 11;
-                      //  await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                          await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
 
                     //For Admins
