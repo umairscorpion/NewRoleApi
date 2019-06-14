@@ -26,39 +26,70 @@ namespace Subzz.Api.Controllers.Manage
         [HttpPost]
         public IActionResult InsertDistrict([FromBody]DistrictModel model)
         {
-            DistrictValidator validator = new DistrictValidator();
-            ValidationResult result = validator.Validate(model);
-            if(result.IsValid)
-            { var userModel = _service.InsertDistrict(model); }
-            else
+            try
             {
-               return BadRequest("Fill All fields");
+                DistrictValidator validator = new DistrictValidator();
+                ValidationResult result = validator.Validate(model);
+                if (result.IsValid)
+                { var userModel = _service.InsertDistrict(model); }
+                else
+                {
+                    return BadRequest("Fill All fields");
+                }
+
+                return Json("successfull");
             }
-            
-            return Json("successfull");
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("updateDistrict")]
         [HttpPatch]
         public IActionResult UpdateDistrict([FromBody]DistrictModel model)
         {
-            DistrictValidator validator = new DistrictValidator();
-            ValidationResult result = validator.Validate(model);
-            if (result.IsValid)
-            { var userModel = _service.UpdateDistrict(model); }
-            else
+            try
             {
-                return BadRequest("Fill All fields");
+                DistrictValidator validator = new DistrictValidator();
+                ValidationResult result = validator.Validate(model);
+                if (result.IsValid)
+                { var userModel = _service.UpdateDistrict(model); }
+                else
+                {
+                    return BadRequest("Fill All fields");
+                }
+                return Json("successfull");
             }
-            return Json("successfull");
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getDistricts")]
         [HttpGet]
         public IEnumerable<DistrictModel> GetDistricts()
         {
-            var districts = _service.GetDistricts();
+            try
+            {
+                var districts = _service.GetDistricts();
             return districts;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+
         }
 
         [Route("{id}")]
@@ -89,40 +120,90 @@ namespace Subzz.Api.Controllers.Manage
         [HttpPost]
         public IActionResult UpdateSettings([FromBody] DistrictModel districtModel)
         {
-            var district = _service.UpdateSettings(districtModel);
+            try
+            {
+                var district = _service.UpdateSettings(districtModel);
             return Ok(district);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("allowances")]
         [HttpPost]
         public IActionResult AddAllowances([FromBody]Allowance model)
         {
-            var allowance = _service.AddAllowance(model);
+            try
+            {
+                var allowance = _service.AddAllowance(model);
             return Ok(allowance);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("allowances")]
         [HttpPatch]
         public IActionResult UpdateAllowances([FromBody]Allowance model)
         {
-            var allowance = _service.AddAllowance(model);
+            try
+            {
+                var allowance = _service.AddAllowance(model);
             return Ok(allowance);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("getAllowances/{districtId}")]
         [HttpGet]
         public IActionResult GetAllowances(string districtId)
         {
-            var allowance = _service.GetAllowances(districtId);
+            try
+            {
+                var allowance = _service.GetAllowances(districtId);
             return Ok(allowance);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("deleteAllowance/{id}")]
         [HttpDelete]
         public IActionResult DeleteAllowance(int id)
         {
-            var allowance = _service.DeleteAllowance(id);
+            try
+            {
+                var allowance = _service.DeleteAllowance(id);
             return Ok(allowance);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
     }

@@ -23,42 +23,82 @@ namespace Subzz.Api.Controllers.Reports
         [HttpPost]
         public IActionResult GetSummary([FromBody]ReportFilter model)
         {
-            model.District = base.CurrentUser.DistrictId;
-            model.OrganizationId = base.CurrentUser.OrganizationId;
-            var reportSummary = _service.GetReportSummary(model);
-            return Ok(reportSummary);
+            try
+            {
+                model.District = base.CurrentUser.DistrictId;
+                model.OrganizationId = base.CurrentUser.OrganizationId;
+                var reportSummary = _service.GetReportSummary(model);
+                return Ok(reportSummary);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("details")]
         [HttpPost]
         public IActionResult GetDetails([FromBody]ReportFilter model)
         {
-            model.District = base.CurrentUser.DistrictId;
-            model.OrganizationId = base.CurrentUser.OrganizationId;
-            var reportDetails = _service.GetReportDetails(model);
-            return Ok(reportDetails);
+            try
+            {
+                model.District = base.CurrentUser.DistrictId;
+                model.OrganizationId = base.CurrentUser.OrganizationId;
+                var reportDetails = _service.GetReportDetails(model);
+                return Ok(reportDetails);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("deleteAbsences")]
         [HttpPost]
         public IActionResult DeleteAbsences([FromBody]ReportFilter model)
         {
-            model.UserId = base.CurrentUser.Id;
-            int RowsEffected = _service.DeleteAbsences(model);
-            if (RowsEffected > 0)
-                return Json("success");
-            return Json("error");
+            try
+            {
+                model.UserId = base.CurrentUser.Id;
+                int RowsEffected = _service.DeleteAbsences(model);
+                if (RowsEffected > 0)
+                    return Json("success");
+                return Json("error");
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
 
         [Route("payrollDetail")]
         [HttpPost]
         public IActionResult GetPayrollDetail([FromBody]ReportFilter model)
         {
+            try
+            { 
             model.DistrictId = base.CurrentUser.DistrictId;
             model.OrganizationId = base.CurrentUser.OrganizationId;
             model.UserId = base.CurrentUser.Id;
             var reportDetails = _service.GetPayrollReportDetails(model);
             return Ok(reportDetails);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
         }
     }
 }
