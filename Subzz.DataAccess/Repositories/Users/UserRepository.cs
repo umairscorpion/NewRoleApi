@@ -199,6 +199,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@Email", model.Email);
             queryParams.Add("@PhoneNumber", model.PhoneNumber);
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
+            queryParams.Add("@IsViewedNewVersion", model.IsViewedNewVersion);
             Db.Query<UserReference>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).SingleOrDefault();
 
             return model;
@@ -783,7 +784,7 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             const string query = "[Users].[GetAvailability]";
             var queryParams = new DynamicParameters();
-            queryParams.Add("@UserId", availability.UserId);
+            queryParams.Add("@UserId", availability.UserId); 
             queryParams.Add("@StartDate", availability.StartDate);
             queryParams.Add("@EndDate", availability.EndDate);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
