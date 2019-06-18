@@ -18,9 +18,11 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+=======
+>>>>>>> 4dd08071372633b98987088dad2b11602f4db507
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.5.1" />
     <PackageReference Include="Quartz" Version="3.0.7" />
   </ItemGroup>
