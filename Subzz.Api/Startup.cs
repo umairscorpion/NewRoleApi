@@ -53,6 +53,10 @@ using SubzzSetting.Business.Setting;
 using SubzzSetting.Business.Setting.Interface;
 using SubzzSettings.DataAccess.Settings;
 using SubzzSettings.DataAccess.Settings.Interface;
+using SubzzManage.DataAccess.Repositries.Error_Log.Interface;
+using SubzzManage.Business.Error_Log.Interface;
+using SubzzManage.Business.Error_Log;
+using SubzzManage.DataAccess.Repositries.Error_Log;
 
 namespace Subzz.Api
 {
@@ -123,6 +127,9 @@ namespace Subzz.Api
             services.AddTransient<IUserSettingsService, UserSettingsService>();
             services.AddTransient<IUserSettingsRepository, UserSettingsRepository>();
 
+            services.AddTransient<IErrorLogService, ErrorLogService>();
+            services.AddTransient<IErrorLogRepository, ErrorLogRepository>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>
            {
@@ -149,7 +156,8 @@ namespace Subzz.Api
             }
             app.UseCors("EnableCORS");
             app.UseAuthentication();
-            app.ConfigureExceptionHandler();
+            //app.ConfigureExceptionHandler();
+            app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseStaticFiles();// For the wwwroot folder
 

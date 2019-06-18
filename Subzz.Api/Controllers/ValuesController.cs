@@ -13,6 +13,7 @@ namespace Subzz.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            //int i = Convert.ToInt32("Hello");
             return new string[] { "value1", "value2" };
         }
 
