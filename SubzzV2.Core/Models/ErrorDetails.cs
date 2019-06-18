@@ -11,6 +11,8 @@ namespace SubzzV2.Core.Models
     {
         public int StatusCode { get; set; }
         public string Message { get; set; }
+        public string FIlePath { get; set; }
+        public string LineNumber { get; set; }
 
 
         public override string ToString()

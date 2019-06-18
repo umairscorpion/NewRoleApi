@@ -47,18 +47,9 @@ namespace Subzz.Api.Controllers.Manage
         [HttpGet]
         public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int Status, bool Requested)
         {
-            try
-            {
                 var result = await _jobService.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, Status, Requested);
                 return result;
-            }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-            }
-            return null;
+            
         }
 
         [Route("acceptJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
