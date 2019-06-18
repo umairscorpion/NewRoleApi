@@ -26,6 +26,8 @@ namespace Subzz.Integration.Core.Domain
         public string SendToUser { get; set; }
         public string UserName { get; set; }
         public string EmployeeName { get; set; }
+        public string ApprovedBy { get; set; }
+        public string Reason { get; set; }
         public string Position { get; set; }
         public string Subject { get; set; }
         public string Grade { get; set; }
@@ -52,6 +54,7 @@ namespace Subzz.Integration.Core.Domain
         public string AcceptUrl { get; set; }
         public string Password { get; set; }
         public string resetPassUrl { get; set; }
+        public string ProfilePicUrl { get; set; }
 
     }
 

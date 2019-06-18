@@ -100,8 +100,9 @@ namespace Subzz.Api.Controllers.Manage
                     message.Location = absenceDetail.AbsenceLocation;
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
+                    message.Photo = absenceDetail.EmployeeProfilePicUrl;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
-                    //Task.Run(() => SendJobAcceptEmails(users, message));
+                    Task.Run(() => SendJobAcceptEmails(users, message));
                 }
                 return AcceptJob;
             }
