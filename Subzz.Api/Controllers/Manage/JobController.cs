@@ -120,6 +120,26 @@ namespace Subzz.Api.Controllers.Manage
                     OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
+                AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
+                IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
+                Message message = new Message();
+                message.AbsenceId = absenceDetail.AbsenceId;
+                message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                    CultureInfo.InvariantCulture).ToSubzzTime();
+                message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                            CultureInfo.InvariantCulture).ToSubzzTime();
+                message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
+                message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+                message.EmployeeName = absenceDetail.EmployeeName;
+                message.Position = absenceDetail.PositionDescription;
+                message.Subject = absenceDetail.SubjectDescription;
+                message.Grade = absenceDetail.Grade;
+                message.Location = absenceDetail.AbsenceLocation;
+                message.Notes = absenceDetail.SubstituteNotes;
+                message.SubstituteName = absenceDetail.SubstituteName;
+                message.Photo = absenceDetail.EmployeeProfilePicUrl;
+                message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                Task.Run(() => SendJobDeclinEmails(users, message));
 
                 return "Declined";
             }
@@ -157,6 +177,41 @@ namespace Subzz.Api.Controllers.Manage
                     {
                         message.TemplateId = 3;
                           await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+        async Task SendJobDeclinEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message)
+        {
+            foreach (var User in users)
+            {
+                try
+                {
+                    message.Password = User.Password;
+                    message.UserName = User.FirstName;
+                    message.SendTo = User.Email;
+                    //For Substitutes
+                    if (User.RoleId == 4)
+                    {
+                        //message.TemplateId = 1;
+                        //await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                    }
+
+                    if (User.RoleId == 3)
+                    {
+                        message.TemplateId = 24;
+                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                    }
+                    //For Admins
+                    else
+                    {
+                        message.TemplateId = 23;
+                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
 
                 }
