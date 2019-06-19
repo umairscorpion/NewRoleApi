@@ -17,7 +17,6 @@ namespace SubzzV2.Integration.Core.Notification
 {
     public class EmailProcessor : IEmailProcessor
     {
-        private const string localUrl = "http://localhost:4200";
 
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
@@ -37,6 +36,7 @@ namespace SubzzV2.Integration.Core.Notification
                 configurationBuilder.AddJsonFile(path, false);
                 var root = configurationBuilder.Build();
                 string url = root.GetSection("URL").GetSection("LiveSiteUrl").Value;
+                message.ProfilePicUrl = url + "/Profile/" + message.Photo;
                 if (message.TemplateId == 1)
                 {
                     message.AcceptUrl = url + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId;
@@ -136,6 +136,12 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
+                ["{Start Date}"] = message.StartDate ?? "",
+                ["{End Date}"] = message.EndDate ?? "",
+                ["{Start Time}"] = message.StartTime ?? "",
+                ["{End Time}"] = message.EndTime ?? "",
+                ["{Leave Type}"] = message.Reason ?? "",
+                ["{Admin Name}"] = message.ApprovedBy ?? "",
                 ["{Subject}"] = !string.IsNullOrEmpty(message.Subject) ? message.Subject + "-" : "N/A-",
                 ["{Grade}"] = !string.IsNullOrEmpty(message.Grade) ? message.Grade : "N/A",
                 ["{StartDateAndTime}"] = !string.IsNullOrEmpty(message.StartTime)? message.StartTime + " " + message.StartDate : "",
@@ -145,6 +151,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Duration}"] = message.Duration ?? "",
                 ["{AcceptUrl}"] = message.AcceptUrl ?? "",
                 ["{resetPasswordKey}"] = !string.IsNullOrEmpty(message.resetPassUrl) ? message.resetPassUrl: "",
+                ["{photo}"] = !string.IsNullOrEmpty(message.ProfilePicUrl) ? message.ProfilePicUrl : "",
             };
             return param;
         }
