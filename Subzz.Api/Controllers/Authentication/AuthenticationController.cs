@@ -59,8 +59,8 @@ namespace Subzz.Api.Controllers.Authentication
                         //issuer: "http://localhost:56412",
                         //audience: "http://localhost:56412",
                         claims: new List<Claim> { new Claim("UserId", UserInfo.UserId.ToString()),
-                    new Claim("districtId", userDetail.DistrictId.ToString()),
-                    new Claim("organizationId", !string.IsNullOrEmpty(userDetail.OrganizationId)  ? userDetail.OrganizationId.ToString(): "-1")},
+                        new Claim("districtId", userDetail.DistrictId.ToString()),
+                        new Claim("organizationId", !string.IsNullOrEmpty(userDetail.OrganizationId)  ? userDetail.OrganizationId.ToString(): "-1")},
                         expires: DateTime.Now.AddMinutes(20),
                         signingCredentials: credentials
                     );

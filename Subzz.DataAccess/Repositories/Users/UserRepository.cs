@@ -465,7 +465,7 @@ namespace Subzz.DataAccess.Repositories.Users
 
         public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
         {
-            var sql = "[users].[GetSubstitutePreferredSchools]";
+            var sql = "[users].[GetSubstitutePreferredSchools]"; 
             var queryParams = new DynamicParameters();
             queryParams.Add("@SubstituteId", UserId);
             return Db.Query<PreferredSchoolModel>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();

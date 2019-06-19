@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
+using Subzz.Integration.Core.Container;
+using Subzz.Integration.Core.Domain;
+using Subzz.Integration.Core.Helper;
+using SubzzAbsence.Business.Absence.Interface;
 using SubzzAbsence.Business.Leaves.Interface;
 using SubzzManage.Business.District.Interface;
 using SubzzV2.Core.Enum;
@@ -19,11 +24,24 @@ namespace Subzz.Api.Controllers.Leave
         private readonly ILeaveService _service;
         private readonly IAuditingService _audit;
         private readonly IDistrictService _disService;
-        public LeaveController(ILeaveService service, IAuditingService audit, IDistrictService disService)
+        private readonly IUserService _userService;
+        private readonly IAbsenceService _absenceService;
+        public LeaveController(ILeaveService service, IAuditingService audit, IDistrictService disService, IAbsenceService absenceService, IUserService userService)
         {
             _service = service;
             _audit = audit;
             _disService = disService;
+            _absenceService = absenceService;
+            _userService = userService;
+        }
+
+        private CommunicationContainer _communicationContainer;
+        public virtual CommunicationContainer CommunicationContainer
+        {
+            get
+            {
+                return _communicationContainer ?? (_communicationContainer = new CommunicationContainer());
+            }
         }
 
         [Route("insertLeaveRequest")]
@@ -51,7 +69,7 @@ namespace Subzz.Api.Controllers.Leave
         {
             try
             {
-                model.EmployeeId = base.CurrentUser.Id;
+                model.ApprovedBy = base.CurrentUser.Id;
                 var leaveRequests = _service.UpdateLeaveRequestStatus(model);
                 // Audit Log
                 if (model.IsApproved == true)
@@ -80,7 +98,7 @@ namespace Subzz.Api.Controllers.Leave
                     };
                     _audit.InsertAuditLog(audit);
                 }
-
+                Task.Run(() => SendNotificationsOnJobApprovedOrDenied(model));
                 return leaveRequests;
             }
             catch (Exception ex)
@@ -241,6 +259,45 @@ namespace Subzz.Api.Controllers.Leave
             {
             }
             return null;
+        }
+
+        async Task SendNotificationsOnJobApprovedOrDenied(LeaveRequestModel leave)
+        {
+            AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(Convert.ToInt32(leave.AbsenceId));
+            Message message = new Message();
+            message.AbsenceId = absenceDetail.AbsenceId;
+            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzTime();
+            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
+            message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+            message.EmployeeName = absenceDetail.EmployeeName;
+            message.Position = absenceDetail.PositionDescription;
+            message.Subject = absenceDetail.SubjectDescription;
+            message.Grade = absenceDetail.Grade;
+            message.Location = absenceDetail.AbsenceLocation;
+            message.Notes = absenceDetail.SubstituteNotes;
+            message.SubstituteName = absenceDetail.SubstituteName;
+            message.Reason = absenceDetail.AbsenceReasonDescription;
+            message.ApprovedBy = _userService.GetUserDetail(leave.ApprovedBy).FirstName;
+            message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+            var user = _userService.GetUserDetail(absenceDetail.EmployeeId);
+            if (leave.IsApproved)
+            message.TemplateId = 16;
+            else message.TemplateId = 19;
+            message.Photo = absenceDetail.EmployeeProfilePicUrl;
+                try
+                {
+                    message.Password = user.Password;
+                    message.UserName = user.FirstName;
+                    message.SendTo = user.Email;
+                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+
+                }
+                catch (Exception ex)
+                {
+                }
         }
     }
 }

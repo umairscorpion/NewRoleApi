@@ -260,9 +260,9 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 dasboardSummary.AbsenceByGradeLevel.AddRange(Results.Read<AbsenceByGradeLevel>().ToList());
                 dasboardSummary.TopFourAbsenceReasons.AddRange(Results.Read<TopFourAbsenceReasons>().ToList());
                 return dasboardSummary;
-
             }
         }
+
         public List<AbsenceSummary> GetTopTenTeachers(string userId)
         {
             using (var connection = base.GetConnection)
