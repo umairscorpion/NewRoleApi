@@ -574,7 +574,7 @@ namespace Subzz.Api.Controllers.Absence
                 var cEvents = events.Select(a => new CalendarEvent
                 {
                     id = a.EventId,
-                    title = a.StartTime + " " + a.UserId,
+                    title = a.Title,
                     description = a.Notes,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),

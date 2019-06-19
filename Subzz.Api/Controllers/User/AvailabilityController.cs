@@ -7,6 +7,7 @@ using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
 using SubzzManage.Business.Manage.Interface;
 using System.Threading.Tasks;
+using SubzzAbsence.Business.Absence.Interface;
 
 namespace Subzz.Api.Controllers.User
 {
@@ -15,10 +16,12 @@ namespace Subzz.Api.Controllers.User
     {
         private readonly IUserService _service;
         private readonly IJobService _jobService;
-        public AvailabilityController(IUserService service, IJobService jobService)
+        private readonly IAbsenceService _absenceService;
+        public AvailabilityController(IUserService service, IJobService jobService, IAbsenceService absenceService)
         {
             _service = service;
             _jobService = jobService;
+            _absenceService = absenceService;
         }
 
         [Route("events")]
@@ -35,6 +38,9 @@ namespace Subzz.Api.Controllers.User
                 var result = _service.GetAvailabilities(model);
                 var calendarEvents = CalendarEvents(result);
                 var absenceEvents = AbsencesToEvents(acceptedAbsences);
+                var events = _absenceService.GetEvents(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
+                var eventsCalendarView = CalendarEvents(events);
+                absenceEvents.AddRange(eventsCalendarView);
                 var allEvents = calendarEvents.Concat(absenceEvents);
                 return Ok(allEvents);
             }
@@ -99,7 +105,7 @@ namespace Subzz.Api.Controllers.User
                 }).ToList();
                 return Ok(events);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -108,7 +114,7 @@ namespace Subzz.Api.Controllers.User
 
             }
             return null;
-           
+
         }
 
         [Route("{id}")]
@@ -154,7 +160,7 @@ namespace Subzz.Api.Controllers.User
         public IActionResult Put(int id, [FromBody]UserAvailability model)
         {
             try
-            { 
+            {
                 model.ModifiedBy = base.CurrentUser.Id;
                 var result = _service.UpdateAvailability(model);
                 return Ok(result);
@@ -189,6 +195,27 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        private List<CalendarEvent> CalendarEvents(IEnumerable<Event> events)
+        {
+            try
+            {
+                var cEvents = events.Select(a => new CalendarEvent
+                {
+                    id = a.EventId,
+                    title = a.Title,
+                    description = a.Notes,
+                    start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                }).ToList();
+                return cEvents;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
+
         private List<CalendarEvent> CalendarEvents(IEnumerable<UserAvailability> availabilities)
         {
             try
@@ -214,25 +241,25 @@ namespace Subzz.Api.Controllers.User
         }
 
         private List<CalendarEvent> AbsencesToEvents(IEnumerable<AbsenceModel> availabilities)
+        {
+            try
             {
-                try
+
+
+                var events = availabilities.Select(a => new CalendarEvent
                 {
+                    id = 0,
+                    title = "for" + " " + a.EmployeeName,
+                    description = a.SubstituteNotes,
+                    start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
+                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    backgroundColor = "",
+                    allDay = false,
+                    className = new string[] { "" }
+                }).ToList();
+                return events;
+            }
 
-
-                    var events = availabilities.Select(a => new CalendarEvent
-                    {
-                        id = 0,
-                        title = "for" + " " + a.EmployeeName,
-                        description = a.SubstituteNotes,
-                        start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                        end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-                        backgroundColor = "",
-                        allDay = false,
-                        className = new string[] { "" }
-                    }).ToList();
-                    return events;
-                }
-                
             catch (Exception ex)
             {
             }
@@ -240,7 +267,7 @@ namespace Subzz.Api.Controllers.User
             {
             }
             return null;
-            
+
         }
     }
 }
