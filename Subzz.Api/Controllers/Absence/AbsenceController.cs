@@ -378,6 +378,8 @@ namespace Subzz.Api.Controllers.Absence
                 }
                 if (statusId == 4)
                 Task.Run(() => SendNotificationsOnJobCancelled(AbsenceId));
+                if (statusId == 1)
+                    Task.Run(() => SendNotificationsOnJobReleased(AbsenceId));
                 return Json("success");
             }
             catch (Exception ex)
@@ -568,9 +570,11 @@ namespace Subzz.Api.Controllers.Absence
             }
             catch (Exception ex)
             {
+
             }
             finally
             {
+
             }
             return null;
         }
@@ -720,6 +724,61 @@ namespace Subzz.Api.Controllers.Absence
                     else
                     {
                         message.TemplateId = 18;
+                        message.SubstituteName = absenceDetail.SubstituteName;
+                    }
+                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+        async Task SendNotificationsOnJobReleased(int AbsenceId)
+        {
+            AbsenceModel absenceDetail = _service.GetAbsenceDetailByAbsenceId(AbsenceId);
+            IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
+            Message message = new Message();
+            message.AbsenceId = absenceDetail.AbsenceId;
+            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzTime();
+            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzTime();
+            message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
+            message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+            message.EmployeeName = absenceDetail.EmployeeName;
+            message.Position = absenceDetail.PositionDescription;
+            message.Subject = absenceDetail.SubjectDescription;
+            message.Grade = absenceDetail.Grade;
+            message.Location = absenceDetail.AbsenceLocation;
+            message.Notes = absenceDetail.SubstituteNotes;
+            message.SubstituteName = absenceDetail.SubstituteName;
+            message.Photo = absenceDetail.EmployeeProfilePicUrl;
+            message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+
+            foreach (var User in users)
+            {
+                try
+                {
+                    message.UserName = User.FirstName;
+                    message.SendTo = User.Email;
+                    //For Substitutes
+                    if (User.RoleId == 4)
+                    {
+                        message.TemplateId = 21;
+
+                    }
+                    //For Employee
+                    if (User.RoleId == 3)
+                    {
+                        message.TemplateId = 20;
+
+                    }
+                    //For Admins
+                    else
+                    {
+                        message.TemplateId = 22;
                         message.SubstituteName = absenceDetail.SubstituteName;
                     }
                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
