@@ -33,7 +33,6 @@ namespace Subzz.Api.Controllers.Manage
             _userService = userService;
             _audit = audit;
         }
-
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
         {
@@ -96,6 +95,33 @@ namespace Subzz.Api.Controllers.Manage
                     Task.Run(() => SendJobAcceptEmails(users, message));
                 }
                 return AcceptJob;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
+
+        [Route("declineJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
+        [HttpGet]
+        public async Task<string> DeclineJob(int AbsenceId, string SubstituteId, string AcceptVia)
+        {
+            try
+            {
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = AbsenceId.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Declined,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return "Declined";
             }
             catch (Exception ex)
             {
