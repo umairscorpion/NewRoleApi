@@ -47,8 +47,7 @@ namespace Subzz.Api.Controllers.Manage
         public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int Status, bool Requested)
         {
                 var result = await _jobService.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, Status, Requested);
-                return result;
-            
+                return result;          
         }
 
         [Route("acceptJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
@@ -103,9 +102,9 @@ namespace Subzz.Api.Controllers.Manage
             return null;
         }
 
-        [Route("declineJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
+        [Route("declineJob/{AbsenceId}")]
         [HttpGet]
-        public async Task<string> DeclineJob(int AbsenceId, string SubstituteId, string AcceptVia)
+        public string DeclineJob(int AbsenceId)
         {
             try
             {
