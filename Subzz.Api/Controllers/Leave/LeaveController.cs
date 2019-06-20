@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
+using Subzz.Api.Custom;
 using Subzz.Business.Services.Users.Interface;
 using Subzz.Integration.Core.Container;
 using Subzz.Integration.Core.Domain;
@@ -98,6 +99,7 @@ namespace Subzz.Api.Controllers.Leave
                     };
                     _audit.InsertAuditLog(audit);
                 }
+                //Notification notification = new Notification(_userService, _absenceService);
                 Task.Run(() => SendNotificationsOnJobApprovedOrDenied(model));
                 return leaveRequests;
             }
@@ -287,17 +289,52 @@ namespace Subzz.Api.Controllers.Leave
             message.TemplateId = 16;
             else message.TemplateId = 19;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
-                try
-                {
-                    message.Password = user.Password;
-                    message.UserName = user.FirstName;
-                    message.SendTo = user.Email;
-                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+            try
+            {
+                message.Password = user.Password;
+                message.UserName = user.FirstName;
+                message.SendTo = user.Email;
+                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
 
-                }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+            }
+
+            if (leave.IsApproved)
+            {
+                IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(leave.AbsenceId));
+                foreach (var User in users)
                 {
+                    try
+                    {
+                        message.Password = User.Password;
+                        message.UserName = User.FirstName;
+                        message.SendTo = User.Email;
+                        //For Substitutes
+                        if (User.RoleId == 4)
+                        {
+                            message.TemplateId = 1;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                        else if (User.RoleId == 3)
+                        {
+                            message.TemplateId = 10;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                        //For Admins
+                        else
+                        {
+                            message.TemplateId = 2;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
+            }
+
         }
     }
 }

@@ -91,6 +91,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.SubstituteName = absenceDetail.SubstituteName;
                     message.Photo = absenceDetail.EmployeeProfilePicUrl;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                    //Notification notification = new Notification();
                     Task.Run(() => SendJobAcceptEmails(users, message));
                 }
                 return AcceptJob;
@@ -138,6 +139,7 @@ namespace Subzz.Api.Controllers.Manage
                 message.SubstituteName = absenceDetail.SubstituteName;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
                 message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                //Notification notification = new Notification();
                 Task.Run(() => SendJobDeclinEmails(users, message));
 
                 return "Declined";
@@ -219,5 +221,6 @@ namespace Subzz.Api.Controllers.Manage
                 }
             }
         }
+
     }
 }
