@@ -191,7 +191,7 @@ namespace Subzz.Api.Controllers.Absence
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
 
-                            if (User.RoleId == 3)
+                            else if (User.RoleId == 3)
                             {
                                 message.TemplateId = 10;
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
@@ -259,7 +259,7 @@ namespace Subzz.Api.Controllers.Absence
                             }
 
                             //For Admins
-                            else
+                            else if (User.RoleId == 1 || User.RoleId == 2)
                             {
                                 message.TemplateId = 14;
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
@@ -280,20 +280,17 @@ namespace Subzz.Api.Controllers.Absence
                         {
                             message.UserName = User.FirstName;
                             message.SendTo = User.Email;
-                            //For Substitutes
-                            if (User.RoleId == 4)
-                            {
-                                message.TemplateId = 7;
-                            }
                             if (User.RoleId == 3)
                             {
-                                message.TemplateId = 7;
+                                message.TemplateId = 13;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
+
                             //For Admins
-                            else
+                            else if (User.RoleId == 1 || User.RoleId == 2)
                             {
-                                message.TemplateId = 8;
-                                message.SubstituteName = DataForEmails.SubstituteName;
+                                message.TemplateId = 14;
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
