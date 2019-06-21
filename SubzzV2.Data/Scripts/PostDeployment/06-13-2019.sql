@@ -28,7 +28,6 @@ BEGIN
 END  
 
 -- 
-USE [Subzz_Users]
 GO
 CREATE TABLE [Users].[Events](
 	[EventId] [int] IDENTITY(1,1) NOT NULL,
