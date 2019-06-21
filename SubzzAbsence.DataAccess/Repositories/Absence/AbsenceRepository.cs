@@ -191,7 +191,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@IsSubstituteRequired", model.SubstituteRequired);
                 queryParams.Add("@NotesToSubstitute", model.SubstituteNotes);
                 queryParams.Add("@AbsenceStatus_Id", model.Status);
-                queryParams.Add("@AbsenceType_Id", model.DurationType);
+                queryParams.Add("@AbsenceType_Id", model.AbsenceType);
                 queryParams.Add("@AnyAttachemt", model.AnyAttachment);
                 queryParams.Add("@User_Id", model.EmployeeId);
                 queryParams.Add("@UpdatedBy_User_Id", model.UpdatedById);
