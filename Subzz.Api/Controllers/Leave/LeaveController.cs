@@ -227,11 +227,8 @@ namespace Subzz.Api.Controllers.Leave
         {
             try
             {
-                var Value = 10;
                 var districtId = base.CurrentUser.DistrictId;
-                var allowances = _disService.GetAllowances(Convert.ToString(districtId));
                 var response = _service.GetEmployeeLeaveBalance(leaveBalance);
-                response.Where(x => x.Personal == null).ToList().ForEach(x => { x.Personal = Value.ToString(); });
                 return Ok(response);
             }
             catch (Exception ex)
@@ -284,17 +281,30 @@ namespace Subzz.Api.Controllers.Leave
             message.Reason = absenceDetail.AbsenceReasonDescription;
             message.ApprovedBy = _userService.GetUserDetail(leave.ApprovedBy).FirstName;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
-            var user = _userService.GetUserDetail(absenceDetail.EmployeeId);
+            var employeeDetail = _userService.GetUserDetail(absenceDetail.EmployeeId);
             if (leave.IsApproved)
             message.TemplateId = 16;
             else message.TemplateId = 19;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
             try
             {
-                message.Password = user.Password;
-                message.UserName = user.FirstName;
-                message.SendTo = user.Email;
-                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                message.Password = employeeDetail.Password;
+                message.UserName = employeeDetail.FirstName;
+                message.SendTo = employeeDetail.Email;
+                if (employeeDetail.IsSubscribedEmail)
+                {
+                    var events = _userService.GetSubstituteNotificationEvents(employeeDetail.UserId);
+                    var jobPostedEvent = events.Where(x => x.EventId == 1).First();
+                    if (leave.IsApproved)
+                    {
+                        if (jobPostedEvent.EmailAlert)
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                    }
+                    else
+                    {
+                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                    }
+                }
 
             }
             catch (Exception ex)
@@ -304,29 +314,59 @@ namespace Subzz.Api.Controllers.Leave
             if (leave.IsApproved)
             {
                 IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(leave.AbsenceId));
-                foreach (var User in users)
+                foreach (var user in users)
                 {
                     try
                     {
-                        message.Password = User.Password;
-                        message.UserName = User.FirstName;
-                        message.SendTo = User.Email;
-                        //For Substitutes
-                        if (User.RoleId == 4)
+                        message.Password = user.Password;
+                        message.UserName = user.FirstName;
+                        message.SendTo = user.Email;
+                        //For Substitutes on In case of direct Assign
+                        if (user.RoleId == 4 && absenceDetail.AbsenceScope == 2)
+                        {
+                            message.TemplateId = 7;
+                            if (user.IsSubscribedEmail)
+                            {
+                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                                if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+
+                        else if (user.RoleId == 4 && absenceDetail.AbsenceScope != 2)
                         {
                             message.TemplateId = 1;
-                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            if (user.IsSubscribedEmail)
+                            {
+                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                                if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
                         }
-                        else if (User.RoleId == 3)
+                        else if (user.RoleId == 3)
                         {
                             message.TemplateId = 10;
-                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            if (user.IsSubscribedEmail)
+                            {
+                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                                if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
                         }
                         //For Admins
                         else
                         {
                             message.TemplateId = 2;
-                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            if (user.IsSubscribedEmail)
+                            {
+                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                                if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
                         }
                     }
                     catch (Exception ex)

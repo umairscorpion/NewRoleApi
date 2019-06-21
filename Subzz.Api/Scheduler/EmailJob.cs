@@ -65,13 +65,14 @@ namespace Subzz.Api.Schedules
                 TimeSpan CurrentTimeToCompare = TimeSpan.Parse(currentTime);
                 if (CurrentTimeToCompare >= ActualTimetoSendTextMessage)
                 {
-                    SendEmailAndSmsNotificationToAll(preferredSubstitute.AbsenceId);
+                    _absenceService.UpdateMailAndSmsFlag(preferredSubstitute.Id, true, true);
+                    //SendEmailAndSmsNotificationToAll(preferredSubstitute);
                 }
             }
         }
-        public void SendEmailAndSmsNotificationToAll(int absenceId)
+        public void SendEmailAndSmsNotificationToAll(PreferredSubstituteModel preferredSchoolModel)
         {
-            AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(absenceId);
+            AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(preferredSchoolModel.AbsenceId);
             Message message = new Message();
             message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
@@ -91,36 +92,42 @@ namespace Subzz.Api.Schedules
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
-            IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(absenceDetail.AbsenceId));
-            foreach (var User in users)
-            {
-                try
-                {
-                    message.Password = User.Password;
-                    message.UserName = User.FirstName;
-                    message.SendTo = User.Email;
-                    //For Substitutes
-                    if (User.RoleId == 4)
-                    {
-                        message.TemplateId = 1;
-                        CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                    }
-                    else if (User.RoleId == 3)
-                    {
-                        message.TemplateId = 10;
-                        CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                    }
-                    //For Admins
-                    else
-                    {
-                        message.TemplateId = 2;
-                        CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                    }
-                }
-                catch (Exception ex)
-                {
-                }
+            message.Password = preferredSchoolModel.Password;
+            message.UserName = preferredSchoolModel.SubstituteName;
+            message.SendTo = preferredSchoolModel.EmailId;
+            //For Substitutes
+            message.TemplateId = 1;
+            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                //IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(absenceDetail.AbsenceId));
+                //foreach (var User in users)
+                //{
+                //    try
+                //    {
+                //        message.Password = User.Password;
+                //        message.UserName = User.FirstName;
+                //        message.SendTo = User.Email;
+                //        //For Substitutes
+                //        if (User.RoleId == 4)
+                //        {
+                //            message.TemplateId = 1;
+                //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                //        }
+                //        else if (User.RoleId == 3)
+                //        {
+                //            message.TemplateId = 10;
+                //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                //        }
+                //        //For Admins
+                //        else
+                //        {
+                //            message.TemplateId = 2;
+                //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //    }
+                //}
             }
-        }
     }
 }

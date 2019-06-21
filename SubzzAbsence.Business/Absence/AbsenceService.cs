@@ -100,5 +100,10 @@ namespace SubzzAbsence.Business.Absence
         {
             return _repo.GetEvents(startDate, endDate, userId);
         }
+
+        public void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail)
+        {
+              _repo.UpdateMailAndSmsFlag(id, IsSendSms, IsSendEmail);
+        }
     }
 }

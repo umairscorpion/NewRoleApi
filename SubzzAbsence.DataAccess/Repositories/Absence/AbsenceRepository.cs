@@ -295,5 +295,18 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 return connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
+
+        public void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateMailAndSmsFlag]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@Id", id);
+                queryParams.Add("@IsSendSms", IsSendSms);
+                queryParams.Add("@IsSendEmail", IsSendEmail);
+                connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
     }
 }
