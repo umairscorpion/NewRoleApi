@@ -18,5 +18,8 @@ namespace SubzzV2.Core.Models
         public DateTime CreatedDate { get; set; }
         public string SubstitutePhoneNumber { get; set; }
         public bool IsSendAll { get; set; }
+        public string EmailId { get; set; }
+        public string Password { get; set; }
+        public string SubstituteName { get; set; }
     }
 }
