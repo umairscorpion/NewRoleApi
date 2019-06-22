@@ -289,8 +289,8 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             {
                 var sql = "[Subzz_Users].[Users].[GetEvents]";
                 var queryParams = new DynamicParameters();
-                queryParams.Add("@StartDate", startDate);
-                queryParams.Add("@EndDate", endDate);
+                queryParams.Add("@StartDate", null);
+                queryParams.Add("@EndDate", null);
                 queryParams.Add("@UserId", userId);
                 return connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }

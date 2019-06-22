@@ -18,7 +18,7 @@ namespace Subzz.Api.Schedules
             ITrigger trigger = TriggerBuilder.Create()
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                .WithIntervalInMinutes(1)
+                .WithIntervalInMinutes(3)
                 .RepeatForever())
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
