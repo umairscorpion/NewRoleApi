@@ -41,8 +41,11 @@ namespace SubzzV2.Integration.Core.Notification
                 string apiUrl = root.GetSection("URL").GetSection("api").Value;
                 string web = root.GetSection("URL").GetSection("web").Value;
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
-                message.AcceptUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
-                message.DeclineUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
+                if (message.TemplateId == 1)
+                {
+                    message.AcceptUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
+                    message.DeclineUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
+                }
                 if (message.TemplateId == 9)
                 {
                     message.resetPassUrl = web + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;

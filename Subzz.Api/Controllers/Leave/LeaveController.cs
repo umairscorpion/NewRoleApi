@@ -334,7 +334,7 @@ namespace Subzz.Api.Controllers.Leave
                             }
                         }
 
-                        else if (user.RoleId == 4 && absenceDetail.AbsenceScope != 2)
+                        else if (user.RoleId == 4 && absenceDetail.AbsenceScope != 2 && absenceDetail.AbsenceScope != 5)
                         {
                             message.TemplateId = 1;
                             if (user.IsSubscribedEmail)
