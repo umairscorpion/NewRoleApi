@@ -25,5 +25,11 @@ namespace SubzzManage.Business.Error_Log
             var error = _repo.InsertError(userId, creationDate, statusCode, message, messageDetail);
             return error;
         }
+
+        int IErrorLogService.InsertEmailLog(string emailTo, string message, string subject, string exception, DateTime updatedOn, string absenceId, string statusCode)
+        {
+            var error = _repo.InsertEmailLog(emailTo, message, subject, exception, updatedOn, absenceId, statusCode);
+            return error;
+        }
     }
 }
