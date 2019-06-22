@@ -40,5 +40,6 @@ namespace SubzzV2.Core.Models
         public bool IsApproved { get; set; }
         public string OriginalFileName { get; set; }
         public string EmployeeProfilePicUrl { get; set; }
+        public int AbsenceType { get; set; }
     }
 }

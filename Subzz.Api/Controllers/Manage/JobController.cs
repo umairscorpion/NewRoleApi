@@ -47,8 +47,7 @@ namespace Subzz.Api.Controllers.Manage
         public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int Status, bool Requested)
         {
                 var result = await _jobService.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, Status, Requested);
-                return result;
-            
+                return result;          
         }
 
         [Route("acceptJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
@@ -92,6 +91,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.SubstituteName = absenceDetail.SubstituteName;
                     message.Photo = absenceDetail.EmployeeProfilePicUrl;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                    //Notification notification = new Notification();
                     Task.Run(() => SendJobAcceptEmails(users, message));
                 }
                 return AcceptJob;
@@ -103,9 +103,9 @@ namespace Subzz.Api.Controllers.Manage
             return null;
         }
 
-        [Route("declineJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
+        [Route("declineJob/{AbsenceId}")]
         [HttpGet]
-        public async Task<string> DeclineJob(int AbsenceId, string SubstituteId, string AcceptVia)
+        public string DeclineJob(int AbsenceId)
         {
             try
             {
@@ -139,6 +139,7 @@ namespace Subzz.Api.Controllers.Manage
                 message.SubstituteName = absenceDetail.SubstituteName;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
                 message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                //Notification notification = new Notification();
                 Task.Run(() => SendJobDeclinEmails(users, message));
 
                 return "Declined";
@@ -152,32 +153,42 @@ namespace Subzz.Api.Controllers.Manage
 
         async Task SendJobAcceptEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message)
         {
-            foreach (var User in users)
+            foreach (var user in users)
             {
                 try
                 {
-                    message.Password = User.Password;
-                    message.UserName = User.FirstName;
-                    message.SendTo = User.Email;
+                    message.Password = user.Password;
+                    message.UserName = user.FirstName;
+                    message.SendTo = user.Email;
                     //For Substitutes
-                    if (User.RoleId == 4)
+                    if (user.RoleId == 4)
                     {
                         message.TemplateId = 1;
-                         await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        if (user.IsSubscribedEmail)
+                        {
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
                     }
 
-                    if (User.RoleId == 3)
+                    else if (user.RoleId == 3)
                     {
                         message.TemplateId = 11;
-                          await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        if (user.IsSubscribedEmail)
+                        {
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
                     }
 
                     //For Admins
                     else
                     {
                         message.TemplateId = 3;
-                          await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        if (user.IsSubscribedEmail)
+                        {
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
                     }
+                    
 
                 }
                 catch (Exception ex)
@@ -188,30 +199,36 @@ namespace Subzz.Api.Controllers.Manage
 
         async Task SendJobDeclinEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message)
         {
-            foreach (var User in users)
+            foreach (var user in users)
             {
                 try
                 {
-                    message.Password = User.Password;
-                    message.UserName = User.FirstName;
-                    message.SendTo = User.Email;
+                    message.Password = user.Password;
+                    message.UserName = user.FirstName;
+                    message.SendTo = user.Email;
                     //For Substitutes
-                    if (User.RoleId == 4)
+                    if (user.RoleId == 4)
                     {
                         //message.TemplateId = 1;
                         //await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
 
-                    if (User.RoleId == 3)
+                    else if (user.RoleId == 3)
                     {
-                        message.TemplateId = 24;
-                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        if (user.IsSubscribedEmail)
+                        {
+                            message.TemplateId = 24;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
                     }
                     //For Admins
                     else
                     {
-                        message.TemplateId = 23;
-                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        if (user.IsSubscribedEmail)
+                        {
+                            message.TemplateId = 23;
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
                     }
 
                 }
@@ -220,5 +237,6 @@ namespace Subzz.Api.Controllers.Manage
                 }
             }
         }
+
     }
 }

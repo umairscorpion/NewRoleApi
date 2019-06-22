@@ -27,5 +27,6 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         DashboardSummary GetAbsenceSummary(string userId, int year);
         List<AbsenceSummary> GetTopTenTeachers(string userId);
         List<Event> GetEvents(DateTime startDate, DateTime endDate, string userId);
+        void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail);
     }
 }

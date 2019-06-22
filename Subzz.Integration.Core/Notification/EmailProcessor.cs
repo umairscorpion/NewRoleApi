@@ -17,7 +17,10 @@ namespace SubzzV2.Integration.Core.Notification
 {
     public class EmailProcessor : IEmailProcessor
     {
+        public EmailProcessor()
+        {
 
+        }
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
         {
@@ -35,15 +38,14 @@ namespace SubzzV2.Integration.Core.Notification
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 configurationBuilder.AddJsonFile(path, false);
                 var root = configurationBuilder.Build();
-                string url = root.GetSection("URL").GetSection("LiveSiteUrl").Value;
-                message.ProfilePicUrl = url + "/Profile/" + message.Photo;
-                if (message.TemplateId == 1)
-                {
-                    message.AcceptUrl = url + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId;
-                }
+                string apiUrl = root.GetSection("URL").GetSection("api").Value;
+                string web = root.GetSection("URL").GetSection("web").Value;
+                message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
+                message.AcceptUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
+                message.DeclineUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
                 if (message.TemplateId == 9)
                 {
-                    message.resetPassUrl = url + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
+                    message.resetPassUrl = web + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
@@ -60,6 +62,7 @@ namespace SubzzV2.Integration.Core.Notification
             }
             catch (System.Exception ex)
             {
+                CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
                 throw ex;
             }
         }
@@ -150,6 +153,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "N/A",
                 ["{Duration}"] = message.Duration ?? "",
                 ["{AcceptUrl}"] = message.AcceptUrl ?? "",
+                ["{DeclineUrl}"] = message.DeclineUrl ?? "",
                 ["{resetPasswordKey}"] = !string.IsNullOrEmpty(message.resetPassUrl) ? message.resetPassUrl: "",
                 ["{photo}"] = !string.IsNullOrEmpty(message.ProfilePicUrl) ? message.ProfilePicUrl : "",
             };

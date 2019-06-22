@@ -191,7 +191,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@IsSubstituteRequired", model.SubstituteRequired);
                 queryParams.Add("@NotesToSubstitute", model.SubstituteNotes);
                 queryParams.Add("@AbsenceStatus_Id", model.Status);
-                queryParams.Add("@AbsenceType_Id", model.DurationType);
+                queryParams.Add("@AbsenceType_Id", model.AbsenceType);
                 queryParams.Add("@AnyAttachemt", model.AnyAttachment);
                 queryParams.Add("@User_Id", model.EmployeeId);
                 queryParams.Add("@UpdatedBy_User_Id", model.UpdatedById);
@@ -289,10 +289,23 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             {
                 var sql = "[Subzz_Users].[Users].[GetEvents]";
                 var queryParams = new DynamicParameters();
-                queryParams.Add("@StartDate", startDate);
-                queryParams.Add("@EndDate", endDate);
+                queryParams.Add("@StartDate", null);
+                queryParams.Add("@EndDate", null);
                 queryParams.Add("@UserId", userId);
                 return connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateMailAndSmsFlag]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@Id", id);
+                queryParams.Add("@IsSendSms", IsSendSms);
+                queryParams.Add("@IsSendEmail", IsSendEmail);
+                connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
     }
