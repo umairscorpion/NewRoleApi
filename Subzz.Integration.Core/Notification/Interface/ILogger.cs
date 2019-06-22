@@ -10,7 +10,7 @@ namespace SubzzV2.Integration.Core.Notification.Interface
 	public interface ILogger
 	{
 		void LogError(System.Exception ex);
-		void LogError(string exception, string messagePrefix, string appName);
+		void LogEmail(string emailTo, string message, string subject, string exception, DateTime updatedOn, string absenceId, string statusCode);
 		void LogError(System.Exception ex, string messagePrefix, string appName);
 		void LogMailMessage(string messageId, string ipAddress, int action, bool mailboxDatabaseExists);
 

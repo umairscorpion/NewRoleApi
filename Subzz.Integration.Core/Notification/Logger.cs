@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using SubzzV2.Integration.Core.Notification.Interface;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ namespace Subzz.Integration.Core.Notification
 {
     public class Logger : ILogger
     {
-        private string _connectionString;
         private SqlConnection Conn
         {
             get
@@ -29,10 +29,20 @@ namespace Subzz.Integration.Core.Notification
             throw new NotImplementedException();
         }
 
-        public void LogError(string exception, string messagePrefix, string appName)
+        public void LogEmail(string emailTo, string message, string subject, string exception, DateTime updatedOn, string absenceId, string statusCode)
         {
             using (var connection = Conn)
             {
+                var sql = "[Subzz_Logs].[Logs].[InsertEmailLog]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@emailTo", emailTo);
+                queryParams.Add("@message", message);
+                queryParams.Add("@subject", subject);
+                queryParams.Add("@exception", exception);
+                queryParams.Add("@updatedOn", updatedOn);
+                queryParams.Add("@absenceId", absenceId);
+                queryParams.Add("@statusCode", statusCode);
+                Conn.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
 

@@ -110,7 +110,10 @@ namespace Subzz.Api.Controllers.Absence
         {
             try
             {
+                DateTime updatedOn = DateTime.Now;
+               
                 var absenceCreation = _service.CreateAbsence(model);
+                CommunicationContainer.Logger.LogEmail("Send Email", "Clicked On Create Absence", Convert.ToString(absenceCreation), null, updatedOn, Convert.ToString(absenceCreation), "OK: Function Called");
                 if (absenceCreation > 0)
                 {
                     // Audit Log
