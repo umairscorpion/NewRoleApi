@@ -59,9 +59,13 @@ namespace SubzzV2.Integration.Core.Notification
                 }
                 await CommunicationContainer.MailClient.SendAsync(body, mailTemplate.Title, to,
                      mailTemplate.SenderEmail, true, message.ImageBase64);
+                DateTime updatedOn = DateTime.Now;
+                CommunicationContainer.Logger.LogEmail(message.SendTo, body, "Subzz Job Notification" , null, updatedOn, Convert.ToString(message.AbsenceId), "OK");
             }
             catch (System.Exception ex)
             {
+                DateTime updatedOn = DateTime.Now;
+                CommunicationContainer.Logger.LogEmail(message.SendTo, null, "Subzz Job Notification", Convert.ToString(ex), updatedOn, Convert.ToString(message.AbsenceId), "FAIL");
                 CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
                 throw ex;
             }
