@@ -66,7 +66,7 @@ namespace Subzz.Api.Schedules
                 if (CurrentTimeToCompare >= ActualTimetoSendTextMessage)
                 {
                     _absenceService.UpdateMailAndSmsFlag(preferredSubstitute.Id, true, true);
-                    //SendEmailAndSmsNotificationToAll(preferredSubstitute);
+                    SendEmailAndSmsNotificationToAll(preferredSubstitute);
                 }
             }
         }

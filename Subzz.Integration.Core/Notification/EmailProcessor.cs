@@ -17,7 +17,10 @@ namespace SubzzV2.Integration.Core.Notification
 {
     public class EmailProcessor : IEmailProcessor
     {
+        public EmailProcessor()
+        {
 
+        }
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
         {
@@ -59,6 +62,7 @@ namespace SubzzV2.Integration.Core.Notification
             }
             catch (System.Exception ex)
             {
+                CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
                 throw ex;
             }
         }

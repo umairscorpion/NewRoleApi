@@ -1,4 +1,5 @@
-﻿using SubzzV2.Integration.Core.Notification;
+﻿using Subzz.Integration.Core.Notification;
+using SubzzV2.Integration.Core.Notification;
 using SubzzV2.Integration.Core.Notification.Interface;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,16 @@ namespace Subzz.Integration.Core.Container
 {
     public class CommunicationContainer
     {
+        private ILogger _logger;
+
+        public virtual ILogger Logger
+        {
+            get
+            {
+                return _logger ?? (_logger = new Logger());
+            }
+        }
+
         private MailTemplatesBuilder _mailTemplatesBuilder;
 
         public virtual MailTemplatesBuilder MailTemplatesBuilder
