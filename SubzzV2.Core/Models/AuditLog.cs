@@ -29,6 +29,7 @@ namespace SubzzV2.Core.Models
         public string EntityId { get; set; }
         public string Created { get; set; }
         public string Approved { get; set; }
+        public string Denied { get; set; }
         public string Accepted { get; set; }
         public string Released { get; set; }
         public string Declined { get; set; }
