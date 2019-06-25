@@ -96,7 +96,8 @@ namespace Subzz.Api.Controllers.TimeClock
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
-                Activity = TimeClockActivity.ActionType.Break
+                Activity = TimeClockActivity.ActionType.Break,
+                TakeBreakTime = DateTime.Now.TimeOfDay
             };
             var Summary = _service.TimeClockBreakStatus(model);
             return Ok(Summary);
@@ -119,7 +120,8 @@ namespace Subzz.Api.Controllers.TimeClock
             var model = new SubzzV2.Core.Models.TimeClock
             {
                 UserId = base.CurrentUser.Id,
-                Activity = TimeClockActivity.ActionType.Return
+                Activity = TimeClockActivity.ActionType.Return,
+                BackFromBreakTime = DateTime.Now.TimeOfDay
             };
             var Summary = _service.TimeClockReturnStatus(model);
             return Ok(Summary);

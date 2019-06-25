@@ -460,8 +460,7 @@ namespace Subzz.Api.Controllers.Absence
             finally
             {
             }
-            return null;
-           
+            return null;         
         }
 
         [Route("getAbsencesScheduleEmployee/{StartDate}/{EndDate}/{UserId}")]
@@ -478,8 +477,7 @@ namespace Subzz.Api.Controllers.Absence
             finally
             {
             }
-            return null;
-            
+            return null;            
         }
 
         [Route("updateAbseceStatus/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}")]
@@ -501,7 +499,6 @@ namespace Subzz.Api.Controllers.Absence
                         OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                     };
                     _audit.InsertAuditLog(audit);
-
                 }
                 else
                 {

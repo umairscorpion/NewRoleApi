@@ -93,7 +93,7 @@ namespace Subzz.Api.Controllers.Leave
                         UserId = CurrentUser.Id,
                         EntityId = model.AbsenceId.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
-                        ActionType = AuditLogs.ActionType.Declined,
+                        ActionType = AuditLogs.ActionType.Denied,
                         DistrictId = CurrentUser.DistrictId,
                         OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                     };
