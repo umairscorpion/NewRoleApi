@@ -274,7 +274,7 @@ namespace Subzz.Api.Controllers.Absence
                     }
                 }
 
-                else if (absenceModel.AbsenceScope == 4)
+                else if (absenceModel.AbsenceScope == 5)
                 {
                     foreach (var user in DataForEmails.Users)
                     {

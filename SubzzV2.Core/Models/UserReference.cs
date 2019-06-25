@@ -24,6 +24,8 @@ namespace SubzzV2.Core.Models
         public string ProfilePicture { get; set; }
         public int DistrictId { get; set; }
         public string OrganizationId { get; set; }
+        public string OrganizationName { get; set; }
+        public string DistrictName { get; set; }
         public int UserLevel { get; set; }
         public List<RolePermission> Permissions { get; set; }
         public bool IsViewedNewVersion { get; set; }

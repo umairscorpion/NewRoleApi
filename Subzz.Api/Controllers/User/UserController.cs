@@ -95,7 +95,9 @@ namespace Subzz.Api.Controllers.User
                     UserLevel = userModel.UserLevel,
                     Permissions = userModel.Permissions,
                     IsViewedNewVersion = userModel.IsViewedNewVersion,
-                    UserRoleDesciption = userModel.UserRoleDesciption
+                    UserRoleDesciption = userModel.UserRoleDesciption,
+                    OrganizationName = userModel.OrganizationName,
+                    DistrictName = userModel.DistrictName
                 };
                 return referenceModel;
             }
