@@ -324,12 +324,18 @@ namespace Subzz.Api.Controllers.Leave
                         //For Substitutes on In case of direct Assign
                         if (user.RoleId == 4 && absenceDetail.AbsenceScope == 2)
                         {
+                            var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                            var jobPostedEvent = events.Where(x => x.EventId == 2).First();
                             message.TemplateId = 7;
                             if (user.IsSubscribedEmail)
                             {
-                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
                                 if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+
+                            if (user.IsSubscribedSMS)
+                            {
+                                if (jobPostedEvent.TextAlert)
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
