@@ -15,16 +15,6 @@ namespace SubzzV2.Integration.Core.Notification
         {
             //string connectionString = ConfigurationManager.ConnectionStrings["DatabaseContext"].ConnectionString;
             List<MessagingSetting> messagingSettings;
-            //using (var dc = new DataContext(connectionString))
-            //{
-            //	messagingSettings = dc.ExecuteQuery<MessagingSetting>(@"
-            //		SELECT TOP 1 
-            //			 [AccountSid]
-            //			,[AuthToken]
-            //                     ,[SenderPhoneNumber]
-            //                     ,[isActive]
-            //			FROM [support].[SmsMessagingSettings] WHERE [IsActive] = {0}", "1").ToList();
-            //}
             using (var dc = new SqlConnection(""))
             {
                 messagingSettings = dc.Query<MessagingSetting>(@"

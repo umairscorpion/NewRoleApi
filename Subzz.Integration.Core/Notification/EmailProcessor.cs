@@ -69,8 +69,8 @@ namespace SubzzV2.Integration.Core.Notification
             {
                 DateTime updatedOn = DateTime.Now;
                 CommunicationContainer.Logger.LogEmail(message.SendTo, null, "Subzz Job Notification", Convert.ToString(ex), updatedOn, Convert.ToString(message.AbsenceId), "FAIL");
-                CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
-                throw ex;
+                //CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
+                //throw ex;
             }
         }
 
@@ -157,7 +157,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{StartDateAndTime}"] = !string.IsNullOrEmpty(message.StartTime)? message.StartTime + " " + message.StartDate : "",
                 ["{EndDateAndTime}"] = !string.IsNullOrEmpty(message.EndTime) ? message.EndTime + " " + message.EndDate: "",
                 ["{Location}"] = !string.IsNullOrEmpty(message.Location) ? message.Location: "",
-                ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "N/A",
+                ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "",
                 ["{Duration}"] = message.Duration ?? "",
                 ["{AcceptUrl}"] = message.AcceptUrl ?? "",
                 ["{DeclineUrl}"] = message.DeclineUrl ?? "",
