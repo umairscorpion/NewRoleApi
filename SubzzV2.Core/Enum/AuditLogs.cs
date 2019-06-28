@@ -41,8 +41,12 @@
             public static string TGuideForAdmin  = "Added Training Guide For Admins";
             public static string TGuideForStaff  = "Added Training Guide For Staff";
             public static string TGuideForSub    = "Added Training Guide For Substitutes";
-            public static string DeletedSubstituteFile  = "Deleted Substitute File";
-            public static string DeletedGuide           = "Deleted Training Guide";
+            public static string DeletedSubstituteFile      = "Deleted Substitute File";
+            public static string DeletedGuide               = "Deleted Training Guide";
+            public static string UpdatedNotifySettings      = "Updated Notification Settings";
+            public static string UpdatedSchoolSettings      = "Updated School Settings";
+            public static string UpdatedCategorySettings    = "Updated Categories Settings";
+            public static string UpdatedSubPreference       = "Updated Substitute Preferences";
 
             // For District Related Actions
             public static string CreatedDistrict    = "Added District";
@@ -61,16 +65,16 @@
             public static string UpdatedEmployee    = "Updated Employee";
             public static string DeletedEmployee    = "Deleted Employee";
             public static string ViewedEmployee     = "Viewed Employee";
-            public static string EmployeeActive     = "Actived Employee";
-            public static string EmployeeInactive   = "Inactived Employee";
+            public static string EmployeeActive     = "Activated Employee";
+            public static string EmployeeInactive   = "Inactivated Employee";
 
             // For Substitute Related Actions
             public static string CreatedSubstitute  = "Added Substitute";
             public static string UpdatedSubstitute  = "Updated Substitute";
             public static string DeletedSubstitute  = "Deleted Substitute";
             public static string ViewedSubstitute   = "Viewed Substitute";
-            public static string SubstituteeActive  = "Actived Substitute";
-            public static string SubstituteInactive = "Inactived Substitute";
+            public static string SubstituteeActive  = "Activated Substitute";
+            public static string SubstituteInactive = "Inactivated Substitute";
 
             // For LeaveType Related Actions
             public static string CreatedLeaveType   = "Added Leave Type";

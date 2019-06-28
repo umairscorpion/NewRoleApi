@@ -150,17 +150,6 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var district = _service.GetDistrict(id);
-                // Audit Log
-                var audit = new AuditLog
-                {
-                    UserId = CurrentUser.Id,
-                    EntityId = id.ToString(),
-                    EntityType = AuditLogs.EntityType.District,
-                    ActionType = AuditLogs.ActionType.ViewedDistrict,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
                 return district;
             }
             catch (Exception ex)

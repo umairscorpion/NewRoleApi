@@ -639,6 +639,18 @@ namespace Subzz.Api.Controllers.User
                     var UserId = base.CurrentUser.Id;
                     var Categories = _service.UpdateUserCategories(cat);
                 }
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedCategorySettings,
+                    PostValue = Serializer.Serialize(substituteCategoryModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return 1;
             }
             catch (Exception ex)
@@ -661,6 +673,18 @@ namespace Subzz.Api.Controllers.User
                     cate.SubstituteId = base.CurrentUser.Id;
                     var events = _service.UpdateNotificationEvents(cate);
                 }
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedNotifySettings,
+                    PostValue = Serializer.Serialize(substituteEventModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return 1;
             }
             catch (Exception ex)
@@ -698,6 +722,18 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 await _service.UpdateSubstitutePeferrence(substitutePreferenceModel);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedSubPreference,
+                    PostValue = Serializer.Serialize(substitutePreferenceModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Json("success");
             }
             catch (Exception ex)
@@ -779,7 +815,19 @@ namespace Subzz.Api.Controllers.User
                     cat.UserId = base.CurrentUser.Id;
                     await _service.UpdateEnabledSchools(cat);
                 }
-            return Json("success");
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedSchoolSettings,
+                    PostValue = Serializer.Serialize(preferredSchoolModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return Json("success");
             }
             catch (Exception ex)
             {

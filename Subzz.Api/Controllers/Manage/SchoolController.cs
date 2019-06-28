@@ -128,17 +128,6 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var SchoolModel = _service.GetSchool(id);
-                // Audit Log
-                var audit = new AuditLog
-                {
-                    UserId = CurrentUser.Id,
-                    EntityId = id.ToString(),
-                    EntityType = AuditLogs.EntityType.School,
-                    ActionType = AuditLogs.ActionType.ViewedSchool,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
                 return SchoolModel;
             }
             catch (Exception ex)
