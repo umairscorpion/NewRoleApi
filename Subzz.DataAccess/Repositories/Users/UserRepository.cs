@@ -263,11 +263,9 @@ namespace Subzz.DataAccess.Repositories.Users
 
         public bool DeleteUser(string UserId)
         {
-            //int hasSucceeded = 0;
             var sql = "[Users].[DeleteUser]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@UserId", UserId);
-            //queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
             var result = Delete(sql, queryParams, CommandType.StoredProcedure);
             return result;
 
