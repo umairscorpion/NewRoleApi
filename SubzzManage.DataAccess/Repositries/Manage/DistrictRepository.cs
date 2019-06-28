@@ -54,7 +54,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@City", model.City);
             queryParams.Add("@IsActive", model.IsActive);
             queryParams.Add("@CountryId", model.CountryId);
-            Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            model.DistrictId = Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
         public DistrictModel UpdateDistrict(DistrictModel model)

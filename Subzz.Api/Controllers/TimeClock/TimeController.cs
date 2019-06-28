@@ -20,6 +20,7 @@ using SubzzV2.Core.Enum;
 using Subzz.Business.Services.Users.Interface;
 using SubzzAbsence.Business.Time;
 using Subzz.Integration.Core.Helper;
+using System.Text;
 
 namespace Subzz.Api.Controllers.TimeClock
 {
@@ -37,20 +38,21 @@ namespace Subzz.Api.Controllers.TimeClock
             _hostingEnvironment = hostingEnvironment;
         }
 
+      
         [Route("clockin")]
         [HttpPost]
-        public IActionResult InsertClockInTime(string userId)
+        public IActionResult InsertClockInTimeNew(string userId)
         {
             try
             {
                 var model = new SubzzV2.Core.Models.TimeClock
                 {
-                    UserId = CurrentUser.Id,
-                    ClockInDate = DateTime.Now,
-                    ClockInTime = DateTime.Now.TimeOfDay,
+                    UserIdd = CurrentUser.Id,
+                    UpdatedOn = DateTime.Now,
+                    ActivityTime = DateTime.Now.TimeOfDay,
                     Activity = TimeClockActivity.ActionType.Clockin
                 };
-                var Summary = _service.InsertClockInTime(model);
+                var Summary = _service.InsertClockInTimeNew(model);
                 return Ok(Summary);
             }
             catch (Exception ex)
@@ -62,21 +64,23 @@ namespace Subzz.Api.Controllers.TimeClock
             return null;
         }
 
+     
+
         [Route("clockout")]
         [HttpPost]
-        public IActionResult InsertClockOutTime(string userId)
+        public IActionResult InsertClockOutTimeNew(string userId)
         {
             try
-            { 
-            var model = new SubzzV2.Core.Models.TimeClock
             {
-                UserId = base.CurrentUser.Id,
-                ClockInDate = DateTime.Now,
-                ClockOutTime = DateTime.Now.TimeOfDay,
-                Activity = TimeClockActivity.ActionType.Clockout
-            };
-            var Summary = _service.InsertClockOutTime(model);
-            return Ok(Summary);
+                var model = new SubzzV2.Core.Models.TimeClock
+                {
+                    UserIdd = base.CurrentUser.Id,
+                    UpdatedOn = DateTime.Now,
+                    ActivityTime = DateTime.Now.TimeOfDay,
+                    Activity = TimeClockActivity.ActionType.Clockout
+                };
+                var Summary = _service.InsertClockOutTimeNew(model);
+                return Ok(Summary);
             }
             catch (Exception ex)
             {
@@ -86,21 +90,26 @@ namespace Subzz.Api.Controllers.TimeClock
             }
             return null;
         }
+
+   
 
         [Route("break")]
         [HttpPost]
-        public IActionResult TimeClockBreakStatus(string userId)
+        public IActionResult TimeClockBreakStatusNew(string userId)
         {
             try
             {
-            var model = new SubzzV2.Core.Models.TimeClock
-            {
-                UserId = base.CurrentUser.Id,
-                Activity = TimeClockActivity.ActionType.Break,
-                TakeBreakTime = DateTime.Now.TimeOfDay
-            };
-            var Summary = _service.TimeClockBreakStatus(model);
-            return Ok(Summary);
+                var model = new SubzzV2.Core.Models.TimeClock
+                {
+                    UserIdd = base.CurrentUser.Id,
+                    UpdatedOn = DateTime.Now,
+                    ActivityTime = DateTime.Now.TimeOfDay,
+                    BreakTime = DateTime.Now.TimeOfDay,
+                    Activity = TimeClockActivity.ActionType.Break,
+                    TakeBreakTime = DateTime.Now.TimeOfDay
+                };
+                var Summary = _service.TimeClockBreakStatusNew(model);
+                return Ok(Summary);
             }
             catch (Exception ex)
             {
@@ -111,20 +120,25 @@ namespace Subzz.Api.Controllers.TimeClock
             return null;
         }
 
+       
+
         [Route("return")]
         [HttpPost]
-        public IActionResult TimeClockReturnStatus(string userId)
+        public IActionResult TimeClockReturnStatusNew(string userId)
         {
             try
-            { 
-            var model = new SubzzV2.Core.Models.TimeClock
             {
-                UserId = base.CurrentUser.Id,
-                Activity = TimeClockActivity.ActionType.Return,
-                BackFromBreakTime = DateTime.Now.TimeOfDay
-            };
-            var Summary = _service.TimeClockReturnStatus(model);
-            return Ok(Summary);
+                var model = new SubzzV2.Core.Models.TimeClock
+                {
+                    UserIdd = base.CurrentUser.Id,
+                    UpdatedOn = DateTime.Now,
+                    ActivityTime = DateTime.Now.TimeOfDay,
+                    ReturnFromBreakTime = DateTime.Now.TimeOfDay,
+                    Activity = TimeClockActivity.ActionType.Return,
+                    TakeBreakTime = DateTime.Now.TimeOfDay
+                };
+                var Summary = _service.TimeClockReturnStatusNew(model);
+                return Ok(Summary);
             }
             catch (Exception ex)
             {

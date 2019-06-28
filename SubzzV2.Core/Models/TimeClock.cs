@@ -12,6 +12,17 @@ namespace SubzzV2.Core.Models
         public int TimeClockId { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
+        public int TotalBreakTime { get; set; }
+
+        //New Implementation
+        public string UserIdd { get; set; }
+        public TimeSpan ActivityTime { get; set; }
+        public string ActivityDesc { get; set; }
+        public DateTime UpdatedOn { get; set; }
+        public TimeSpan BreakTime { get; set; }
+        public TimeSpan ReturnFromBreakTime { get; set; }
+        public int ParentId { get; set; }
+        public int TotalBreakMinutes { get; set; }
 
     }
 }
