@@ -99,7 +99,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             queryParams.Add("@OrganizationId", model.OrganizationId);
             queryParams.Add("@CreatedDate", DateTime.Now);
             queryParams.Add("@ModifiedDate", DateTime.Now);
-            Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            model.LeaveTypeId = Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
 

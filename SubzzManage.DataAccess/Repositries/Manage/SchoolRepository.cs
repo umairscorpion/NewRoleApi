@@ -54,7 +54,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             queryParams.Add("@NotifyOthersTime", model.NotifyOthersTime);
             queryParams.Add("@DailyAbenceLimit", model.DailyAbenceLimit);
             queryParams.Add("@IsAbsenceLimit", model.IsAbsenceLimit);
-            Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            model.SchoolId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
         public OrganizationModel UpdateSchool(OrganizationModel model)

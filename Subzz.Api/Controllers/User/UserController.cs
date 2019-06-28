@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
+using Subzz.Integration.Core.Helper;
+using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 
 namespace Subzz.Api.Controllers.User
@@ -23,11 +25,13 @@ namespace Subzz.Api.Controllers.User
         private readonly IUserService _service;
         private IHostingEnvironment _hostingEnvironment;
         private IUserAuthenticationService _authService;
-        public UserController(IUserService service, IUserAuthenticationService authService, IHostingEnvironment hostingEnvironment)
+        private readonly IAuditingService _audit;
+        public UserController(IUserService service, IUserAuthenticationService authService, IHostingEnvironment hostingEnvironment, IAuditingService audit)
         {
             _service = service;
             _hostingEnvironment = hostingEnvironment;
             _authService = authService;
+            _audit = audit;
         }
 
         [Route("list/summary")]
@@ -157,6 +161,18 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var user = _service.UpdatePassword(model);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.UserId.ToString(),
+                    EntityType = AuditLogs.EntityType.ChangedPassword,
+                    ActionType = AuditLogs.ActionType.ChangedPassword,
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
                 return Ok();
             }
             catch (Exception ex)
@@ -197,14 +213,38 @@ namespace Subzz.Api.Controllers.User
         {
             try
             {
-            ////In Case Of Substitute
-            //if (model.RoleId == 4)
-            //{
-            //    model.TeachingLevel = 0;
-            //    model.Speciality = "N/A";
-            //    model.OrganizationId = "N/A";
-            //}
                 var userModel = _service.InsertUser(model);
+                if(model.RoleId == 4)
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Substitute,
+                        ActionType = AuditLogs.ActionType.CreatedSubstitute,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Staff,
+                        ActionType = AuditLogs.ActionType.CreatedEmployee,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                
                 return model;
             }
             catch (Exception ex)
@@ -222,7 +262,38 @@ namespace Subzz.Api.Controllers.User
         {
             try
             {
-                return _service.UpdateUser(model);
+                var UserModel = _service.UpdateUser(model);
+                if (model.RoleId == 4)
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Substitute,
+                        ActionType = AuditLogs.ActionType.UpdatedSubstitute,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Staff,
+                        ActionType = AuditLogs.ActionType.UpdatedEmployee,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                return UserModel;
             }
             catch (Exception ex)
             {
@@ -239,7 +310,19 @@ namespace Subzz.Api.Controllers.User
         {
             try
             { 
-                return _service.UpdateUserProfile(model);
+                var Profile = _service.UpdateUserProfile(model);
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.UserId.ToString(),
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedProfile,
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+                return Profile;
             }
             catch (Exception ex)
             {
@@ -268,13 +351,73 @@ namespace Subzz.Api.Controllers.User
             }
             return null;
         }
+
         [Route("updateUserStatus")]
         [HttpPatch]
         public SubzzV2.Core.Entities.User UpdateUserStatus([FromBody]SubzzV2.Core.Entities.User model)
         {
             try
             { 
-                return _service.UpdateUserStatus(model);
+                 var Model = _service.UpdateUserStatus(model);
+                if (model.RoleId == 4)
+                {
+                    if(model.IsActive == true)
+                    {
+                        var audit = new AuditLog
+                        {
+                            UserId = CurrentUser.Id,
+                            EntityId = model.UserId.ToString(),
+                            EntityType = AuditLogs.EntityType.Substitute,
+                            ActionType = AuditLogs.ActionType.SubstituteeActive,
+                            DistrictId = CurrentUser.DistrictId,
+                            OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                        };
+                        _audit.InsertAuditLog(audit);
+                    }
+                    else
+                    {
+                        var audit = new AuditLog
+                        {
+                            UserId = CurrentUser.Id,
+                            EntityId = model.UserId.ToString(),
+                            EntityType = AuditLogs.EntityType.Substitute,
+                            ActionType = AuditLogs.ActionType.SubstituteInactive,
+                            DistrictId = CurrentUser.DistrictId,
+                            OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                        };
+                        _audit.InsertAuditLog(audit);
+                    }                   
+                }
+                else
+                {
+                    if (model.IsActive == true)
+                    {
+                        var audit = new AuditLog
+                        {
+                            UserId = CurrentUser.Id,
+                            EntityId = model.UserId.ToString(),
+                            EntityType = AuditLogs.EntityType.Staff,
+                            ActionType = AuditLogs.ActionType.EmployeeActive,
+                            DistrictId = CurrentUser.DistrictId,
+                            OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                        };
+                        _audit.InsertAuditLog(audit);
+                    }
+                    else
+                    {
+                        var audit = new AuditLog
+                        {
+                            UserId = CurrentUser.Id,
+                            EntityId = model.UserId.ToString(),
+                            EntityType = AuditLogs.EntityType.Staff,
+                            ActionType = AuditLogs.ActionType.EmployeeInactive,
+                            DistrictId = CurrentUser.DistrictId,
+                            OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                        };
+                        _audit.InsertAuditLog(audit);
+                    }
+                }
+                return Model;
             }
             catch (Exception ex)
             {
@@ -311,6 +454,34 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var userModel = _service.GetUserDetail(Id);
+                if (userModel.RoleId == 4)
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = userModel.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Substitute,
+                        ActionType = AuditLogs.ActionType.ViewedSubstitute,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = userModel.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Staff,
+                        ActionType = AuditLogs.ActionType.ViewedEmployee,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
                 return new List<SubzzV2.Core.Entities.User> { userModel };
             }
             catch (Exception ex)
@@ -343,7 +514,19 @@ namespace Subzz.Api.Controllers.User
         [HttpDelete]
         public bool Delete(string id)
         {
-            return _service.DeleteUser(id);
+            var result = _service.DeleteUser(id);
+            // Audit Log
+            var audit = new AuditLog
+            {
+                UserId = CurrentUser.Id,
+                EntityId = id.ToString(),
+                EntityType = AuditLogs.EntityType.Staff,
+                ActionType = AuditLogs.ActionType.DeletedEmployee,
+                DistrictId = CurrentUser.DistrictId,
+                OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+            };
+            _audit.InsertAuditLog(audit);
+            return result;
         }
 
         [Route("{id}")]
@@ -704,6 +887,19 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var Settings = _service.InsertPayRate(payRateSettings);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = Settings.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.PayRate,
+                    ActionType = AuditLogs.ActionType.CreatedPayRate,
+                    PostValue = Serializer.Serialize(payRateSettings),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Settings;
             }
             catch (Exception ex)
@@ -722,6 +918,19 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var positions = _service.InsertPayRate(payRateSettings);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = payRateSettings.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.PayRate,
+                    ActionType = AuditLogs.ActionType.UpdatedPayRate,
+                    PostValue = Serializer.Serialize(payRateSettings),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(positions);
             }
             catch (Exception ex)
@@ -761,6 +970,18 @@ namespace Subzz.Api.Controllers.User
                 payRate.Id = id;
                 payRate.ArchivedBy = base.CurrentUser.Id; ;
                 var result = _service.DeletePayRate(payRate);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.PayRate,
+                    ActionType = AuditLogs.ActionType.DeletedPayRate,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -779,6 +1000,19 @@ namespace Subzz.Api.Controllers.User
             try
             {
                 var rule = _service.InsertPayRateRule(payRateRule);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = rule.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.PayRateRule,
+                    ActionType = AuditLogs.ActionType.CreatedPayRateRule,
+                    PostValue = Serializer.Serialize(payRateRule),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(rule);
             }
             catch (Exception ex)
@@ -797,6 +1031,19 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var rule = _service.InsertPayRateRule(payRateRule);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = payRateRule.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.PayRateRule,
+                    ActionType = AuditLogs.ActionType.UpdatedPayRateRule,
+                    PostValue = Serializer.Serialize(payRateRule),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(rule);
             }
             catch (Exception ex)
@@ -836,6 +1083,18 @@ namespace Subzz.Api.Controllers.User
                 payRate.Id = id;
                 payRate.ArchivedBy = base.CurrentUser.Id; ;
                 var result = _service.DeletePayRateRule(payRate);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.PayRateRule,
+                    ActionType = AuditLogs.ActionType.DeletedPayRateRule,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(result);
             }
             catch (Exception ex)

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subzz.Api.Controllers.Base;
 using SubzzV2.Core.Models;
+using Subzz.Business.Services.Users.Interface;
+using SubzzV2.Core.Enum;
+using Subzz.Integration.Core.Helper;
 
 namespace Subzz.Api.Controllers.Manage
 {
@@ -15,9 +18,11 @@ namespace Subzz.Api.Controllers.Manage
     public class SchoolController : BaseApiController
     {
         private readonly ISchoolService _service;
-        public SchoolController(ISchoolService service)
+        private readonly IAuditingService _audit;
+        public SchoolController(ISchoolService service, IAuditingService audit)
         {
             _service = service;
+            _audit = audit;
         }
         [Route("insertSchool")]
         [HttpPost]
@@ -26,6 +31,18 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var school = _service.InsertSchool(model);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.SchoolId.ToString(),
+                    EntityType = AuditLogs.EntityType.School,
+                    ActionType = AuditLogs.ActionType.CreatedSchool,
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
                 return school;
             }
             catch (Exception ex)
@@ -43,7 +60,20 @@ namespace Subzz.Api.Controllers.Manage
         {
             try
             {
-                return _service.UpdateSchool(model);
+                 var SchoolModel = _service.UpdateSchool(model);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.SchoolId.ToString(),
+                    EntityType = AuditLogs.EntityType.School,
+                    ActionType = AuditLogs.ActionType.UpdatedSchool,
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+                return SchoolModel;
             }
             catch (Exception ex)
             {
@@ -76,7 +106,19 @@ namespace Subzz.Api.Controllers.Manage
         [HttpDelete]
         public bool Delete(string id)
         {
-                return _service.DeleteSchool(id);
+            var DeleteSchool = _service.DeleteSchool(id);
+            // Audit Log
+            var audit = new AuditLog
+            {
+                UserId = CurrentUser.Id,
+                EntityId = id.ToString(),
+                EntityType = AuditLogs.EntityType.School,
+                ActionType = AuditLogs.ActionType.DeletedSchool,
+                DistrictId = CurrentUser.DistrictId,
+                OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+            };
+            _audit.InsertAuditLog(audit);
+            return DeleteSchool;
         }
 
         [Route("getSchoolById/{id}")]
@@ -85,7 +127,19 @@ namespace Subzz.Api.Controllers.Manage
         {
             try
             {
-                return _service.GetSchool(id);
+                var SchoolModel = _service.GetSchool(id);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.School,
+                    ActionType = AuditLogs.ActionType.ViewedSchool,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+                return SchoolModel;
             }
             catch (Exception ex)
             {
