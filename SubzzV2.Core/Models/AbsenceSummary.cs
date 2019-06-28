@@ -63,6 +63,18 @@ namespace SubzzV2.Core.Models
         public int TotalAbsence { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int SubjectEnglish { get; set; }
+        public int SubjectHistory { get; set; }
+        public int SubjectMath { get; set; }
+        public int SubjectScience { get; set; }
+        public int SubjectPE { get; set; }
+        public int SubjectMusic { get; set; }
+        public int SubjectArt { get; set; }
+        public int SubjectTechnology { get; set; }
+        public int SubjectWorld { get; set; }
+        public int SubjectCareer { get; set; }
+        public int SubjectSpecial { get; set; }
+        public int SubjectAdult { get; set; }
 
     }
 }
