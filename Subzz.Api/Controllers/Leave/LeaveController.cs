@@ -99,6 +99,19 @@ namespace Subzz.Api.Controllers.Leave
                     };
                     _audit.InsertAuditLog(audit);
                 }
+                if (model.IsArchived == true)
+                {
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.AbsenceId.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Archived,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
                 //Notification notification = new Notification(_userService, _absenceService);
                 Task.Run(() => SendNotificationsOnJobApprovedOrDenied(model));
                 return leaveRequests;
@@ -118,7 +131,38 @@ namespace Subzz.Api.Controllers.Leave
         {
             try
             {
+                var leaveTypeId = model.LeaveTypeId;
                 var leaveTypeModel = _service.InsertLeaveType(model);
+                // Audit Log
+                if (leaveTypeId > 0)
+                {
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.LeaveTypeId.ToString(),
+                        EntityType = AuditLogs.EntityType.LeaveType,
+                        ActionType = AuditLogs.ActionType.UpdatedLeaveType,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.LeaveTypeId.ToString(),
+                        EntityType = AuditLogs.EntityType.LeaveType,
+                        ActionType = AuditLogs.ActionType.CreatedLeaveType,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                
                 return leaveTypeModel;
             }
             catch(Exception ex)
@@ -191,6 +235,16 @@ namespace Subzz.Api.Controllers.Leave
             try
             {
                 var response = _service.DeleteLeaveType(leaveTypeId);
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = leaveTypeId.ToString(),
+                    EntityType = AuditLogs.EntityType.LeaveType,
+                    ActionType = AuditLogs.ActionType.DeletedLeaveType,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -209,6 +263,16 @@ namespace Subzz.Api.Controllers.Leave
             try
             {
                 var response = _service.GetleaveTypeById(leaveTypeId);
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = leaveTypeId.ToString(),
+                    EntityType = AuditLogs.EntityType.LeaveType,
+                    ActionType = AuditLogs.ActionType.ViewedLeaveType,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
                 return Ok(response);
             }
             catch (Exception ex)

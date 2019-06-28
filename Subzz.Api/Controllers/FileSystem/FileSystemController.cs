@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
+using Subzz.Integration.Core.Helper;
+using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
 
 namespace Subzz.Api.Controllers.FileSystem
@@ -18,10 +20,12 @@ namespace Subzz.Api.Controllers.FileSystem
     {
         private IHostingEnvironment _hostingEnvironment;
         private readonly IUserService _service;
-        public FileSystemController(IHostingEnvironment hostingEnvironment, IUserService service)
+        private readonly IAuditingService _audit;
+        public FileSystemController(IHostingEnvironment hostingEnvironment, IUserService service, IAuditingService audit)
         {
             _hostingEnvironment = hostingEnvironment;
             _service = service;
+            _audit = audit;
         }
 
         [Route("uploadProfilePicture")]
@@ -687,6 +691,68 @@ namespace Subzz.Api.Controllers.FileSystem
                 fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
                 fileManager.UserId = base.CurrentUser.Id;
                 var Files = _service.AddFiles(fileManager);
+
+                // Audit Log
+                if (fileManager.FileType == "2")
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = fileManager.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.TGuideForAdmin,
+                        PostValue = Serializer.Serialize(fileManager),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else if (fileManager.FileType == "3")
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = fileManager.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.TGuideForStaff,
+                        PostValue = Serializer.Serialize(fileManager),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else if (fileManager.FileType == "4")
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = fileManager.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.TGuideForSub,
+                        PostValue = Serializer.Serialize(fileManager),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = fileManager.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.SubstituteFile,
+                        PostValue = Serializer.Serialize(fileManager),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
                 return Files;
             }
             catch (Exception ex)
@@ -729,6 +795,36 @@ namespace Subzz.Api.Controllers.FileSystem
                 fileManager.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
                 fileManager.UserId = base.CurrentUser.Id;
                 var Files = _service.DeleteFiles(fileManager);
+
+                // Audit Log
+                if (fileManager.FileType == "Guides")
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = fileManager.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.DeletedGuide,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = fileManager.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.User,
+                        ActionType = AuditLogs.ActionType.DeletedSubstituteFile,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
 
                 string folderName = "Files";
                 string webRootPath = _hostingEnvironment.WebRootPath;
