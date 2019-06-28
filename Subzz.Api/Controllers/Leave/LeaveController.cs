@@ -335,8 +335,8 @@ namespace Subzz.Api.Controllers.Leave
 
                             if (user.IsSubscribedSMS)
                             {
-                                if (jobPostedEvent.TextAlert)
-                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                                //if (jobPostedEvent.TextAlert)
+                                   // CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
 

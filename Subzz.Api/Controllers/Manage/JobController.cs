@@ -89,6 +89,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.Location = absenceDetail.AbsenceLocation;
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
+                    message.Reason = absenceDetail.AbsenceReasonDescription;
                     message.Photo = absenceDetail.EmployeeProfilePicUrl;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                     //Notification notification = new Notification();
@@ -168,10 +169,10 @@ namespace Subzz.Api.Controllers.Manage
                         {
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
-                        if (user.IsSubscribedSMS)
-                        {
-                            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
-                        }
+                        //if (user.IsSubscribedSMS)
+                        //{
+                        //    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                        //}
                     }
 
                     else if (user.RoleId == 3)
