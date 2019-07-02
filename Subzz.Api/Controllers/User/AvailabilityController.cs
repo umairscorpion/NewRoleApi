@@ -83,7 +83,7 @@ namespace Subzz.Api.Controllers.User
                 {
                     model = new SubstituteAvailability { StartDate = DateTime.Now, AvailabilityStatusId = -1, UserId = "" };
                 }
-
+                model.DistrictId = base.CurrentUser.DistrictId;
                 var result = _service.GetSubstituteAvailability(model).ToList();
                 var resources = result.Select(a => new CalendarResource
                 {
@@ -184,6 +184,24 @@ namespace Subzz.Api.Controllers.User
                 model.AvailabilityId = id;
                 model.ArchivedBy = base.CurrentUser.Id;
                 var result = _service.DeleteAvailability(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("checkSubstituteAvailability")]
+        [HttpPost]
+        public IActionResult CheckSubstituteAvailability([FromBody]UserAvailability model)
+        {
+            try
+            {
+                var result = _service.CheckSubAvailability(model);
                 return Ok(result);
             }
             catch (Exception ex)

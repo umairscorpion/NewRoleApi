@@ -218,6 +218,11 @@ namespace Subzz.Business.Services.Users
             return _repo.DeleteAvailability(availability);
         }
 
+        public int CheckSubAvailability(UserAvailability availability)
+        {
+            return _repo.CheckSubAvailability(availability);
+        }
+
         public IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence)
         {
             return _repo.GetAvailableSubstitutes(absence);

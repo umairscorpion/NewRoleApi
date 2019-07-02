@@ -785,6 +785,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@StartDate", model.StartDate);
             queryParams.Add("@AvailabilityStatusId", model.AvailabilityStatusId);
             queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@DistrictId", model.DistrictId);
             return Db.Query<SubstituteAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
         public IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability)
@@ -798,7 +799,7 @@ namespace Subzz.DataAccess.Repositories.Users
         }
         public UserAvailability GetAvailabilityById(int id)
         {
-            const string query = "[Users].[GetAvailability]";
+            const string query = "[Users].[GetAvailabilityById]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@AvailabilityId", id);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -858,6 +859,16 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@AvailabilityId", availability.AvailabilityId);
             queryParams.Add("@ArchivedBy", availability.ArchivedBy);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public int CheckSubAvailability(UserAvailability availability)
+        {
+            const string query = "[Users].[CheckSubAvailability]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", availability.UserId);
+            queryParams.Add("@StartDate", availability.StartDate);
+            queryParams.Add("@EndDate", availability.EndDate);
+            return Db.Query<int>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
         #endregion
 
