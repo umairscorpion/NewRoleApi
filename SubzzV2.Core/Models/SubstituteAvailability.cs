@@ -25,5 +25,6 @@ namespace SubzzV2.Core.Models
         public string AvailabilityStatusTitle { get; set; }
         public string AvailabilityContentBackgroundColor { get; set; }
         public string AvailabilityIconCss { get; set; }
+        public int DistrictId { get; set; }
     }
 }

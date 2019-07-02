@@ -75,6 +75,12 @@
             public static string ViewedSubstitute   = "Viewed Substitute";
             public static string SubstituteeActive  = "Activated Substitute";
             public static string SubstituteInactive = "Inactivated Substitute";
+            public static string CreatedSubPosition = "Added Substitute Position";
+            public static string UpdatedSubPosition = "Updated Substitute Position";
+            public static string DeletedSubPosition = "Deleted Substitute Position";
+            public static string UpdatedSubList     = "Updated School Substitute List";
+            public static string UpdatedBlockedList = "Updated School Blocked Substitute List";
+
 
             // For LeaveType Related Actions
             public static string CreatedLeaveType   = "Added Leave Type";

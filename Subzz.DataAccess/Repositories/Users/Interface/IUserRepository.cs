@@ -50,6 +50,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserAvailability InsertAvailability(UserAvailability availability);
         UserAvailability UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
+        int CheckSubAvailability(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
 
         PositionDetail InsertPositions(PositionDetail position);

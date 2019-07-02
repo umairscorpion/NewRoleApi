@@ -861,8 +861,22 @@ namespace Subzz.Api.Controllers.User
         public PositionDetail InsertPositions([FromBody]PositionDetail position)
         {
             try
-            { 
-                return _service.InsertPositions(position);
+            {
+                var Position= _service.InsertPositions(position);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = Position.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.Substitute,
+                    ActionType = AuditLogs.ActionType.CreatedSubPosition,
+                    PostValue = Serializer.Serialize(position),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return Position;
             }
             catch (Exception ex)
             {
@@ -898,6 +912,19 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var positions = _service.InsertPositions(position);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = position.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.Substitute,
+                    ActionType = AuditLogs.ActionType.UpdatedSubPosition,
+                    PostValue = Serializer.Serialize(position),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(positions);
             }
             catch (Exception ex)
@@ -916,6 +943,18 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                 var allowance = _service.DeletePosition(id);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.Substitute,
+                    ActionType = AuditLogs.ActionType.DeletedSubPosition,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(allowance);
             }
             catch (Exception ex)
@@ -1185,6 +1224,18 @@ namespace Subzz.Api.Controllers.User
                 schoolSubList.ModifyByUserId = base.CurrentUser.Id;
                 schoolSubList.DistrictId = base.CurrentUser.DistrictId;
                 var schoolSubs = await _service.UpdateSchoolSubList(schoolSubList);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedSubList,
+                    PostValue = Serializer.Serialize(schoolSubList),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(schoolSubs);
             }
             catch (Exception ex)
@@ -1225,6 +1276,18 @@ namespace Subzz.Api.Controllers.User
                 schoolSubList.ModifyByUserId = base.CurrentUser.Id;
                 schoolSubList.DistrictId = base.CurrentUser.DistrictId;
                 var schoolSubs = await _service.UpdateBlockedSchoolSubList(schoolSubList);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedBlockedList,
+                    PostValue = Serializer.Serialize(schoolSubList),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 return Ok(schoolSubs);
             }
             catch (Exception ex)
