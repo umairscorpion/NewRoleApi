@@ -241,7 +241,7 @@ namespace Subzz.Api.Controllers.User
                 var events = availabilities.Select(a => new CalendarEvent
                 {
                     id = a.AvailabilityId,
-                    title = a.Title,
+                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" ? "Unavailable": a.AvailabilityContentBackgroundColor == "#0ea8ea" ? "Vacation": "Recurring" ,
                     description = a.Notes,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
