@@ -66,18 +66,17 @@ namespace SubzzV2.Integration.Core.Notification
 
         public SmsTemplate GetSmsTemplateById(int id)
         {
-            //string connectionString = ConfigurationManager.ConnectionStrings["DatabaseContext"].ConnectionString;
+            string connectionString = "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
             List<SmsTemplate> smsTemplatesList;
-            using (var dc = new SqlConnection(""))
+            using (var dc = new SqlConnection(connectionString))
             {
                 smsTemplatesList = dc.Query<SmsTemplate>(@"
 					SELECT
-						[Id]
-						,[UserType]						
+						[SmsTemplate_Id] as Id				
 						,[TextContent]
 						,[SendTo]					
-					FROM [support].[SmsTemplates]
-					WHERE [Id] = {0}", id).ToList();
+					FROM [Subzz_Settings].[Settings].[SmsTemplate]
+					WHERE [SmsTemplate_Id] = " + id + "", id).ToList();
             }
             if (!smsTemplatesList.Any())
             {

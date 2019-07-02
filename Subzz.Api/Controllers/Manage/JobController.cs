@@ -164,15 +164,15 @@ namespace Subzz.Api.Controllers.Manage
                     //For Substitutes
                     if (user.RoleId == 4)
                     {
-                        message.TemplateId = 1;
+                        message.TemplateId = 12;
                         if (user.IsSubscribedEmail)
                         {
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
-                        //if (user.IsSubscribedSMS)
-                        //{
-                        //    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
-                        //}
+                        if (user.IsSubscribedSMS)
+                        {
+                            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                        }
                     }
 
                     else if (user.RoleId == 3)

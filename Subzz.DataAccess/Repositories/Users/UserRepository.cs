@@ -517,6 +517,14 @@ namespace Subzz.DataAccess.Repositories.Users
             return result;
         }
 
+        public string GetUserIdByPhoneNumber(string phoneNumber)
+        {
+            var sql = "[users].[sp_getUserIdByPhoneNumber]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@PhoneNumber", phoneNumber);
+            return Db.Query<string>(sql, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
         public bool Delete(string sql, DynamicParameters param, CommandType commandType)
         {
             var DeletedRecord = Db.Execute(sql, param: param, commandType: commandType);

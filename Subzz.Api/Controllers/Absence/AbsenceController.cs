@@ -258,12 +258,11 @@ namespace Subzz.Api.Controllers.Absence
                                     if (jobPostedEvent.EmailAlert)
                                         await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                                 }
-
-                                //if (user.IsSubscribedSMS)
-                                //{
-                                //    if (jobPostedEvent.TextAlert)
-                                //        CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
-                                //}
+                                if (user.IsSubscribedSMS)
+                                {
+                                    if (jobPostedEvent.TextAlert)
+                                        CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                }
 
                             }
                             //For Admins
@@ -305,7 +304,7 @@ namespace Subzz.Api.Controllers.Absence
                             else if (user.RoleId == 3)
                             {
                                 message.TemplateId = 10;
-                                if (user.IsSubscribedEmail)
+                                if (user.IsSubscribedEmail)      
                                 {
                                     var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                                     var jobPostedEvent = events.Where(x => x.EventId == 2).First();
@@ -775,13 +774,13 @@ namespace Subzz.Api.Controllers.Absence
                         if (jobPostedEvent.EmailAlert)
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
-                    //if (user.IsSubscribedSMS && user.RoleId == 4)
-                    //{
-                    //    var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                    //    var jobPostedEvent = events.Where(x => x.EventId == 5).First();
-                    //    if (jobPostedEvent.TextAlert)
-                    //        CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
-                    //}
+                    if (user.IsSubscribedSMS && user.RoleId == 4)
+                    {
+                        var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                        var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                        if (jobPostedEvent.TextAlert)
+                            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                    }
 
 
                 }
@@ -830,13 +829,13 @@ namespace Subzz.Api.Controllers.Absence
                             if (jobPostedEvent.EmailAlert)
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
-                        //if (user.IsSubscribedSMS)
-                        //{
-                        //    var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                        //    var jobPostedEvent = events.Where(x => x.EventId == 5).First();
-                        //    if (jobPostedEvent.TextAlert)
-                        //            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
-                        //}
+                        if (user.IsSubscribedSMS)
+                        {
+                            var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                            var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                            if (jobPostedEvent.TextAlert)
+                                CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                        }
 
                     }
                     //For Admins
