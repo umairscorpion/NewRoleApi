@@ -24,6 +24,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:61138/"
+      //ngrok http 5000 -host-header="localhost:5000"
     }
   }
 }
