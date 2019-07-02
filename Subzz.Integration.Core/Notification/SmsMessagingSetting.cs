@@ -13,17 +13,17 @@ namespace SubzzV2.Integration.Core.Notification
     {
         public MessagingSetting GetSetting()
         {
-            //string connectionString = ConfigurationManager.ConnectionStrings["DatabaseContext"].ConnectionString;
             List<MessagingSetting> messagingSettings;
-            using (var dc = new SqlConnection(""))
+            //using (var connection = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
+            using (var connection = new SqlConnection("data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"))
             {
-                messagingSettings = dc.Query<MessagingSetting>(@"
+                messagingSettings = connection.Query<MessagingSetting>(@"
 					SELECT  
-						 [AccountSid]
+						 [AccountId]
 						,[AuthToken]
                         ,[SenderPhoneNumber]
                         ,[isActive]
-						FROM [support].[SmsMessagingSettings] where isActive = 1").ToList();
+						FROM [Subzz_Settings].[Settings].[SmsMessagingSettings] where isActive = 1").ToList();
             }
             return messagingSettings.FirstOrDefault();
         }

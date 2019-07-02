@@ -78,5 +78,6 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         List<UserSummary> GetUsersSummaryList(int districtId);
         bool VerifyUser(User model);
         Event InsertEvent(Event model);
+        string GetUserIdByPhoneNumber(string phoneNumber);
     }
 }

@@ -314,5 +314,10 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.InsertEvent(model);
         }
+
+        public string GetUserIdByPhoneNumber(string phoneNumber)
+        {
+            return _repo.GetUserIdByPhoneNumber(phoneNumber);
+        }
     }
 }

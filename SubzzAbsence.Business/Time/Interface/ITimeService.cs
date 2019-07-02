@@ -13,7 +13,7 @@ namespace SubzzAbsence.Business.Time.Interface
     {
         int InsertClockInTime(TimeClock model);        //new        int InsertClockInTimeNew(TimeClock model);        int InsertClockOutTime(TimeClock model);
 
-        //new
+        //
         int InsertClockOutTimeNew(TimeClock model);
 
         int TimeClockBreakStatus(TimeClock model);

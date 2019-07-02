@@ -62,7 +62,7 @@ namespace Subzz.Api.Controllers.Absence
             {
             }
             return null;
-            
+
         }
 
         [Route("uploadFile")]
@@ -94,7 +94,7 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         file.CopyTo(stream);
                     }
-                    
+
                 }
                 return Json(fileName);
             }
@@ -111,7 +111,7 @@ namespace Subzz.Api.Controllers.Absence
             try
             {
                 DateTime updatedOn = DateTime.Now;
-               
+
                 var absenceCreation = _service.CreateAbsence(model);
                 if (absenceCreation > 0)
                 {
@@ -141,7 +141,7 @@ namespace Subzz.Api.Controllers.Absence
                     }
                     else
                     {
-                        //Task.Run(() => SendJobPostEmails(model));
+                        Task.Run(() => SendJobPostEmails(model));
                         return Json(absenceCreation.ToString());
                     }
                 }
@@ -172,6 +172,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Grade = DataForEmails.Grade;
             message.Location = DataForEmails.AbsenceLocation;
             message.Notes = DataForEmails.SubstituteNotes;
+            message.Reason = DataForEmails.AbsenceReasonDescription;
             message.Photo = DataForEmails.EmployeeProfilePicUrl;
             message.Duration = DataForEmails.DurationType == 1 ? "Full Day" : DataForEmails.DurationType == 2 ? "First Half" : DataForEmails.DurationType == 3 ? "Second Half" : "Custom";
             //Entire Sustitute Pool or Request Specifc Sub
@@ -200,6 +201,7 @@ namespace Subzz.Api.Controllers.Absence
 
                                 if (user.IsSubscribedSMS)
                                 {
+                                    message.PhoneNumber = user.PhoneNumber;
                                     if (jobPostedEvent.TextAlert)
                                         CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                                 }
@@ -256,7 +258,6 @@ namespace Subzz.Api.Controllers.Absence
                                     if (jobPostedEvent.EmailAlert)
                                         await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                                 }
-
                                 if (user.IsSubscribedSMS)
                                 {
                                     if (jobPostedEvent.TextAlert)
@@ -303,7 +304,7 @@ namespace Subzz.Api.Controllers.Absence
                             else if (user.RoleId == 3)
                             {
                                 message.TemplateId = 10;
-                                if (user.IsSubscribedEmail)
+                                if (user.IsSubscribedEmail)      
                                 {
                                     var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                                     var jobPostedEvent = events.Where(x => x.EventId == 2).First();
@@ -460,7 +461,7 @@ namespace Subzz.Api.Controllers.Absence
             finally
             {
             }
-            return null;         
+            return null;
         }
 
         [Route("getAbsencesScheduleEmployee/{StartDate}/{EndDate}/{UserId}")]
@@ -477,7 +478,7 @@ namespace Subzz.Api.Controllers.Absence
             finally
             {
             }
-            return null;            
+            return null;
         }
 
         [Route("updateAbseceStatus/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}")]
@@ -514,7 +515,7 @@ namespace Subzz.Api.Controllers.Absence
                     _audit.InsertAuditLog(audit);
                 }
                 if (statusId == 4)
-                Task.Run(() => SendNotificationsOnJobCancelled(AbsenceId));
+                    Task.Run(() => SendNotificationsOnJobCancelled(AbsenceId));
                 if (statusId == 1)
                     Task.Run(() => SendNotificationsOnJobReleased(AbsenceId));
                 return Json("success");
@@ -808,6 +809,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Location = absenceDetail.AbsenceLocation;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
+            message.Reason = absenceDetail.AbsenceReasonDescription;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             message.TemplateId = 15;
             foreach (var user in users)
@@ -832,7 +834,7 @@ namespace Subzz.Api.Controllers.Absence
                             var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                             var jobPostedEvent = events.Where(x => x.EventId == 5).First();
                             if (jobPostedEvent.TextAlert)
-                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
 
                     }
@@ -877,7 +879,7 @@ namespace Subzz.Api.Controllers.Absence
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
-            
+
             foreach (var user in users)
             {
                 try
@@ -943,6 +945,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Location = absenceDetail.AbsenceLocation;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
+            message.Reason = absenceDetail.AbsenceReasonDescription;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             message.SubstituteName = absenceDetail.SubstituteName;

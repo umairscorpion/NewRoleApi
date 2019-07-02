@@ -49,7 +49,7 @@ namespace Subzz.Api.Controllers.TimeClock
                 {
                     UserIdd = CurrentUser.Id,
                     UpdatedOn = DateTime.Now,
-                    ActivityTime = DateTime.Now.TimeOfDay,
+                    ActivityTime = DateTime.Now,
                     Activity = TimeClockActivity.ActionType.Clockin
                 };
                 var Summary = _service.InsertClockInTimeNew(model);
@@ -76,7 +76,7 @@ namespace Subzz.Api.Controllers.TimeClock
                 {
                     UserIdd = base.CurrentUser.Id,
                     UpdatedOn = DateTime.Now,
-                    ActivityTime = DateTime.Now.TimeOfDay,
+                    ActivityTime = DateTime.Now,
                     Activity = TimeClockActivity.ActionType.Clockout
                 };
                 var Summary = _service.InsertClockOutTimeNew(model);
@@ -103,7 +103,7 @@ namespace Subzz.Api.Controllers.TimeClock
                 {
                     UserIdd = base.CurrentUser.Id,
                     UpdatedOn = DateTime.Now,
-                    ActivityTime = DateTime.Now.TimeOfDay,
+                    ActivityTime = DateTime.Now,
                     BreakTime = DateTime.Now.TimeOfDay,
                     Activity = TimeClockActivity.ActionType.Break,
                     TakeBreakTime = DateTime.Now.TimeOfDay
@@ -132,7 +132,7 @@ namespace Subzz.Api.Controllers.TimeClock
                 {
                     UserIdd = base.CurrentUser.Id,
                     UpdatedOn = DateTime.Now,
-                    ActivityTime = DateTime.Now.TimeOfDay,
+                    ActivityTime = DateTime.Now,
                     ReturnFromBreakTime = DateTime.Now.TimeOfDay,
                     Activity = TimeClockActivity.ActionType.Return,
                     TakeBreakTime = DateTime.Now.TimeOfDay
