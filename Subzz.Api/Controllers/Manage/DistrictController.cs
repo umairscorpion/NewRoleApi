@@ -9,6 +9,9 @@ using Subzz.Api.Controllers.Base;
 using SubzzV2.Core.Models;
 using FluentValidation.Results;
 using Subzz.Api.Validators;
+using Subzz.Business.Services.Users.Interface;
+using SubzzV2.Core.Enum;
+using Subzz.Integration.Core.Helper;
 
 namespace Subzz.Api.Controllers.Manage
 {
@@ -17,9 +20,11 @@ namespace Subzz.Api.Controllers.Manage
     public class DistrictController : BaseApiController
     {
         private readonly IDistrictService _service;
-        public DistrictController(IDistrictService service)
+        private readonly IAuditingService _audit;
+        public DistrictController(IDistrictService service, IAuditingService audit)
         {
             _service = service;
+            _audit = audit;
         }
 
         [Route("insertDistrict")]
@@ -31,12 +36,25 @@ namespace Subzz.Api.Controllers.Manage
                 DistrictValidator validator = new DistrictValidator();
                 ValidationResult result = validator.Validate(model);
                 if (result.IsValid)
-                { var userModel = _service.InsertDistrict(model); }
+                {
+                    var userModel = _service.InsertDistrict(model);
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.DistrictId.ToString(),
+                        EntityType = AuditLogs.EntityType.District,
+                        ActionType = AuditLogs.ActionType.CreatedDistrict,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
                 else
                 {
                     return BadRequest("Fill All fields");
-                }
-
+                }          
                 return Json("successfull");
             }
             catch (Exception ex)
@@ -57,7 +75,21 @@ namespace Subzz.Api.Controllers.Manage
                 DistrictValidator validator = new DistrictValidator();
                 ValidationResult result = validator.Validate(model);
                 if (result.IsValid)
-                { var userModel = _service.UpdateDistrict(model); }
+                {
+                    var userModel = _service.UpdateDistrict(model);
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.DistrictId.ToString(),
+                        EntityType = AuditLogs.EntityType.District,
+                        ActionType = AuditLogs.ActionType.UpdatedDistrict,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
                 else
                 {
                     return BadRequest("Fill All fields");
@@ -80,7 +112,7 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var districts = _service.GetDistricts();
-            return districts;
+                return districts;
             }
             catch (Exception ex)
             {
@@ -96,7 +128,19 @@ namespace Subzz.Api.Controllers.Manage
         [HttpDelete]
         public bool Delete(int id)
         {
-            return _service.DeleteDistrict(id);
+            var DeleteDistrict = _service.DeleteDistrict(id);
+            // Audit Log
+            var audit = new AuditLog
+            {
+                UserId = CurrentUser.Id,
+                EntityId = id.ToString(),
+                EntityType = AuditLogs.EntityType.District,
+                ActionType = AuditLogs.ActionType.DeletedDistrict,
+                DistrictId = CurrentUser.DistrictId,
+                OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+            };
+            _audit.InsertAuditLog(audit);
+            return DeleteDistrict;
         }
 
         [Route("getDistrictById/{Id}")]
@@ -106,6 +150,17 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var district = _service.GetDistrict(id);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.District,
+                    ActionType = AuditLogs.ActionType.ViewedDistrict,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
                 return district;
             }
             catch (Exception ex)
@@ -141,7 +196,8 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var allowance = _service.AddAllowance(model);
-            return Ok(allowance);
+
+                return Ok(allowance);
             }
             catch (Exception ex)
             {
@@ -159,7 +215,20 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var allowance = _service.AddAllowance(model);
-            return Ok(allowance);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = model.Id.ToString(),
+                    EntityType = AuditLogs.EntityType.Allowances,
+                    ActionType = AuditLogs.ActionType.UpdatedAllowance,
+                    PostValue = Serializer.Serialize(model),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return Ok(allowance);
             }
             catch (Exception ex)
             {
@@ -195,7 +264,19 @@ namespace Subzz.Api.Controllers.Manage
             try
             {
                 var allowance = _service.DeleteAllowance(id);
-            return Ok(allowance);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.Allowances,
+                    ActionType = AuditLogs.ActionType.DeletedAllowance,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return Ok(allowance);
             }
             catch (Exception ex)
             {

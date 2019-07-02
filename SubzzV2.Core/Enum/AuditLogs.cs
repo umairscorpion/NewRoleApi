@@ -6,6 +6,15 @@
         {
             public static string User       = "User";
             public static string Absence    = "Absence";
+            public static string District   = "District";
+            public static string School     = "School";
+            public static string Staff      = "Staff";
+            public static string Substitute = "Substitute";
+            public static string LeaveType  = "LeaveType";
+            public static string Allowances = "Allowances";
+            public static string ChangedPassword = "ChangedPassword";
+            public static string PayRate         = "PayRate";
+            public static string PayRateRule     = "PayRateRule";
         }
 
         public static class ActionType
@@ -21,9 +30,71 @@
             public static string Assigned   = "Assigned";
             public static string Approved   = "Approved";
             public static string Denied     = "Denied";
+            public static string Archived   = "Archived";
 
-            public static string LoggedIn   = "LoggedIn";
-            public static string LoggedOut  = "LoggedOut";
+            // For User Related Actions
+            public static string LoggedIn        = "Logged In";
+            public static string LoggedOut       = "Logged Out";
+            public static string UpdatedProfile  = "Updated Profile Information";
+            public static string ChangedPassword = "Changed Password For User";
+            public static string SubstituteFile  = "Added Substitute File";
+            public static string TGuideForAdmin  = "Added Training Guide For Admins";
+            public static string TGuideForStaff  = "Added Training Guide For Staff";
+            public static string TGuideForSub    = "Added Training Guide For Substitutes";
+            public static string DeletedSubstituteFile  = "Deleted Substitute File";
+            public static string DeletedGuide           = "Deleted Training Guide";
+
+            // For District Related Actions
+            public static string CreatedDistrict    = "Added District";
+            public static string UpdatedDistrict    = "Updated District";
+            public static string DeletedDistrict    = "Deleted District";
+            public static string ViewedDistrict     = "Viewed District";
+
+            // For Organization/School Related Actions
+            public static string CreatedSchool      = "Added School";
+            public static string UpdatedSchool      = "Updated School";
+            public static string DeletedSchool      = "Deleted School";
+            public static string ViewedSchool       = "Viewed School";
+
+            // For Employee/Staff Related Actions
+            public static string CreatedEmployee    = "Added Employee";
+            public static string UpdatedEmployee    = "Updated Employee";
+            public static string DeletedEmployee    = "Deleted Employee";
+            public static string ViewedEmployee     = "Viewed Employee";
+            public static string EmployeeActive     = "Actived Employee";
+            public static string EmployeeInactive   = "Inactived Employee";
+
+            // For Substitute Related Actions
+            public static string CreatedSubstitute  = "Added Substitute";
+            public static string UpdatedSubstitute  = "Updated Substitute";
+            public static string DeletedSubstitute  = "Deleted Substitute";
+            public static string ViewedSubstitute   = "Viewed Substitute";
+            public static string SubstituteeActive  = "Actived Substitute";
+            public static string SubstituteInactive = "Inactived Substitute";
+
+            // For LeaveType Related Actions
+            public static string CreatedLeaveType   = "Added Leave Type";
+            public static string UpdatedLeaveType   = "Updated Leave Type";
+            public static string DeletedLeaveType   = "Deleted Leave Type";
+            public static string ViewedLeaveType    = "Viewed Leave Type";
+
+            // For Allowances Related Actions
+            public static string CreatedAllowance  = "Added Allowance";
+            public static string UpdatedAllowance  = "Updated Allowance";
+            public static string DeletedAllowance  = "Deleted Allowance";
+            public static string ViewedAllowance   = "Viewed Allowance";
+
+            // For Pay Rate Related Actions
+            public static string CreatedPayRate     = "Added Pay Rate";
+            public static string UpdatedPayRate     = "Updated Pay Rate";
+            public static string DeletedPayRate     = "Deleted Pay Rate";
+            public static string ViewedPayRate      = "Viewed Pay Rate";
+
+            // For Pay Rate Rule Related Actions
+            public static string CreatedPayRateRule = "Added Pay Rate Rule";
+            public static string UpdatedPayRateRule = "Updated Pay Rate Rule";
+            public static string DeletedPayRateRule = "Deleted Pay Rate Rule";
+            public static string ViewedPayRateRule  = "Viewed Pay Rate Rule";
         }
     }
 }
