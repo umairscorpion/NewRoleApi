@@ -89,6 +89,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.Location = absenceDetail.AbsenceLocation;
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
+                    message.Reason = absenceDetail.AbsenceReasonDescription;
                     message.Photo = absenceDetail.EmployeeProfilePicUrl;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                     //Notification notification = new Notification();
@@ -163,7 +164,7 @@ namespace Subzz.Api.Controllers.Manage
                     //For Substitutes
                     if (user.RoleId == 4)
                     {
-                        message.TemplateId = 1;
+                        message.TemplateId = 12;
                         if (user.IsSubscribedEmail)
                         {
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
