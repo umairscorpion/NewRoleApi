@@ -62,12 +62,13 @@ namespace SubzzV2.Integration.Core.Notification
 
             string body = PrepareBodyMessage(param, smsTemplate.TextContent);
 
-            CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body);
+            CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body, message.AbsenceId);
+           
 		}
 
-        public void Process(string to, string from, string message)
+        public void Process(string to, string from, string message, int absenceId)
         {
-            CommunicationContainer.MessagingClient.SendMessage(from, to, message);
+            CommunicationContainer.MessagingClient.SendMessage(from, to, message, absenceId);
         }
 
         private string PrepareBodyMessage(Dictionary<string, string> param, string body)

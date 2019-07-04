@@ -15,13 +15,13 @@ namespace SubzzV2.Integration.Core.Notification
 			_messagingClientWrapper = messagingClientWrapper;
 		}
 
-		public void SendMessage(string from, string to, string body)
+		public void SendMessage(string from, string to, string body, int absenceId)
 		{
-			_messagingClientWrapper.SendMessage(from, to, body);
+			_messagingClientWrapper.SendMessage(from, to, body, absenceId);
 		}
-        public void SendMessage(string to, string body)
+        public void SendMessage(string to, string body, int absenceId)
         {
-            _messagingClientWrapper.SendMessage(to, body);
+            _messagingClientWrapper.SendMessage(to, body, absenceId);
         }
     }
 }
