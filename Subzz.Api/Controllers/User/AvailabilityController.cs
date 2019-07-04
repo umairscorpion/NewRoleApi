@@ -241,7 +241,11 @@ namespace Subzz.Api.Controllers.User
                 var events = availabilities.Select(a => new CalendarEvent
                 {
                     id = a.AvailabilityId,
-                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" ? "Unavailable": a.AvailabilityContentBackgroundColor == "#0ea8ea" ? "Vacation": "Recurring" ,
+                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == false ? a.StartTime + "-" + a.EndTime + " Unavailable" :
+                    a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == true ? " Unavailable" :
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? a.StartTime + "-" + a.EndTime + " Vacation" :
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == true ? " Vacation" :
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? a.StartTime + "-" + a.EndTime + " Recurring" : " Recurring",
                     description = a.Notes,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
@@ -262,12 +266,10 @@ namespace Subzz.Api.Controllers.User
         {
             try
             {
-
-
                 var events = availabilities.Select(a => new CalendarEvent
                 {
-                    id = 0,
-                    title = "for" + " " + a.EmployeeName,
+                    id = -1,
+                    title = DateTime.Today.Add(a.StartTime).ToString("hh:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("hh:mm tt") + " for" + " " + a.EmployeeName,
                     description = a.SubstituteNotes,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
