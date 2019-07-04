@@ -11,7 +11,7 @@ namespace SubzzV2.Integration.Core.Notification.Interface
 	/// </summary>
 	public interface IMessagingClient
 	{
-		void SendMessage(string from, string to, string body);
-        void SendMessage(string to, string body);
+		void SendMessage(string from, string to, string body, int absenceId);
+        void SendMessage(string to, string body, int absenceId);
     }
 }
