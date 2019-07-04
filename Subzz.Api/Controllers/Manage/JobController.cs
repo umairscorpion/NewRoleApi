@@ -171,6 +171,7 @@ namespace Subzz.Api.Controllers.Manage
                         }
                         if (user.IsSubscribedSMS)
                         {
+                            message.PhoneNumber = user.PhoneNumber;
                             CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }

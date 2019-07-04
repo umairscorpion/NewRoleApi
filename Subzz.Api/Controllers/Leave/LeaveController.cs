@@ -413,6 +413,11 @@ namespace Subzz.Api.Controllers.Leave
                                 var jobPostedEvent = events.Where(x => x.EventId == 2).First();
                                 if (jobPostedEvent.EmailAlert)
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                                if (user.IsSubscribedSMS)
+                                {
+                                    message.PhoneNumber = user.PhoneNumber;
+                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                }
                             }
                         }
                         else if (user.RoleId == 3)
