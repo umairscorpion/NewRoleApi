@@ -831,7 +831,7 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             const string query = "[Users].[UpdateAvailability]";
             var queryParams = new DynamicParameters();
-            queryParams.Add("@UserId", availability.AvailabilityId);
+            queryParams.Add("@AvailabilityId", availability.AvailabilityId);
             queryParams.Add("@UserId", availability.UserId);
             queryParams.Add("@AvailabilityStatusId", availability.AvailabilityStatusId);
             queryParams.Add("@Title", availability.Title);
@@ -868,6 +868,8 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@UserId", availability.UserId);
             queryParams.Add("@StartDate", availability.StartDate);
             queryParams.Add("@EndDate", availability.EndDate);
+            queryParams.Add("@StartTime", availability.StartTime);
+            queryParams.Add("@EndTime", availability.EndTime);
             return Db.Query<int>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
         #endregion
