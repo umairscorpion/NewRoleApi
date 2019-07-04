@@ -166,6 +166,12 @@ namespace Subzz.Api.Controllers.Absence
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceModel.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceModel.EndDate).ToString("D");
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceModel.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceModel.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceModel.EndDate).ToSubzzDateForSMS();
             message.EmployeeName = DataForEmails.EmployeeName;
             message.Position = DataForEmails.PositionDescription;
             message.Subject = DataForEmails.SubjectDescription;
@@ -752,6 +758,12 @@ namespace Subzz.Api.Controllers.Absence
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -769,23 +781,23 @@ namespace Subzz.Api.Controllers.Absence
                     message.Password = user.Password;
                     message.UserName = user.FirstName;
                     message.SendTo = user.Email;
-                    if (user.IsSubscribedEmail)
+                    if (user.IsSubscribedSMS && user.RoleId == 4 && absenceDetail.SubstituteRequired)
+                    {
+                        var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                        var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                        message.PhoneNumber = user.PhoneNumber;
+                        if (jobPostedEvent.EmailAlert)
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        if (jobPostedEvent.TextAlert)
+                            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                    }
+                    else if (user.IsSubscribedEmail && user.RoleId != 4)
                     {
                         var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                         var jobPostedEvent = events.Where(x => x.EventId == 7).First();
                         if (jobPostedEvent.EmailAlert)
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
-                    if (user.IsSubscribedSMS && user.RoleId == 4 && absenceDetail.SubstituteRequired)
-                    {
-                        var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                        var jobPostedEvent = events.Where(x => x.EventId == 5).First();
-                        message.PhoneNumber = user.PhoneNumber;
-                        if (jobPostedEvent.TextAlert)
-                            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
-                    }
-
-
                 }
                 catch (Exception ex)
                 {
@@ -805,6 +817,12 @@ namespace Subzz.Api.Controllers.Absence
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -873,6 +891,12 @@ namespace Subzz.Api.Controllers.Absence
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -911,7 +935,7 @@ namespace Subzz.Api.Controllers.Absence
 
                     }
                     //For Admins And Employee
-                    else
+                    else if (user.RoleId != 4)
                     {
                         message.TemplateId = 18;
                         message.SubstituteName = absenceDetail.SubstituteName;
@@ -942,6 +966,14 @@ namespace Subzz.Api.Controllers.Absence
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;

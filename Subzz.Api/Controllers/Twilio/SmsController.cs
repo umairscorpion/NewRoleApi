@@ -67,6 +67,14 @@ namespace Subzz.Api.Controllers.Twilio
                                                     CultureInfo.InvariantCulture).ToSubzzTime();
                         message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
                         message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+
+                        message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                        message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                                    CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                        message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                        message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+
                         message.EmployeeName = absenceDetail.EmployeeName;
                         message.Position = absenceDetail.PositionDescription;
                         message.Subject = absenceDetail.SubjectDescription;
@@ -135,6 +143,14 @@ namespace Subzz.Api.Controllers.Twilio
                                                 CultureInfo.InvariantCulture).ToSubzzTime();
                     message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
                     message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+
+                    message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                    message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                    message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                    message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+
                     message.EmployeeName = absenceDetail.EmployeeName;
                     message.Position = absenceDetail.PositionDescription;
                     message.Subject = absenceDetail.SubjectDescription;
@@ -287,6 +303,14 @@ namespace Subzz.Api.Controllers.Twilio
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
