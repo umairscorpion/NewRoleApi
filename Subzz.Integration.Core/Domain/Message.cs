@@ -57,6 +57,11 @@ namespace Subzz.Integration.Core.Domain
         public string resetPassUrl { get; set; }
         public string ProfilePicUrl { get; set; }
 
+        public string StartTimeSMS { get; set; }
+        public string EndTimeSMS { get; set; }
+        public string StartDateSMS { get; set; }
+        public string EndDateSMS { get; set; }
+
     }
 
     public class MailsAttachment
