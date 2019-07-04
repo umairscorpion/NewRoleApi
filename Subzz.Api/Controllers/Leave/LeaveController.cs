@@ -335,6 +335,13 @@ namespace Subzz.Api.Controllers.Leave
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -386,7 +393,7 @@ namespace Subzz.Api.Controllers.Leave
                         message.UserName = user.FirstName;
                         message.SendTo = user.Email;
                         //For Substitutes on In case of direct Assign
-                        if (user.RoleId == 4 && absenceDetail.AbsenceScope == 2)
+                        if (user.RoleId == 4 && absenceDetail.AbsenceType == 2 && absenceDetail.SubstituteRequired)
                         {
                             var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                             var jobPostedEvent = events.Where(x => x.EventId == 2).First();
@@ -399,12 +406,12 @@ namespace Subzz.Api.Controllers.Leave
 
                             if (user.IsSubscribedSMS)
                             {
-                                //if (jobPostedEvent.TextAlert)
-                                   // CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                if (jobPostedEvent.TextAlert)
+                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
 
-                        else if (user.RoleId == 4 && absenceDetail.AbsenceScope != 2 && absenceDetail.AbsenceScope != 5)
+                        else if (user.RoleId == 4 && absenceDetail.AbsenceType != 2 && absenceDetail.AbsenceType != 5 && absenceDetail.SubstituteRequired)
                         {
                             message.TemplateId = 1;
                             if (user.IsSubscribedEmail)
@@ -413,9 +420,19 @@ namespace Subzz.Api.Controllers.Leave
                                 var jobPostedEvent = events.Where(x => x.EventId == 2).First();
                                 if (jobPostedEvent.EmailAlert)
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                                if (user.IsSubscribedSMS)
+                                {
+                                    message.PhoneNumber = user.PhoneNumber;
+                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                }
+                            }
+
+                            if (user.IsSubscribedSMS)
+                            {
+                               CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
-                        else if (user.RoleId == 3)
+                        else if (user.RoleId == 3 && absenceDetail.AbsenceType != 2)
                         {
                             message.TemplateId = 10;
                             if (user.IsSubscribedEmail)
@@ -426,8 +443,33 @@ namespace Subzz.Api.Controllers.Leave
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
+
+                        else if (user.RoleId == 3 && absenceDetail.AbsenceType == 2)
+                        {
+                            message.TemplateId = 8;
+                            if (user.IsSubscribedEmail)
+                            {
+                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                                if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+
                         //For Admins
-                        else
+                        else if ((user.RoleId == 1 || user.RoleId == 2) && absenceDetail.AbsenceType == 2)
+                        {
+                            message.TemplateId = 8;
+                            if (user.IsSubscribedEmail)
+                            {
+                                var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                                var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                                if (jobPostedEvent.EmailAlert)
+                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+
+                        else if ((user.RoleId == 1 || user.RoleId == 2) && absenceDetail.AbsenceType != 2)
                         {
                             message.TemplateId = 2;
                             if (user.IsSubscribedEmail)

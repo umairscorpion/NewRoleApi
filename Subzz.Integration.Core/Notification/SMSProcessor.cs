@@ -32,38 +32,6 @@ namespace SubzzV2.Integration.Core.Notification
             {
                 expiringDates = message.ExpiringDates.ToString();
             }
-            //string messageBody = "New Job!" + Environment.NewLine;
-            //try
-            //{
-
-            //    //messageBody +=  "ID: " + confirmationNumber + Environment.NewLine;          
-            //    // messageBody +=  schoolAddress + Environment.NewLine;
-            //    messageBody += message.StartDate + "-" + message.EndDate + Environment.NewLine;
-
-            //    messageBody += message.StartTime + "-" + message.EndTime + Environment.NewLine;
-            //    messageBody += message.EmployeeName + Environment.NewLine;
-            //    messageBody += message.Position + "@" + message.Location + Environment.NewLine;
-            //    if (message.EmployeeName != "Find a Sub")
-            //        messageBody += message.Subject + "," + message.Grade + Environment.NewLine;
-            //    if (!string.IsNullOrEmpty(message.Notes))
-            //    {
-            //        if (message.Notes.Length <= 15)
-            //        {
-            //            messageBody += "Notes: " + message.Notes + Environment.NewLine;
-            //        }
-            //        else
-            //        {
-            //            messageBody += "Notes: " + message.Notes.Substring(0, 15) + ".." + Environment.NewLine;
-            //        }
-
-            //    }
-            //    messageBody += "Text " + message.AbsenceId + " to Accept";
-            //}
-
-            //catch (Exception eeee)
-            //{
-
-            //}
 
             Dictionary<string, string> param = new Dictionary<string, string>()
             {
@@ -72,10 +40,10 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
-                ["{Start Date}"] = message.StartDate ?? "",
-                ["{End Date}"] = message.EndDate ?? "",
-                ["{Start Time}"] = message.StartTime ?? "",
-                ["{End Time}"] = message.EndTime ?? "",
+                ["{Start Date}"] = message.StartDateSMS ?? "",
+                ["{End Date}"] = message.EndDateSMS ?? "",
+                ["{Start Time}"] = message.StartTimeSMS ?? "",
+                ["{End Time}"] = message.EndTimeSMS ?? "",
                 ["{Leave Type}"] = message.Reason ?? "",
                 ["{Admin Name}"] = message.ApprovedBy ?? "",
                 ["{Subject}"] = !string.IsNullOrEmpty(message.Subject) ? message.Subject + "-" : "N/A-",
@@ -94,12 +62,13 @@ namespace SubzzV2.Integration.Core.Notification
 
             string body = PrepareBodyMessage(param, smsTemplate.TextContent);
 
-            CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body);
+            CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body, message.AbsenceId);
+           
 		}
 
-        public void Process(string to, string from, string message)
+        public void Process(string to, string from, string message, int absenceId)
         {
-            CommunicationContainer.MessagingClient.SendMessage(from, to, message);
+            CommunicationContainer.MessagingClient.SendMessage(from, to, message, absenceId);
         }
 
         private string PrepareBodyMessage(Dictionary<string, string> param, string body)

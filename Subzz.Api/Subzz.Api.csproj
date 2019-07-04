@@ -23,7 +23,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.5.1" />
     <PackageReference Include="Quartz" Version="3.0.7" />
-    <PackageReference Include="Twilio" Version="5.30.0" />
+    <PackageReference Include="Twilio" Version="5.31.0" />
     <PackageReference Include="Twilio.AspNet.Core" Version="5.20.1" />
     <PackageReference Include="Twilio.AspNet.Mvc" Version="5.20.1" />
   </ItemGroup>

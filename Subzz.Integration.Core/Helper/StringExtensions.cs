@@ -17,5 +17,16 @@ namespace Subzz.Integration.Core.Helper
         {
             return dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
         }
+
+        public static string ToSubzzTimeForSms(this DateTime dateTime)
+        {
+            return dateTime.ToString("hh:mmt", CultureInfo.InvariantCulture);
+        }
+
+        public static string ToSubzzDateForSMS(this DateTime dateTime)
+        {
+
+            return dateTime.ToString("MM/dd/yy(ddd)");
+        }
     }
 }

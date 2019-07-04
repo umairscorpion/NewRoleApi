@@ -95,39 +95,41 @@ namespace Subzz.Api.Schedules
             message.Password = preferredSchoolModel.Password;
             message.UserName = preferredSchoolModel.SubstituteName;
             message.SendTo = preferredSchoolModel.EmailId;
+            message.PhoneNumber = preferredSchoolModel.SubstitutePhoneNumber;
             //For Substitutes
             message.TemplateId = 1;
             CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                //IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(absenceDetail.AbsenceId));
-                //foreach (var User in users)
-                //{
-                //    try
-                //    {
-                //        message.Password = User.Password;
-                //        message.UserName = User.FirstName;
-                //        message.SendTo = User.Email;
-                //        //For Substitutes
-                //        if (User.RoleId == 4)
-                //        {
-                //            message.TemplateId = 1;
-                //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                //        }
-                //        else if (User.RoleId == 3)
-                //        {
-                //            message.TemplateId = 10;
-                //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                //        }
-                //        //For Admins
-                //        else
-                //        {
-                //            message.TemplateId = 2;
-                //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //    }
-                //}
-            }
+            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+            //IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(absenceDetail.AbsenceId));
+            //foreach (var User in users)
+            //{
+            //    try
+            //    {
+            //        message.Password = User.Password;
+            //        message.UserName = User.FirstName;
+            //        message.SendTo = User.Email;
+            //        //For Substitutes
+            //        if (User.RoleId == 4)
+            //        {
+            //            message.TemplateId = 1;
+            //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+            //        }
+            //        else if (User.RoleId == 3)
+            //        {
+            //            message.TemplateId = 10;
+            //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+            //        }
+            //        //For Admins
+            //        else
+            //        {
+            //            message.TemplateId = 2;
+            //            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //    }
+            //}
+        }
     }
 }
