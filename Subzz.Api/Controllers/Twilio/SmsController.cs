@@ -83,33 +83,33 @@ namespace Subzz.Api.Controllers.Twilio
                     }
                     else if (status == "Blocked")
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You Are Blocked By Employee To Accept This Job");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You Are Blocked By Employee To Accept This Job", Convert.ToInt32(body[0]));
                         messagingResponse.Message("You Are Blocked By Employee To Accept This Job");
                     }
                     else if (status == "Cancelled")
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Has Been Cancelled");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Has Been Cancelled", Convert.ToInt32(body[0]));
                         messagingResponse.Message("Job Has Been Cancelled");
                     }
                     else if (status == "Accepted")
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Already Accepted");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Already Accepted", Convert.ToInt32(body[0]));
                         messagingResponse.Message("Job Already Accepted");
                     }
                     else if (status == "Conflict")
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Already Accepted Job on This Date");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Already Accepted Job on This Date", Convert.ToInt32(body[0]));
                         messagingResponse.Message("Already Accepted Job on This Date");
                     }
                     else if (status == "Declined")
                     {
 
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", Convert.ToInt32(body[0]));
                         messagingResponse.Message("Declined Successfully");
                     }
                     else
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later", Convert.ToInt32(body[0]));
                         messagingResponse.Message("Problem Occured While Process you Request.Please Try Again Later");
                     }
                 }
@@ -166,19 +166,19 @@ namespace Subzz.Api.Controllers.Twilio
                         };
                         _audit.InsertAuditLog(audit);
                         Task.Run(() => SendNotificationsOnJobReleased(Convert.ToInt32(body[0])));
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Release Successfully.");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Release Successfully.", Convert.ToInt32(body[0]));
                         messagingResponse.Message("Job Release Successfully");
                     }
                     else
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are not accepted this job.");
+                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are not accepted this job.", Convert.ToInt32(body[0]));
                         messagingResponse.Message("You are not accepted this job.");
                     }
                 }
             }
             else
             {
-                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Not a valid format.");
+                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Not a valid format.", Convert.ToInt32(body[0]));
                 messagingResponse.Message("You are not accepted this job.");
             }
             return TwiML(messagingResponse);

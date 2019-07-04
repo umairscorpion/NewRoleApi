@@ -9,7 +9,7 @@ namespace SubzzV2.Integration.Core.Notification.Interface
 {
 	public interface IMessagingClientWrapper
 	{
-		void SendMessage(string from, string to, string body);
-        void SendMessage(string to, string body);
+		void SendMessage(string from, string to, string body, int absenceId);
+        void SendMessage(string to, string body, int absenceId);
     }
 }

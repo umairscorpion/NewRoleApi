@@ -46,17 +46,32 @@ namespace Subzz.Integration.Core.Notification
             }
         }
 
-        public void LogSms(string phoneNumber, string message, DateTime sentAt, string absenceId, string senderNo)
+        public void LogSms(string phoneNumber, string message, DateTime sentAt, string absenceId, string senderNo, string exception, string status, string smsId)
         {
-            using (var connection = Conn)
+            try
             {
-                var sql = "[Subzz_Logs].[Logs].[InsertSmsLog]";
-                var queryParams = new DynamicParameters();
-                queryParams.Add("@phoneNumber", phoneNumber);
-                queryParams.Add("@message", message);
-                queryParams.Add("@sentAt", sentAt);
-                queryParams.Add("@AbsenceId", absenceId);
-                queryParams.Add("@senderNo", senderNo);
+                using (var connection = Conn)
+                {
+                    var sql = "[Subzz_Logs].[Logs].[InsertSmsLog]";
+                    var queryParams = new DynamicParameters();
+                    queryParams.Add("@phoneNumber", phoneNumber);
+                    queryParams.Add("@message", message);
+                    queryParams.Add("@sentAt", sentAt);
+                    queryParams.Add("@AbsenceId", absenceId);
+                    queryParams.Add("@senderNo", senderNo);
+                    queryParams.Add("@exception", exception);
+                    queryParams.Add("@status", status);
+                    queryParams.Add("@smsId", smsId);
+                   
+                    Conn.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            finally
+            {
             }
         }
 
