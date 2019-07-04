@@ -414,6 +414,11 @@ namespace Subzz.Api.Controllers.Leave
                                 if (jobPostedEvent.EmailAlert)
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
+
+                            if (user.IsSubscribedSMS)
+                            {
+                               CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                            }
                         }
                         else if (user.RoleId == 3)
                         {
