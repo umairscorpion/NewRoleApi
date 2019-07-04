@@ -95,6 +95,8 @@ namespace SubzzV2.Integration.Core.Notification
             string body = PrepareBodyMessage(param, smsTemplate.TextContent);
 
             CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body);
+            DateTime sentAt = DateTime.Now;
+            CommunicationContainer.Logger.LogSms(message.PhoneNumber, body, sentAt, Convert.ToString(message.AbsenceId), "12345");
 		}
 
         public void Process(string to, string from, string message)

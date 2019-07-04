@@ -46,6 +46,20 @@ namespace Subzz.Integration.Core.Notification
             }
         }
 
+        public void LogSms(string phoneNumber, string message, DateTime sentAt, string absenceId, string senderNo)
+        {
+            using (var connection = Conn)
+            {
+                var sql = "[Subzz_Logs].[Logs].[InsertSmsLog]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@phoneNumber", phoneNumber);
+                queryParams.Add("@message", message);
+                queryParams.Add("@sentAt", sentAt);
+                queryParams.Add("@AbsenceId", absenceId);
+                queryParams.Add("@senderNo", senderNo);
+            }
+        }
+
         public void LogError(System.Exception ex, string messagePrefix, string appName)
         {
             
