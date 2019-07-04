@@ -241,11 +241,11 @@ namespace Subzz.Api.Controllers.User
                 var events = availabilities.Select(a => new CalendarEvent
                 {
                     id = a.AvailabilityId,
-                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == false ? a.StartTime + "-" + a.EndTime + " Unavailable" :
+                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("hh:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("hh:mm tt") + " Unavailable" :
                     a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == true ? " Unavailable" :
-                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? a.StartTime + "-" + a.EndTime + " Vacation" :
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("hh:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("hh:mm tt") + " Vacation" :
                     a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == true ? " Vacation" :
-                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? a.StartTime + "-" + a.EndTime + " Recurring" : " Recurring",
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("hh:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("hh:mm tt") + " Recurring" : " Recurring",
                     description = a.Notes,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
