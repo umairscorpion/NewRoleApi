@@ -203,6 +203,7 @@ namespace Subzz.Api.Controllers.Absence
                                 {
                                     message.PhoneNumber = user.PhoneNumber;
                                     if (jobPostedEvent.TextAlert)
+                                        message.PhoneNumber = user.PhoneNumber;
                                         CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                                 }
                             }
@@ -261,6 +262,7 @@ namespace Subzz.Api.Controllers.Absence
                                 if (user.IsSubscribedSMS)
                                 {
                                     if (jobPostedEvent.TextAlert)
+                                        message.PhoneNumber = user.PhoneNumber;
                                         CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                                 }
 
@@ -778,6 +780,7 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                         var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                        message.PhoneNumber = user.PhoneNumber;
                         if (jobPostedEvent.TextAlert)
                             CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                     }
@@ -902,6 +905,7 @@ namespace Subzz.Api.Controllers.Absence
                             var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                             var jobPostedEvent = events.Where(x => x.EventId == 5).First();
                             if (jobPostedEvent.TextAlert)
+                                message.PhoneNumber = user.PhoneNumber;
                                 CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
 
@@ -971,6 +975,7 @@ namespace Subzz.Api.Controllers.Absence
                             var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                             var jobPostedEvent = events.Where(x => x.EventId == 5).First();
                             if (jobPostedEvent.TextAlert)
+                                message.PhoneNumber = user.PhoneNumber;
                                 CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
 
