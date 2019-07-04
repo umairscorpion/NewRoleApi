@@ -32,38 +32,6 @@ namespace SubzzV2.Integration.Core.Notification
             {
                 expiringDates = message.ExpiringDates.ToString();
             }
-            //string messageBody = "New Job!" + Environment.NewLine;
-            //try
-            //{
-
-            //    //messageBody +=  "ID: " + confirmationNumber + Environment.NewLine;          
-            //    // messageBody +=  schoolAddress + Environment.NewLine;
-            //    messageBody += message.StartDate + "-" + message.EndDate + Environment.NewLine;
-
-            //    messageBody += message.StartTime + "-" + message.EndTime + Environment.NewLine;
-            //    messageBody += message.EmployeeName + Environment.NewLine;
-            //    messageBody += message.Position + "@" + message.Location + Environment.NewLine;
-            //    if (message.EmployeeName != "Find a Sub")
-            //        messageBody += message.Subject + "," + message.Grade + Environment.NewLine;
-            //    if (!string.IsNullOrEmpty(message.Notes))
-            //    {
-            //        if (message.Notes.Length <= 15)
-            //        {
-            //            messageBody += "Notes: " + message.Notes + Environment.NewLine;
-            //        }
-            //        else
-            //        {
-            //            messageBody += "Notes: " + message.Notes.Substring(0, 15) + ".." + Environment.NewLine;
-            //        }
-
-            //    }
-            //    messageBody += "Text " + message.AbsenceId + " to Accept";
-            //}
-
-            //catch (Exception eeee)
-            //{
-
-            //}
 
             Dictionary<string, string> param = new Dictionary<string, string>()
             {

@@ -419,6 +419,11 @@ namespace Subzz.Api.Controllers.Leave
                                     CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                                 }
                             }
+
+                            if (user.IsSubscribedSMS)
+                            {
+                               CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                            }
                         }
                         else if (user.RoleId == 3)
                         {
