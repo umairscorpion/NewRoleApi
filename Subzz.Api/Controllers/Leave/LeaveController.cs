@@ -394,6 +394,7 @@ namespace Subzz.Api.Controllers.Leave
                             if (user.IsSubscribedEmail)
                             {
                                 if (jobPostedEvent.EmailAlert)
+                                    message.PhoneNumber = user.PhoneNumber;
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
 
