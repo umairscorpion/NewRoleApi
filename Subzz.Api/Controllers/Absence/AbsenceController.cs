@@ -267,7 +267,7 @@ namespace Subzz.Api.Controllers.Absence
                                 }
 
                             }
-                            //For Admins
+                            //For Admins And Employee
                             else
                             {
                                 message.TemplateId = 8;
@@ -776,7 +776,7 @@ namespace Subzz.Api.Controllers.Absence
                         if (jobPostedEvent.EmailAlert)
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
-                    if (user.IsSubscribedSMS && user.RoleId == 4)
+                    if (user.IsSubscribedSMS && user.RoleId == 4 && absenceDetail.SubstituteRequired)
                     {
                         var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                         var jobPostedEvent = events.Where(x => x.EventId == 5).First();
@@ -890,7 +890,7 @@ namespace Subzz.Api.Controllers.Absence
                     message.UserName = user.FirstName;
                     message.SendTo = user.Email;
                     //For Substitutes
-                    if (user.RoleId == 4)
+                    if (user.RoleId == 4 && absenceDetail.SubstituteRequired)
                     {
                         message.TemplateId = 17;
                         if (user.IsSubscribedEmail)
