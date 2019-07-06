@@ -47,15 +47,21 @@ namespace Subzz.Api.Controllers.Twilio
         public async Task<TwiMLResult> RecieveSms(SmsRequest incomingMessage)
         {
             var messagingResponse = new MessagingResponse();
-            var userId = _userService.GetUserIdByPhoneNumber(incomingMessage.From);
             //Confirmation Number is on 0 Index and (A => Accept, D => Decline, R => Release) are on first Index 
             string[] body = incomingMessage.Body.Split(' ');
+            var userId = _userService.GetUserIdByPhoneNumber(incomingMessage.From);
+            if (string.IsNullOrEmpty(userId))
+            {
+                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You're not register user", Convert.ToInt32(body[0]));
+                messagingResponse.Message("You're not register user");
+                return TwiML(messagingResponse);
+            }
             if (body.Length == 2)
             {
                 var absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(Convert.ToInt32(body[0]));
                 if (absenceDetail != null && absenceDetail.AbsenceId > 0)
                 {
-                    if (body[1] == "A")
+                    if (body[1].ToLower() == "a")
                     {
                         string status = await _jobService.AcceptJob(absenceDetail.AbsenceId, userId, "Sms");
                         if (status == "success")
@@ -74,8 +80,14 @@ namespace Subzz.Api.Controllers.Twilio
                                     CultureInfo.InvariantCulture).ToSubzzTimeForSms();
                             message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
                                                         CultureInfo.InvariantCulture).ToSubzzTimeForSms();
-                            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-                            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                            if (message.StartDate == message.EndDate)
+                            {
+                                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                            }
+                            else
+                            {
+                                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                            }
 
                             message.EmployeeName = absenceDetail.EmployeeName;
                             message.Position = absenceDetail.PositionDescription;
@@ -90,6 +102,7 @@ namespace Subzz.Api.Controllers.Twilio
                             //Notification notification = new Notification();
                             Task.Run(() => SendJobAcceptEmails(users, message));
                             messagingResponse.Message("Accepted Successfully");
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Accepted Successfully", Convert.ToInt32(body[0]));
                         }
                         else if (status == "Blocked")
                         {
@@ -117,13 +130,19 @@ namespace Subzz.Api.Controllers.Twilio
                             CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", Convert.ToInt32(body[0]));
                             messagingResponse.Message("Declined Successfully");
                         }
+                        else if (status == "Unavailable")
+                        {
+
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are unavailable", Convert.ToInt32(body[0]));
+                            messagingResponse.Message("You are unavailable");
+                        }
                         else
                         {
                             CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later", Convert.ToInt32(body[0]));
-                            messagingResponse.Message("Problem Occured While Process you Request.Please Try Again Later");
+                            messagingResponse.Message("Problem Occured While Process your Request.Please Try Again Later");
                         }
                     }
-                    else if (body[1] == "D")
+                    else if (body[1].ToLower() == "D")
                     {
                         // Audit Log
                         var audit = new AuditLog
@@ -150,8 +169,14 @@ namespace Subzz.Api.Controllers.Twilio
                                     CultureInfo.InvariantCulture).ToSubzzTimeForSms();
                         message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
                                                     CultureInfo.InvariantCulture).ToSubzzTimeForSms();
-                        message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-                        message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                        if (message.StartDate == message.EndDate)
+                        {
+                            message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                        }
+                        else
+                        {
+                            message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                        }
 
                         message.EmployeeName = absenceDetail.EmployeeName;
                         message.Position = absenceDetail.PositionDescription;
@@ -166,7 +191,7 @@ namespace Subzz.Api.Controllers.Twilio
                         Task.Run(() => SendJobDeclinEmails(users, message));
                         messagingResponse.Message("Job Decline Successfully");
                     }
-                    else if (body[1] == "R")
+                    else if (body[1].ToLower() == "R")
                     {
                         var acceptedJobs = await _jobService.GetAvailableJobs(absenceDetail.StartDate, absenceDetail.EndDate, userId, absenceDetail.OrganizationId, absenceDetail.DistrictId, 2, false);
                         var IsAcceptedJob = acceptedJobs.ToList().Where(absence => absence.AbsenceId == Convert.ToInt32(body[0])).FirstOrDefault();
@@ -196,13 +221,13 @@ namespace Subzz.Api.Controllers.Twilio
                 }
                 else
                 {
-                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Not a valid Confirmation Number.", Convert.ToInt32(body[0]));
+                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Response! Please provide correct Job#", Convert.ToInt32(body[0]));
                     messagingResponse.Message("Not a valid Confirmation Number.");
                 }
             }
             else
             {
-                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Not a valid format.", Convert.ToInt32(body[0]));
+                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Format!", Convert.ToInt32(body[0]));
                 messagingResponse.Message("Not a valid format.");
             }
             return TwiML(messagingResponse);
@@ -227,6 +252,7 @@ namespace Subzz.Api.Controllers.Twilio
                         }
                         if (user.IsSubscribedSMS)
                         {
+                            message.PhoneNumber = user.PhoneNumber;
                             CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
@@ -316,8 +342,14 @@ namespace Subzz.Api.Controllers.Twilio
                                 CultureInfo.InvariantCulture).ToSubzzTimeForSms();
             message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
                                         CultureInfo.InvariantCulture).ToSubzzTimeForSms();
-            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            if (message.StartDate == message.EndDate)
+            {
+                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            }
+            else
+            {
+                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            }
 
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
