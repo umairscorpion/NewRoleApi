@@ -26,5 +26,6 @@ namespace SubzzV2.Core.Models
         public string AvailabilityContentBackgroundColor { get; set; }
         public string AvailabilityIconCss { get; set; }
         public int DistrictId { get; set; }
+        public int CheckFilter { get; set; }
     }
 }
