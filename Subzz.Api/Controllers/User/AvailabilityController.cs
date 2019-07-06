@@ -83,6 +83,7 @@ namespace Subzz.Api.Controllers.User
                 {
                     model = new SubstituteAvailability { StartDate = DateTime.Now, AvailabilityStatusId = -1, UserId = "" };
                 }
+                
                 model.DistrictId = base.CurrentUser.DistrictId;
                 var result = _service.GetSubstituteAvailability(model).ToList();
                 var resources = result.Select(a => new CalendarResource

@@ -776,18 +776,20 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@Email", model.Email);
             return Db.Query<bool>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
-
-        
+       
         public IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model)
         {
             const string query = "[Users].[GetSubstituteAvailabilities]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@StartDate", model.StartDate);
+            queryParams.Add("@EndDate", model.EndDate);
             queryParams.Add("@AvailabilityStatusId", model.AvailabilityStatusId);
             queryParams.Add("@UserId", model.UserId);
             queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@ForFilter", model.CheckFilter);
             return Db.Query<SubstituteAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
+
         public IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability)
         {
             const string query = "[Users].[GetAvailability]";
@@ -797,6 +799,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@EndDate", availability.EndDate);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
+
         public UserAvailability GetAvailabilityById(int id)
         {
             const string query = "[Users].[GetAvailabilityById]";
@@ -804,6 +807,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@AvailabilityId", id);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
+
         public UserAvailability InsertAvailability(UserAvailability availability)
         {
             const string query = "[Users].[InsertAvailability]";
@@ -827,6 +831,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@CreatedBy", availability.CreatedBy);
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
+
         public UserAvailability UpdateAvailability(UserAvailability availability)
         {
             const string query = "[Users].[UpdateAvailability]";
