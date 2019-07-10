@@ -142,7 +142,7 @@ namespace SubzzV2.Integration.Core.Notification
             Dictionary<string, string> param = new Dictionary<string, string>()
             {
                 ["{User Name}"] = message.UserName ?? "",
-                ["{Confirmation}"] = message.AbsenceId > 0 ? message.AbsenceId.ToString():  "",
+                ["{Confirmation}"] = message.ConfirmationNumber ?? "N/A",
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
