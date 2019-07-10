@@ -61,6 +61,8 @@ namespace Subzz.Integration.Core.Domain
         public string EndTimeSMS { get; set; }
         public string StartDateSMS { get; set; }
         public string EndDateSMS { get; set; }
+        public string DateToDisplayInSMS { get; set; }
+        public string ConfirmationNumber { get; set; }
 
     }
 
