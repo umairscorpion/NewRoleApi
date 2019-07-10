@@ -75,7 +75,7 @@ namespace Subzz.Api.Controllers.Manage
                     AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
                     IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                     Message message = new Message();
-                    message.AbsenceId = absenceDetail.AbsenceId;
+                    message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
                     message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                         CultureInfo.InvariantCulture).ToSubzzTime();
                     message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -83,11 +83,17 @@ namespace Subzz.Api.Controllers.Manage
                     message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
                     message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
                     message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
-                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                                CultureInfo.InvariantCulture).ToSubzzTimeForSms();
                     message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
-                                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
-                    message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-                    message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                                                CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                    if (message.StartDate == message.EndDate)
+                    {
+                        message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                    }
+                    else
+                    {
+                        message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                    }
                     message.EmployeeName = absenceDetail.EmployeeName;
                     message.Position = absenceDetail.PositionDescription;
                     message.Subject = absenceDetail.SubjectDescription;
@@ -130,7 +136,7 @@ namespace Subzz.Api.Controllers.Manage
                 AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
                 IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                 Message message = new Message();
-                message.AbsenceId = absenceDetail.AbsenceId;
+                message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
                 message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                     CultureInfo.InvariantCulture).ToSubzzTime();
                 message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -138,11 +144,17 @@ namespace Subzz.Api.Controllers.Manage
                 message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
                 message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
                 message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
-                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                                CultureInfo.InvariantCulture).ToSubzzTimeForSms();
                 message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
-                                            CultureInfo.InvariantCulture).ToSubzzDateForSMS();
-                message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-                message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                                            CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                if (message.StartDate == message.EndDate)
+                {
+                    message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                }
+                else
+                {
+                    message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                }
 
                 message.EmployeeName = absenceDetail.EmployeeName;
                 message.Position = absenceDetail.PositionDescription;

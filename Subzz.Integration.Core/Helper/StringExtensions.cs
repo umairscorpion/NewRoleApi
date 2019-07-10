@@ -26,7 +26,13 @@ namespace Subzz.Integration.Core.Helper
         public static string ToSubzzDateForSMS(this DateTime dateTime)
         {
 
-            return dateTime.ToString("MM/dd/yy(ddd)");
+            return dateTime.ToString("ddd MM/dd/yy");
+        }
+
+        public static string ToSubzzShortDateForSMS(this DateTime dateTime)
+        {
+
+            return dateTime.ToString("ddd MM/dd");
         }
     }
 }
