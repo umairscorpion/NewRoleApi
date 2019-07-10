@@ -242,17 +242,26 @@ namespace Subzz.Api.Controllers.User
                 var events = availabilities.Select(a => new CalendarEvent
                 {
                     id = a.AvailabilityId,
-                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("hh:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("hh:mm tt") + " Unavailable" :
+                    title = a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("h:mm tt") + " Unavailable" :
                     a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == true ? " Unavailable" :
-                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("hh:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("hh:mm tt") + " Vacation" :
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("h:mm tt") + " Vacation" :
                     a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == true ? " Vacation" :
-                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("hh:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("hh:mm tt") + " Recurring" : " Recurring",
-                    description = a.Notes,
+                    a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring",
+                    description = a.AvailabilityStatusTitle,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    end = DateTime.Parse(a.StartTime) == DateTime.Parse(a.EndTime) ? DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s") :
+                    DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
                     backgroundColor = a.AvailabilityContentBackgroundColor,
                     allDay = a.IsAllDayOut,
-                    className = new string[] { a.AvailabilityIconCss }
+                    className = new string[] { a.AvailabilityIconCss },
+                    isAllDayOut = a.IsAllDayOut,
+                    isRepeat = a.IsRepeat,
+                    repeatType = a.RepeatType,
+                    repeatValue = a.RepeatValue,
+                    repeatOnWeekDays = a.RepeatOnWeekDays,
+                    isEndsNever = a.IsEndsNever,
+                    endsOnAfterNumberOfOccurrance = a.EndsOnAfterNumberOfOccurrance,
+                    endsOnUntilDate = a.EndsOnUntilDate
                 }).ToList();
                 return events;
             }
@@ -270,11 +279,12 @@ namespace Subzz.Api.Controllers.User
                 var events = availabilities.Select(a => new CalendarEvent
                 {
                     id = -1,
-                    title = DateTime.Today.Add(a.StartTime).ToString("hh:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("hh:mm tt") + " for" + " " + a.EmployeeName,
-                    description = a.SubstituteNotes,
+                    title = DateTime.Today.Add(a.StartTime).ToString("h:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("h:mm tt") + " " + a.EmployeeName,
+                    description = a.SubstituteName + " for " + a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-                    backgroundColor = "",
+                    organizationName = a.AbsenceLocation,
+                    backgroundColor = "#15A315",
                     allDay = false,
                     className = new string[] { "" }
                 }).ToList();

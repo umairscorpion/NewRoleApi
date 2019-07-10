@@ -176,7 +176,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
-        public int UpdateAbsence(AbsenceModel model)
+        public string UpdateAbsence(AbsenceModel model)
         {
             using (var connection = base.GetConnection)
             {
@@ -197,9 +197,9 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@UpdatedBy_User_Id", model.UpdatedById);
                 queryParams.Add("@Substitute_Id", model.SubstituteId);
                 queryParams.Add("@AbsenceDuration_Id", model.DurationType);
-                int numberOfEffectedRow = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                string numberOfEffectedRow = connection.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
-                if (model.AnyAttachment && model.AbsenceId > 0 && numberOfEffectedRow > 0)
+                if (model.AnyAttachment && model.AbsenceId > 0 && numberOfEffectedRow == "success")
                 {
                     sql = "[Absence].[UpdateAttachment]";
                     queryParams = new DynamicParameters();

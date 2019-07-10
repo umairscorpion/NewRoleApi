@@ -30,5 +30,7 @@ namespace SubzzV2.Core.Models
         public bool? IsArchived { get; set; }
         public DateTime? ArchivedOn { get; set; }
         public string ArchivedBy { get; set; }
+        public string AvailabilityStatusName { get; set; }
+        public string AvailabilityStatusTitle { get; set; }
     }
 }
