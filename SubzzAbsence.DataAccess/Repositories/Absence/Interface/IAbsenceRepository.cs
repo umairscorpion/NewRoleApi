@@ -12,7 +12,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
 {
     public interface IAbsenceRepository
     {
-        int CreateAbsence(AbsenceModel model);
+        AbsenceModel CreateAbsence(AbsenceModel model);
         Task<int> SaveAsSingleDayAbsence(DataTable absences);
         IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId);
         IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId);
@@ -23,7 +23,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         IEnumerable<PreferredSubstituteModel> GetFavSubsForSendingSms(DateTime date);
         List<PreferredSubstituteModel> GetFavSubsForSendingSmsAndEmail(DateTime date);
         int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
-        int UpdateAbsence(AbsenceModel user);
+        string UpdateAbsence(AbsenceModel user);
         //List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
         DashboardSummary GetAbsenceSummary(string userId, int year);
         List<AbsenceSummary> GetTopTenTeachers(string userId);

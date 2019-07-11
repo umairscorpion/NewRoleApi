@@ -6,7 +6,7 @@ namespace SubzzV2.Core.Models
     {
         public int AvailabilityId { get; set; }
         public string UserId { get; set; }
-        public int? AvailabilityStatusId { get; set; }
+        public int AvailabilityStatusId { get; set; }
         public string AvailabilityContentBackgroundColor { get; set; }
         public string AvailabilityIconCss { get; set; }
         public string Title { get; set; }
@@ -30,5 +30,7 @@ namespace SubzzV2.Core.Models
         public bool? IsArchived { get; set; }
         public DateTime? ArchivedOn { get; set; }
         public string ArchivedBy { get; set; }
+        public string AvailabilityStatusName { get; set; }
+        public string AvailabilityStatusTitle { get; set; }
     }
 }
