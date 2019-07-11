@@ -586,8 +586,8 @@ namespace Subzz.Api.Controllers.Absence
             try
             {
                 model.UpdatedById = base.CurrentUser.Id;
-                int RowsEffected = _service.UpdateAbsence(model);
-                if (RowsEffected > 0)
+                string RowsEffected = _service.UpdateAbsence(model);
+                if (RowsEffected == "success")
                 {
                     var audit = new AuditLog
                     {
@@ -604,11 +604,11 @@ namespace Subzz.Api.Controllers.Absence
                     Task.Run(() => SendNotificationsOnJobUpdated(model.AbsenceId));
                     DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(model.AbsenceId, model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
-                    return Json("success");
+                    return Json(RowsEffected);
                 }
                 else
                 {
-                    return Json("error");
+                    return Json(RowsEffected);
                 }
             }
             catch (Exception ex)
@@ -724,10 +724,12 @@ namespace Subzz.Api.Controllers.Absence
                 var events = absences.Select(a => new CalendarEvent
                 {
                     id = a.AbsenceId,
-                    title = a.StartTime + " " + a.CreatedByUser,
-                    description = a.PayrollNotes,
+                    title = DateTime.Today.Add(a.StartTime).ToString("h:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("h:mm tt") + " " + a.EmployeeName,
+                    description = a.SubstituteId != "-1" ? a.SubstituteName + " for " +  a.EmployeeName : a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    organizationName = a.AbsenceLocation,
+                    backgroundColor = "#15A315",
                 }).ToList();
                 return events;
             }
@@ -750,9 +752,10 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     id = a.EventId,
                     title = a.Title,
-                    description = a.Notes,
+                    description = a.Title,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    forEvents = "Events",
                 }).ToList();
                 return cEvents;
             }

@@ -22,7 +22,7 @@ namespace SubzzAbsence.Business.Absence.Interface
         IEnumerable<PreferredSubstituteModel> GetFavSubsForSendingSms(DateTime date);
         List<PreferredSubstituteModel> GetFavSubsForSendingSmsAndEmail(DateTime date);
         int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
-        int UpdateAbsence(AbsenceModel model);
+        string UpdateAbsence(AbsenceModel model);
         //List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
         DashboardSummary GetAbsenceSummary(string userId, int year);
         List<AbsenceSummary> GetTopTenTeachers(string userId);
