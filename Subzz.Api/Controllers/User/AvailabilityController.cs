@@ -31,17 +31,22 @@ namespace Subzz.Api.Controllers.User
             try
             {
                 model.UserId = base.CurrentUser.Id;
+                var startDate = Convert.ToDateTime(model.StartDate);
+                var endDate = Convert.ToDateTime(model.EndDate);
                 var acceptedAbsences = await _jobService.GetAvailableJobs(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId, base.CurrentUser.OrganizationId, base.CurrentUser.DistrictId, 2, false);
                 //Set this to null after getting absences beacause it generates error in stored Procedure
                 model.StartDate = null;
                 model.EndDate = null;
                 var result = _service.GetAvailabilities(model);
                 var calendarEvents = CalendarEvents(result);
+                //var calendarEvents = CalendarEvents(result.Where(o => o.AvailabilityStatusId != 3));
+                //var recurringEvents = CalendarRecurringEvents(result.Where(o => o.AvailabilityStatusId == 3), startDate, endDate);
                 var absenceEvents = AbsencesToEvents(acceptedAbsences);
                 var events = _absenceService.GetEvents(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
                 var eventsCalendarView = CalendarEvents(events);
                 absenceEvents.AddRange(eventsCalendarView);
                 var allEvents = calendarEvents.Concat(absenceEvents);
+                //var all = allEvents.Concat(recurringEvents);
                 return Ok(allEvents);
             }
             catch (Exception ex)
@@ -242,6 +247,7 @@ namespace Subzz.Api.Controllers.User
                 var events = availabilities.Select(a => new CalendarEvent
                 {
                     id = a.AvailabilityId,
+                    availabilityStatusId = a.AvailabilityStatusId,
                     title = a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("h:mm tt") + " Unavailable" :
                     a.AvailabilityContentBackgroundColor == "#d20f0f" && a.IsAllDayOut == true ? " Unavailable" :
                     a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("h:mm tt") + " Vacation" :
@@ -254,7 +260,6 @@ namespace Subzz.Api.Controllers.User
                     backgroundColor = a.AvailabilityContentBackgroundColor,
                     allDay = a.IsAllDayOut,
                     className = new string[] { a.AvailabilityIconCss },
-                    isAllDayOut = a.IsAllDayOut,
                     isRepeat = a.IsRepeat,
                     repeatType = a.RepeatType,
                     repeatValue = a.RepeatValue,
@@ -299,6 +304,88 @@ namespace Subzz.Api.Controllers.User
             }
             return null;
 
+        }
+
+        private List<CalendarEvent> CalendarRecurringEvents(IEnumerable<UserAvailability> availabilities, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                List<CalendarEvent> list = new List<CalendarEvent>();
+                CalendarEvent evt;
+                foreach (var av in availabilities)
+                {
+                    if (!av.IsEndsNever)
+                    {
+                        if (Convert.ToDateTime(av.EndsOnUntilDate) > endDate)
+                        {
+                            List<DateTime> dateTime = GetDaydBetweenTwoDates(startDate, endDate, Convert.ToInt32(av.RepeatOnWeekDays));
+                            foreach(var dates in dateTime)
+                            {
+                                evt = new CalendarEvent();
+                                evt.id = av.AvailabilityId;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
+                                evt.description = av.AvailabilityStatusTitle;
+                                evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                list.Add(evt);
+                            }
+                        }
+                        else
+                        {
+                            List<DateTime> dateTime = GetDaydBetweenTwoDates(startDate, Convert.ToDateTime(av.EndsOnUntilDate), Convert.ToInt32(av.RepeatOnWeekDays));
+                            foreach (var dates in dateTime)
+                            {
+                                evt = new CalendarEvent();
+                                evt.id = av.AvailabilityId;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
+                                evt.description = av.AvailabilityStatusTitle;
+                                evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                list.Add(evt);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        List<DateTime> dateTime = GetDaydBetweenTwoDates(startDate, endDate, Convert.ToInt32(av.RepeatOnWeekDays));
+                        foreach (var dates in dateTime)
+                        {
+                            evt = new CalendarEvent();
+                            evt.id = av.AvailabilityId;
+                            evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
+                            evt.description = av.AvailabilityStatusTitle;
+                            evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                            evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                            list.Add(evt);
+                        }
+                    }
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
+
+        public List<DateTime> GetDaydBetweenTwoDates(DateTime startDate, DateTime endDate, int dayOfWeek)
+        {
+            List<DateTime> dateTimes = new List<DateTime>();
+
+            for(int counter= 0, arrayCounter = 0; arrayCounter < (endDate - startDate).TotalDays; counter++)
+            {
+                DateTime currentDate = startDate;
+                int Day = Convert.ToInt32(startDate.DayOfWeek);
+                if (Day == dayOfWeek)
+                {
+                    dateTimes.Add(currentDate);
+                    arrayCounter++;
+                }
+                counter++;
+                startDate = startDate.AddDays(1);
+            }
+            return dateTimes;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace SubzzV2.Core.Models
     {
         public int AvailabilityId { get; set; }
         public string UserId { get; set; }
-        public int? AvailabilityStatusId { get; set; }
+        public int AvailabilityStatusId { get; set; }
         public string AvailabilityContentBackgroundColor { get; set; }
         public string AvailabilityIconCss { get; set; }
         public string Title { get; set; }

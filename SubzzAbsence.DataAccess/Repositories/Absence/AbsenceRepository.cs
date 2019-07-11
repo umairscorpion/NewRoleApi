@@ -176,6 +176,17 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
+        public List<PreferredSubstituteModel> GetFavSubsForSendingSmsAndEmail(DateTime date)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[GetFavSubsForSendingSms]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@date", date);
+                return connection.Query<PreferredSubstituteModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
         public string UpdateAbsence(AbsenceModel model)
         {
             using (var connection = base.GetConnection)
@@ -308,5 +319,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
+
+        public void UpdateNotificationflagForAll(int absenceId)        {            using (var connection = base.GetConnection)            {                var sql = "[Absence].[UpdateNotificationflagForAll]";                var queryParams = new DynamicParameters();                queryParams.Add("@AbsenceId", absenceId);                connection.Query<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);            }        }        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)        {            using (var connection = base.GetConnection)            {                var sql = "[Absence].[getAbsenceIdByConfirmationNumber]";                var queryParams = new DynamicParameters();                queryParams.Add("@ConfirmationNumber", ConfirmationNumber);                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);            }        }
     }
 }

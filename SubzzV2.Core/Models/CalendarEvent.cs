@@ -6,6 +6,7 @@ namespace SubzzV2.Core.Models
     public class CalendarEvent
     {
         public int id { get; set; }
+        public int availabilityStatusId { get; set; }
         public string title { get; set; }
         public bool allDay { get; set; }
         public string start { get; set; }
@@ -21,8 +22,7 @@ namespace SubzzV2.Core.Models
         public string profilePicUrl { get; set; }
         public string organizationName { get; set; }
         public string forEvents { get; set; }
-
-        public bool isAllDayOut { get; set; }
+        
         public bool isRepeat { get; set; }
         public string repeatType { get; set; }
         public int? repeatValue { get; set; }
