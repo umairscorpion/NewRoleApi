@@ -50,6 +50,10 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     message.resetPassUrl = web + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
                 }
+                if (message.TemplateId == 25)
+                {
+                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo;
+                }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
                 string[] to;
@@ -154,6 +158,9 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
+                ["{Email}"] = message.SendTo ?? "",
+                ["{Password}"] = message.Password ?? "",
+                ["{VerifyUrl}"] = message.VerifyUrl ?? "",
                 ["{Start Date}"] = message.StartDate ?? "",
                 ["{End Date}"] = message.EndDate ?? "",
                 ["{Start Time}"] = message.StartTime ?? "",

@@ -58,6 +58,7 @@ namespace Subzz.Integration.Core.Domain
         public string Password { get; set; }
         public string resetPassUrl { get; set; }
         public string ProfilePicUrl { get; set; }
+        public string VerifyUrl { get; set; }
 
         public string StartTimeSMS { get; set; }
         public string EndTimeSMS { get; set; }

@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
 using Subzz.Integration.Core.Container;
+using Subzz.Integration.Core.Domain;
 using Subzz.Integration.Core.Helper;
 using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
@@ -224,6 +225,7 @@ namespace Subzz.Api.Controllers.User
             try
             {
                 var userModel = _service.InsertUser(model);
+                SendWelcomeLetter(userModel);
                 if(model.RoleId == 4)
                 {
                     // Audit Log
@@ -265,10 +267,22 @@ namespace Subzz.Api.Controllers.User
             }
             return null;
         }
+        [Route("resendWelcomeLetter")]
+        [HttpPost]
+        public void ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
+        {
+            SendWelcomeLetter(user);
+        }
 
         private void SendWelcomeLetter(SubzzV2.Core.Entities.User user)
         {
-
+            Message message = new Message();
+            message.Password = user.Password;
+            message.UserName = user.FirstName;
+            message.SendTo = user.Email;
+            message.Photo = user.ProfilePicture;
+            message.TemplateId = 25;
+            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
         }
 
         [Route("updateUser")]
