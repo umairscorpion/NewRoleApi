@@ -12,7 +12,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
 {
     public interface IAbsenceRepository
     {
-        int CreateAbsence(AbsenceModel model);
+        AbsenceModel CreateAbsence(AbsenceModel model);
         Task<int> SaveAsSingleDayAbsence(DataTable absences);
         IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId);
         IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId);

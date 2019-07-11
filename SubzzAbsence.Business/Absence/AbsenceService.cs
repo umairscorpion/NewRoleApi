@@ -25,7 +25,7 @@ namespace SubzzAbsence.Business.Absence
             _repo = repo;
         }
 
-        public int CreateAbsence(AbsenceModel model)
+        public AbsenceModel CreateAbsence(AbsenceModel model)
         {
             var absenceCreation = _repo.CreateAbsence(model);
             return absenceCreation;

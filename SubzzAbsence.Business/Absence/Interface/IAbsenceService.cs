@@ -11,7 +11,7 @@ namespace SubzzAbsence.Business.Absence.Interface
 {
     public interface IAbsenceService
     {
-        int CreateAbsence(AbsenceModel model);
+        AbsenceModel CreateAbsence(AbsenceModel model);
         Task<int> SaveAsSingleDayAbsence(DataTable absences);
         IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId);
         IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId);

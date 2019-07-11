@@ -67,7 +67,7 @@ namespace SubzzV2.Integration.Core.Notification
         public SmsTemplate GetSmsTemplateById(int id)
         {
             string connectionString = "data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true";
-            //string connectionString = "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
+            //string connectionString = "Data Source=DESKTOP-BQ3LKMC\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
             List<SmsTemplate> smsTemplatesList;
             using (var dc = new SqlConnection(connectionString))
             {

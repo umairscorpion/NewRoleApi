@@ -113,13 +113,13 @@ namespace Subzz.Api.Controllers.Absence
                 DateTime updatedOn = DateTime.Now;
 
                 var absenceCreation = _service.CreateAbsence(model);
-                if (absenceCreation > 0)
+                if (absenceCreation.AbsenceId > 0)
                 {
                     // Audit Log
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = absenceCreation.ToString(),
+                        EntityId = absenceCreation.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Create,
                         PostValue = Serializer.Serialize(model),
@@ -128,8 +128,9 @@ namespace Subzz.Api.Controllers.Absence
                     };
                     _audit.InsertAuditLog(audit);
 
-                    model.AbsenceId = absenceCreation;
-                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation,
+                    model.AbsenceId = absenceCreation.AbsenceId;
+                    model.ConfirmationNumber = absenceCreation.ConfirmationNumber;
+                    DataTable SingleDayAbsences = CustomClass.InsertAbsenceBasicDetailAsSingleDay(absenceCreation.AbsenceId,
                         model.StartDate, model.EndDate, model.StartTime, model.EndTime, model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId, model.Status);
                     Task taskForStoreAbsenceAsSingleDay = _service.SaveAsSingleDayAbsence(SingleDayAbsences);
                     if (model.AbsenceScope == 3)
@@ -147,12 +148,12 @@ namespace Subzz.Api.Controllers.Absence
                             Task.Run(() => SendJobPostEmails(model));
                         }
                         
-                        return Json(absenceCreation.ToString());
+                        return Json(absenceCreation.ConfirmationNumber.ToString());
                     }
                     else
                     {
                         Task.Run(() => SendJobPostEmails(model));
-                        return Json(absenceCreation.ToString());
+                        return Json(absenceCreation.ConfirmationNumber.ToString());
                     }
                 }
             }
@@ -505,9 +506,9 @@ namespace Subzz.Api.Controllers.Absence
             return null;
         }
 
-        [Route("updateAbseceStatus/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}")]
+        [Route("updateAbseceStatus/{ConfirmationNumber}/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}")]
         [HttpGet]
-        public ActionResult UpdateAbsenceStatus(int AbsenceId, int statusId, string UpdateStatusDate, string UserId)
+        public ActionResult UpdateAbsenceStatus(string ConfirmationNumber, int AbsenceId, int statusId, string UpdateStatusDate, string UserId)
         {
             try
             {
@@ -517,7 +518,7 @@ namespace Subzz.Api.Controllers.Absence
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = AbsenceId.ToString(),
+                        EntityId = ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Released,
                         DistrictId = CurrentUser.DistrictId,
@@ -530,7 +531,7 @@ namespace Subzz.Api.Controllers.Absence
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = AbsenceId.ToString(),
+                        EntityId = ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Cancelled,
                         DistrictId = CurrentUser.DistrictId,
@@ -591,7 +592,7 @@ namespace Subzz.Api.Controllers.Absence
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Update,
                         PreValue = Serializer.Serialize(_service.GetAbsenceDetailByAbsenceId(model.AbsenceId)),
@@ -619,9 +620,9 @@ namespace Subzz.Api.Controllers.Absence
             return null;
         }
 
-        [Route("updateAbseceStatusAndSub/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
+        [Route("updateAbseceStatusAndSub/{ConfirmationNumber}/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}/{SubstituteId}/{SubstituteRequired}")]
         [HttpGet]
-        public ActionResult UpdateAbseceStatusAndSub(int AbsenceId, int statusId, string UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
+        public ActionResult UpdateAbseceStatusAndSub(string ConfirmationNumber, int AbsenceId, int statusId, string UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired)
         {
             try
             {
@@ -631,7 +632,7 @@ namespace Subzz.Api.Controllers.Absence
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = AbsenceId.ToString(),
+                        EntityId = ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Assigned,
                         DistrictId = CurrentUser.DistrictId,
