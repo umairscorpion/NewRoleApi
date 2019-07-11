@@ -43,6 +43,8 @@ namespace Subzz.Integration.Core.Domain
         public int TemplateId { get; set; }
         public string ImageBase64 { get; set; }
         public List<MailsAttachment> MailAttachments { get; set; }
+        public string AttachedFileName { get; set; }
+        public string FileContentType { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastname { get; set; }
         public string TimeInterval { get; set; }
@@ -56,6 +58,7 @@ namespace Subzz.Integration.Core.Domain
         public string Password { get; set; }
         public string resetPassUrl { get; set; }
         public string ProfilePicUrl { get; set; }
+        public string VerifyUrl { get; set; }
 
         public string StartTimeSMS { get; set; }
         public string EndTimeSMS { get; set; }

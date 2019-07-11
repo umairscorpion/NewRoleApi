@@ -197,6 +197,8 @@ namespace Subzz.Api.Controllers.Absence
             message.Notes = DataForEmails.SubstituteNotes;
             message.Reason = DataForEmails.AbsenceReasonDescription;
             message.Photo = DataForEmails.EmployeeProfilePicUrl;
+            message.AttachedFileName = DataForEmails.AttachedFileName;
+            message.FileContentType = DataForEmails.FileContentType;
             message.Duration = DataForEmails.DurationType == 1 ? "Full Day" : DataForEmails.DurationType == 2 ? "First Half" : DataForEmails.DurationType == 3 ? "Second Half" : "Custom";
             //Entire Sustitute Pool or Request Specifc Sub
             if (absenceModel.IsApprovalRequired)
@@ -639,7 +641,6 @@ namespace Subzz.Api.Controllers.Absence
                         OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                     };
                     _audit.InsertAuditLog(audit);
-                    Task.Run(() => SendNotificationsOnJobUpdated(AbsenceId));
                     Task.Run(() => SendNotificationsOnJobAssignedFromReports(AbsenceId));
 
                     return Json("success");
