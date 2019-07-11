@@ -25,7 +25,7 @@ namespace SubzzAbsence.Business.Absence
             _repo = repo;
         }
 
-        public int CreateAbsence(AbsenceModel model)
+        public AbsenceModel CreateAbsence(AbsenceModel model)
         {
             var absenceCreation = _repo.CreateAbsence(model);
             return absenceCreation;
@@ -76,7 +76,7 @@ namespace SubzzAbsence.Business.Absence
             return _repo.GetFavSubsForSendingSmsAndEmail(date);
         }
 
-        public string UpdateAbsence(AbsenceModel user)
+        public int UpdateAbsence(AbsenceModel user)
         {
             return _repo.UpdateAbsence(user);
         }
@@ -111,6 +111,14 @@ namespace SubzzAbsence.Business.Absence
               _repo.UpdateMailAndSmsFlag(id, IsSendSms, IsSendEmail);
         }
 
-        public void UpdateNotificationflagForAll(int absenceId)        {            _repo.UpdateNotificationflagForAll(absenceId);        }        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)        {            return _repo.GetAbsenceIdByConfirmationNumber(ConfirmationNumber);        }
+        public void UpdateNotificationflagForAll(int absenceId)
+        {
+            _repo.UpdateNotificationflagForAll(absenceId);
+        }
+
+        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)
+        {
+            return _repo.GetAbsenceIdByConfirmationNumber(ConfirmationNumber);
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
         {
         }
 
-        public int CreateAbsence(AbsenceModel model)
+        public AbsenceModel CreateAbsence(AbsenceModel model)
         {
             using (var connection = base.GetConnection)
             {
@@ -47,7 +47,9 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@PayrollNotes", model.PayrollNotes);
                 queryParams.Add("@SubstituteNotes", model.SubstituteNotes);
                 queryParams.Add("@AnyAttachment", model.AnyAttachment);
-                model.AbsenceId = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                var absenceConfirmation = connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+                model.AbsenceId = absenceConfirmation.AbsenceId;
+                model.ConfirmationNumber = absenceConfirmation.ConfirmationNumber;
                 if (model.AnyAttachment && model.AbsenceId > 0)
                 {
                     sql = "[Absence].[InsertAttachment]";
@@ -61,7 +63,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                     connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
                 }
             }
-            return model.AbsenceId;
+            return model;
         }
 
         public async Task<int> SaveAsSingleDayAbsence(DataTable Absences)
@@ -143,6 +145,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             var queryParams = new DynamicParameters();
             var Interval = absence.Interval;
             var TotalInterval = absence.TotalInterval;
+            var timeDifference = absence.Interval;
             int Counter = 0;
             using (var connection = base.GetConnection)
             {
@@ -158,7 +161,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                     queryParams.Add("@CreatedDate", DateTime.Now);
                     queryParams.Add("@IsSendAll", 0);
                     await connection.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
-                    Interval = Interval + Interval;
+                    Interval = Counter >= 1 ? Interval + timeDifference: Interval;
                     Counter = Counter + 1;
                 }
             }
@@ -180,14 +183,14 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
         {
             using (var connection = base.GetConnection)
             {
-                var sql = "[Absence].[GetFavSubsForSendingSms]";
+                var sql = "[Absence].[GetFavSubsForSendingSmsAndEmail]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@date", date);
                 return connection.Query<PreferredSubstituteModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
 
-        public string UpdateAbsence(AbsenceModel model)
+        public int UpdateAbsence(AbsenceModel model)
         {
             using (var connection = base.GetConnection)
             {
@@ -208,9 +211,9 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@UpdatedBy_User_Id", model.UpdatedById);
                 queryParams.Add("@Substitute_Id", model.SubstituteId);
                 queryParams.Add("@AbsenceDuration_Id", model.DurationType);
-                string numberOfEffectedRow = connection.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                int numberOfEffectedRow = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
-                if (model.AnyAttachment && model.AbsenceId > 0 && numberOfEffectedRow == "success")
+                if (model.AnyAttachment && model.AbsenceId > 0 && numberOfEffectedRow > 0)
                 {
                     sql = "[Absence].[UpdateAttachment]";
                     queryParams = new DynamicParameters();
@@ -320,6 +323,26 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
-        public void UpdateNotificationflagForAll(int absenceId)        {            using (var connection = base.GetConnection)            {                var sql = "[Absence].[UpdateNotificationflagForAll]";                var queryParams = new DynamicParameters();                queryParams.Add("@AbsenceId", absenceId);                connection.Query<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);            }        }        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)        {            using (var connection = base.GetConnection)            {                var sql = "[Absence].[getAbsenceIdByConfirmationNumber]";                var queryParams = new DynamicParameters();                queryParams.Add("@ConfirmationNumber", ConfirmationNumber);                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);            }        }
+        public void UpdateNotificationflagForAll (int absenceId)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateNotificationflagForAll]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@AbsenceId", absenceId);
+                connection.Query<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
+        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[getAbsenceIdByConfirmationNumber]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@ConfirmationNumber", ConfirmationNumber);
+                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
     }
 }
