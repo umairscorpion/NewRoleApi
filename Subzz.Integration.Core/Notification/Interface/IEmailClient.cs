@@ -15,5 +15,6 @@ namespace SubzzV2.Integration.Core.Notification.Interface
         void Send(string htmlBody, string subject, string[] to, string from, bool isHtmlBody, string base64, List<MailsAttachment> mailAttachments = null, string charset = "utf-8");
 
         Task SendAsync(string htmlBody, string subject, string[] to, string from, bool isHtmlBody, string base64, string charset = "utf-8");
+        Task SendRawEmail(string htmlBody, string subject, string[] to, string from, bool isHtmlBody, string attachedFileName, string fileContentType);
     }
 }

@@ -54,8 +54,8 @@ namespace Subzz.Api.Controllers.Twilio
                 var AbsenceId = _absenceService.GetAbsenceIdByConfirmationNumber(body[0]);
                 if (AbsenceId == 0)
                 {
-                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Response! Please provide correct Job#", AbsenceId);
-                    messagingResponse.Message("Not a valid Confirmation Number.");
+                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid entry! Please enter correct Job ID", AbsenceId);
+                    messagingResponse.Message("Invalid entry! Please enter correct Job ID.");
                     return TwiML(messagingResponse);
                 }
                 var userId = _userService.GetUserIdByPhoneNumber(incomingMessage.From);
@@ -108,8 +108,6 @@ namespace Subzz.Api.Controllers.Twilio
                             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                             //Notification notification = new Notification();
                             Task.Run(() => SendJobAcceptEmails(users, message));
-                            messagingResponse.Message("Accepted Successfully");
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Accepted Successfully", AbsenceId);
                         }
                         else if (status.ToLower() == "blocked")
                         {
@@ -149,7 +147,7 @@ namespace Subzz.Api.Controllers.Twilio
                             messagingResponse.Message("Problem Occured While Process your Request.Please Try Again Later");
                         }
                     }
-                    else if (body[1].ToLower() == "D")
+                    else if (body[1].ToLower() == "d")
                     {
                         // Audit Log
                         var audit = new AuditLog
@@ -198,7 +196,7 @@ namespace Subzz.Api.Controllers.Twilio
                         Task.Run(() => SendJobDeclinEmails(users, message));
                         messagingResponse.Message("Job Decline Successfully");
                     }
-                    else if (body[1].ToLower() == "R")
+                    else if (body[1].ToLower() == "r")
                     {
                         var acceptedJobs = await _jobService.GetAvailableJobs(absenceDetail.StartDate, absenceDetail.EndDate, userId, absenceDetail.OrganizationId, absenceDetail.DistrictId, 2, false);
                         var IsAcceptedJob = acceptedJobs.ToList().Where(absence => absence.AbsenceId == AbsenceId).FirstOrDefault();
@@ -228,8 +226,8 @@ namespace Subzz.Api.Controllers.Twilio
                 }
                 else
                 {
-                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Response! Please provide correct Job#", AbsenceId);
-                    messagingResponse.Message("Not a valid Confirmation Number.");
+                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid entry! Please enter correct Job ID", AbsenceId);
+                    messagingResponse.Message("Invalid entry! Please enter correct Job ID.");
                 }
             }
             else

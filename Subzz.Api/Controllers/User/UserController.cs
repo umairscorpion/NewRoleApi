@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
+using Subzz.Integration.Core.Container;
 using Subzz.Integration.Core.Helper;
 using SubzzV2.Core.Enum;
 using SubzzV2.Core.Models;
@@ -32,6 +33,15 @@ namespace Subzz.Api.Controllers.User
             _hostingEnvironment = hostingEnvironment;
             _authService = authService;
             _audit = audit;
+        }
+
+        private CommunicationContainer _communicationContainer;
+        public virtual CommunicationContainer CommunicationContainer
+        {
+            get
+            {
+                return _communicationContainer ?? (_communicationContainer = new CommunicationContainer());
+            }
         }
 
         [Route("list/summary")]
@@ -256,6 +266,11 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        private void SendWelcomeLetter(SubzzV2.Core.Entities.User user)
+        {
+
+        }
+
         [Route("updateUser")]
         [HttpPatch]
         public SubzzV2.Core.Entities.User UpdateUser([FromBody]SubzzV2.Core.Entities.User model)
@@ -359,6 +374,7 @@ namespace Subzz.Api.Controllers.User
             try
             { 
                  var Model = _service.UpdateUserStatus(model);
+
                 if (model.RoleId == 4)
                 {
                     if(model.IsActive == true)

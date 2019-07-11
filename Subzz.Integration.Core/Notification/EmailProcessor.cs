@@ -60,8 +60,16 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     body += mailTemplate.EmailDisclaimerContent;
                 }
-                await CommunicationContainer.MailClient.SendAsync(body, mailTemplate.Title, to,
+                if (string.IsNullOrEmpty(message.AttachedFileName))
+                {
+                    await CommunicationContainer.MailClient.SendAsync(body, mailTemplate.Title, to,
                      mailTemplate.SenderEmail, true, message.ImageBase64);
+                }
+                else
+                {
+                    await CommunicationContainer.MailClient.SendRawEmail(body, mailTemplate.Title, to,
+                    mailTemplate.SenderEmail, true, message.AttachedFileName, message.FileContentType);
+                }
                 DateTime updatedOn = DateTime.Now;
                 CommunicationContainer.Logger.LogEmail(message.SendTo, body, mailTemplate.Notes , null, updatedOn, Convert.ToString(message.AbsenceId), "OK");
             }
