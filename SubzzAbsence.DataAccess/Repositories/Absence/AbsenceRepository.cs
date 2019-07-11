@@ -20,7 +20,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
         {
         }
 
-        public int CreateAbsence(AbsenceModel model)
+        public AbsenceModel CreateAbsence(AbsenceModel model)
         {
             using (var connection = base.GetConnection)
             {
@@ -47,7 +47,9 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@PayrollNotes", model.PayrollNotes);
                 queryParams.Add("@SubstituteNotes", model.SubstituteNotes);
                 queryParams.Add("@AnyAttachment", model.AnyAttachment);
-                model.AbsenceId = connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                var absenceConfirmation = connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+                model.AbsenceId = absenceConfirmation.AbsenceId;
+                model.ConfirmationNumber = absenceConfirmation.ConfirmationNumber;
                 if (model.AnyAttachment && model.AbsenceId > 0)
                 {
                     sql = "[Absence].[InsertAttachment]";
@@ -61,7 +63,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                     connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
                 }
             }
-            return model.AbsenceId;
+            return model;
         }
 
         public async Task<int> SaveAsSingleDayAbsence(DataTable Absences)
