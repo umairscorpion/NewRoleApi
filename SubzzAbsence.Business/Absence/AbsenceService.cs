@@ -71,6 +71,11 @@ namespace SubzzAbsence.Business.Absence
             return _repo.GetFavSubsForSendingSms(date);
         }
 
+        public List<PreferredSubstituteModel> GetFavSubsForSendingSmsAndEmail(DateTime date)
+        {
+            return _repo.GetFavSubsForSendingSmsAndEmail(date);
+        }
+
         public int UpdateAbsence(AbsenceModel user)
         {
             return _repo.UpdateAbsence(user);
@@ -104,6 +109,16 @@ namespace SubzzAbsence.Business.Absence
         public void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail)
         {
               _repo.UpdateMailAndSmsFlag(id, IsSendSms, IsSendEmail);
+        }
+
+        public void UpdateNotificationflagForAll(int absenceId)
+        {
+            _repo.UpdateNotificationflagForAll(absenceId);
+        }
+
+        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)
+        {
+            return _repo.GetAbsenceIdByConfirmationNumber(ConfirmationNumber);
         }
     }
 }

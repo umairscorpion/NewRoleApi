@@ -20,6 +20,7 @@ namespace SubzzAbsence.Business.Absence.Interface
         AbsenceModel GetAbsenceDetailByAbsenceId(int AbsenceId);
         Task<int> CreatePreferredAbsenceHistory(IEnumerable<User> Substitutes, AbsenceModel absences);
         IEnumerable<PreferredSubstituteModel> GetFavSubsForSendingSms(DateTime date);
+        List<PreferredSubstituteModel> GetFavSubsForSendingSmsAndEmail(DateTime date);
         int UpdateAbsenceStatusAndSub(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId, string SubstituteId, bool SubstituteRequired);
         int UpdateAbsence(AbsenceModel model);
         //List<AbsenceSummary> GetAbsenceSummary(string userId, int year);
@@ -27,5 +28,7 @@ namespace SubzzAbsence.Business.Absence.Interface
         List<AbsenceSummary> GetTopTenTeachers(string userId);
         List<Event> GetEvents(DateTime startDate, DateTime endDate, string userId);
         void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail);
+        void UpdateNotificationflagForAll(int absenceId);
+        int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber);
     }
 }

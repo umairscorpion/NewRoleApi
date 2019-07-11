@@ -145,6 +145,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             var queryParams = new DynamicParameters();
             var Interval = absence.Interval;
             var TotalInterval = absence.TotalInterval;
+            var timeDifference = absence.Interval;
             int Counter = 0;
             using (var connection = base.GetConnection)
             {
@@ -160,7 +161,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                     queryParams.Add("@CreatedDate", DateTime.Now);
                     queryParams.Add("@IsSendAll", 0);
                     await connection.ExecuteAsync(sql, queryParams, commandType: CommandType.StoredProcedure);
-                    Interval = Interval + Interval;
+                    Interval = Counter >= 1 ? Interval + timeDifference: Interval;
                     Counter = Counter + 1;
                 }
             }
@@ -172,6 +173,17 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             using (var connection = base.GetConnection)
             {
                 var sql = "[Absence].[GetFavSubsForSendingSms]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@date", date);
+                return connection.Query<PreferredSubstituteModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public List<PreferredSubstituteModel> GetFavSubsForSendingSmsAndEmail(DateTime date)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[GetFavSubsForSendingSmsAndEmail]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@date", date);
                 return connection.Query<PreferredSubstituteModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
@@ -308,6 +320,28 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@IsSendSms", IsSendSms);
                 queryParams.Add("@IsSendEmail", IsSendEmail);
                 connection.Query<Event>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public void UpdateNotificationflagForAll (int absenceId)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateNotificationflagForAll]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@AbsenceId", absenceId);
+                connection.Query<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
+        public int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[getAbsenceIdByConfirmationNumber]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@ConfirmationNumber", ConfirmationNumber);
+                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
     }

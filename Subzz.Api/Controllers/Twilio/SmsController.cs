@@ -47,20 +47,124 @@ namespace Subzz.Api.Controllers.Twilio
         public async Task<TwiMLResult> RecieveSms(SmsRequest incomingMessage)
         {
             var messagingResponse = new MessagingResponse();
-            var userId = _userService.GetUserIdByPhoneNumber(incomingMessage.From);
             //Confirmation Number is on 0 Index and (A => Accept, D => Decline, R => Release) are on first Index 
             string[] body = incomingMessage.Body.Split(' ');
             if (body.Length == 2)
             {
-                var absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(Convert.ToInt32(body[0]));
-                if (body[1] == "A")
+                var AbsenceId = _absenceService.GetAbsenceIdByConfirmationNumber(body[0]);
+                if (AbsenceId == 0)
                 {
-                    string status = await _jobService.AcceptJob(absenceDetail.AbsenceId, userId, "Sms");
-                    if (status == "success")
+                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Response! Please provide correct Job#", AbsenceId);
+                    messagingResponse.Message("Not a valid Confirmation Number.");
+                    return TwiML(messagingResponse);
+                }
+                var userId = _userService.GetUserIdByPhoneNumber(incomingMessage.From);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You're not register user", AbsenceId);
+                    messagingResponse.Message("You're not register user");
+                    return TwiML(messagingResponse);
+                }
+                var absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
+                if (absenceDetail != null && absenceDetail.AbsenceId > 0)
+                {
+                    if (body[1].ToLower() == "a")
                     {
-                        IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(body[0]));
+                        string status = await _jobService.AcceptJob(absenceDetail.AbsenceId, userId, "Sms");
+                        if (status.ToLower() == "success")
+                        {
+                            IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
+                            Message message = new Message();
+                            message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+                            message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                                CultureInfo.InvariantCulture).ToSubzzTime();
+                            message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                                        CultureInfo.InvariantCulture).ToSubzzTime();
+                            message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
+                            message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+
+                            message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                    CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                            message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                                        CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                            if (message.StartDate == message.EndDate)
+                            {
+                                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                            }
+                            else
+                            {
+                                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                            }
+
+                            message.EmployeeName = absenceDetail.EmployeeName;
+                            message.Position = absenceDetail.PositionDescription;
+                            message.Subject = absenceDetail.SubjectDescription;
+                            message.Grade = absenceDetail.Grade;
+                            message.Location = absenceDetail.AbsenceLocation;
+                            message.Notes = absenceDetail.SubstituteNotes;
+                            message.SubstituteName = absenceDetail.SubstituteName;
+                            message.Reason = absenceDetail.AbsenceReasonDescription;
+                            message.Photo = absenceDetail.EmployeeProfilePicUrl;
+                            message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                            //Notification notification = new Notification();
+                            Task.Run(() => SendJobAcceptEmails(users, message));
+                            messagingResponse.Message("Accepted Successfully");
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Accepted Successfully", AbsenceId);
+                        }
+                        else if (status.ToLower() == "blocked")
+                        {
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You Are Blocked By Employee To Accept This Job", AbsenceId);
+                            messagingResponse.Message("You Are Blocked By Employee To Accept This Job");
+                        }
+                        else if (status.ToLower() == "cancelled")
+                        {
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Has Been Cancelled", AbsenceId);
+                            messagingResponse.Message("Job Has Been Cancelled");
+                        }
+                        else if (status.ToLower() == "accepted")
+                        {
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Already Accepted", AbsenceId);
+                            messagingResponse.Message("Job Already Accepted");
+                        }
+                        else if (status.ToLower() == "conflict")
+                        {
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Already Accepted Job on This Date", AbsenceId);
+                            messagingResponse.Message("Already Accepted Job on This Date");
+                        }
+                        else if (status.ToLower() == "declined")
+                        {
+
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", AbsenceId);
+                            messagingResponse.Message("Declined Successfully");
+                        }
+                        else if (status.ToLower() == "unavailable")
+                        {
+
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are unavailable", AbsenceId);
+                            messagingResponse.Message("You are unavailable");
+                        }
+                        else
+                        {
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later", AbsenceId);
+                            messagingResponse.Message("Problem Occured While Process your Request.Please Try Again Later");
+                        }
+                    }
+                    else if (body[1].ToLower() == "D")
+                    {
+                        // Audit Log
+                        var audit = new AuditLog
+                        {
+                            UserId = userId,
+                            EntityId = body[0],
+                            EntityType = AuditLogs.EntityType.Absence,
+                            ActionType = AuditLogs.ActionType.Declined,
+                            DistrictId = 0,
+                            OrganizationId = "N/A"
+                        };
+                        _audit.InsertAuditLog(audit);
+                        IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                         Message message = new Message();
-                        message.AbsenceId = absenceDetail.AbsenceId;
+                        message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
                         message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                             CultureInfo.InvariantCulture).ToSubzzTime();
                         message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -69,11 +173,17 @@ namespace Subzz.Api.Controllers.Twilio
                         message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
 
                         message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
-                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                                    CultureInfo.InvariantCulture).ToSubzzTimeForSms();
                         message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
-                                                    CultureInfo.InvariantCulture).ToSubzzDateForSMS();
-                        message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-                        message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                                                    CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                        if (message.StartDate == message.EndDate)
+                        {
+                            message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+                        }
+                        else
+                        {
+                            message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                        }
 
                         message.EmployeeName = absenceDetail.EmployeeName;
                         message.Position = absenceDetail.PositionDescription;
@@ -82,120 +192,50 @@ namespace Subzz.Api.Controllers.Twilio
                         message.Location = absenceDetail.AbsenceLocation;
                         message.Notes = absenceDetail.SubstituteNotes;
                         message.SubstituteName = absenceDetail.SubstituteName;
-                        message.Reason = absenceDetail.AbsenceReasonDescription;
                         message.Photo = absenceDetail.EmployeeProfilePicUrl;
                         message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                         //Notification notification = new Notification();
-                        Task.Run(() => SendJobAcceptEmails(users, message));
-                        messagingResponse.Message("Accepted Successfully");
+                        Task.Run(() => SendJobDeclinEmails(users, message));
+                        messagingResponse.Message("Job Decline Successfully");
                     }
-                    else if (status == "Blocked")
+                    else if (body[1].ToLower() == "R")
                     {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You Are Blocked By Employee To Accept This Job", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("You Are Blocked By Employee To Accept This Job");
-                    }
-                    else if (status == "Cancelled")
-                    {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Has Been Cancelled", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("Job Has Been Cancelled");
-                    }
-                    else if (status == "Accepted")
-                    {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Already Accepted", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("Job Already Accepted");
-                    }
-                    else if (status == "Conflict")
-                    {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Already Accepted Job on This Date", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("Already Accepted Job on This Date");
-                    }
-                    else if (status == "Declined")
-                    {
-
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("Declined Successfully");
-                    }
-                    else
-                    {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("Problem Occured While Process you Request.Please Try Again Later");
-                    }
-                }
-                else if (body[1] == "D")
-                {
-                    // Audit Log
-                    var audit = new AuditLog
-                    {
-                        UserId = userId,
-                        EntityId = body[0],
-                        EntityType = AuditLogs.EntityType.Absence,
-                        ActionType = AuditLogs.ActionType.Declined,
-                        DistrictId = 0,
-                        OrganizationId = "N/A"
-                    };
-                    _audit.InsertAuditLog(audit);
-                    IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(Convert.ToInt32(body[0]));
-                    Message message = new Message();
-                    message.AbsenceId = absenceDetail.AbsenceId;
-                    message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
-                                        CultureInfo.InvariantCulture).ToSubzzTime();
-                    message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
-                                                CultureInfo.InvariantCulture).ToSubzzTime();
-                    message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
-                    message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
-
-                    message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
-                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
-                    message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
-                                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
-                    message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-                    message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
-
-                    message.EmployeeName = absenceDetail.EmployeeName;
-                    message.Position = absenceDetail.PositionDescription;
-                    message.Subject = absenceDetail.SubjectDescription;
-                    message.Grade = absenceDetail.Grade;
-                    message.Location = absenceDetail.AbsenceLocation;
-                    message.Notes = absenceDetail.SubstituteNotes;
-                    message.SubstituteName = absenceDetail.SubstituteName;
-                    message.Photo = absenceDetail.EmployeeProfilePicUrl;
-                    message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
-                    //Notification notification = new Notification();
-                    Task.Run(() => SendJobDeclinEmails(users, message));
-                    messagingResponse.Message("Job Decline Successfully");
-                }
-                else if (body[1] == "R")
-                {
-                    var acceptedJobs = await _jobService.GetAvailableJobs(absenceDetail.StartDate, absenceDetail.EndDate, userId, absenceDetail.OrganizationId, absenceDetail.DistrictId, 2, false);
-                    var IsAcceptedJob = acceptedJobs.ToList().Where(absence => absence.AbsenceId == Convert.ToInt32(body[0])).FirstOrDefault();
-                    if (IsAcceptedJob.AbsenceId > 0)
-                    {
-                        _absenceService.UpdateAbsenceStatus(Convert.ToInt32(body[0]), 1, DateTime.Now, userId);
-                        var audit = new AuditLog
+                        var acceptedJobs = await _jobService.GetAvailableJobs(absenceDetail.StartDate, absenceDetail.EndDate, userId, absenceDetail.OrganizationId, absenceDetail.DistrictId, 2, false);
+                        var IsAcceptedJob = acceptedJobs.ToList().Where(absence => absence.AbsenceId == AbsenceId).FirstOrDefault();
+                        if (IsAcceptedJob.AbsenceId > 0)
                         {
-                            UserId = userId,
-                            EntityId = body[0],
-                            EntityType = AuditLogs.EntityType.Absence,
-                            ActionType = AuditLogs.ActionType.Released,
-                            DistrictId = absenceDetail.DistrictId,
-                            OrganizationId = absenceDetail.OrganizationId == "-1" ? null : absenceDetail.OrganizationId
-                        };
-                        _audit.InsertAuditLog(audit);
-                        Task.Run(() => SendNotificationsOnJobReleased(Convert.ToInt32(body[0])));
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Release Successfully.", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("Job Release Successfully");
+                            _absenceService.UpdateAbsenceStatus(AbsenceId, 1, DateTime.Now, userId);
+                            var audit = new AuditLog
+                            {
+                                UserId = userId,
+                                EntityId = body[0],
+                                EntityType = AuditLogs.EntityType.Absence,
+                                ActionType = AuditLogs.ActionType.Released,
+                                DistrictId = absenceDetail.DistrictId,
+                                OrganizationId = absenceDetail.OrganizationId == "-1" ? null : absenceDetail.OrganizationId
+                            };
+                            _audit.InsertAuditLog(audit);
+                            Task.Run(() => SendNotificationsOnJobReleased(AbsenceId));
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Release Successfully.", AbsenceId);
+                            messagingResponse.Message("Job Release Successfully");
+                        }
+                        else
+                        {
+                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are not authorized to reject this job.", AbsenceId);
+                            messagingResponse.Message("You are not authorized to reject this job.");
+                        }
                     }
-                    else
-                    {
-                        CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are not accepted this job.", Convert.ToInt32(body[0]));
-                        messagingResponse.Message("You are not accepted this job.");
-                    }
+                }
+                else
+                {
+                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Response! Please provide correct Job#", AbsenceId);
+                    messagingResponse.Message("Not a valid Confirmation Number.");
                 }
             }
             else
             {
-                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Not a valid format.", Convert.ToInt32(body[0]));
-                messagingResponse.Message("You are not accepted this job.");
+                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Format!", Convert.ToInt32(body[0]));
+                messagingResponse.Message("Not a valid format.");
             }
             return TwiML(messagingResponse);
         }
@@ -219,6 +259,7 @@ namespace Subzz.Api.Controllers.Twilio
                         }
                         if (user.IsSubscribedSMS)
                         {
+                            message.PhoneNumber = user.PhoneNumber;
                             CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
@@ -296,7 +337,7 @@ namespace Subzz.Api.Controllers.Twilio
             AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
             IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
             Message message = new Message();
-            message.AbsenceId = absenceDetail.AbsenceId;
+            message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -305,11 +346,17 @@ namespace Subzz.Api.Controllers.Twilio
             message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
 
             message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
-                                CultureInfo.InvariantCulture).ToSubzzDateForSMS();
+                                CultureInfo.InvariantCulture).ToSubzzTimeForSms();
             message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
-                                        CultureInfo.InvariantCulture).ToSubzzDateForSMS();
-            message.StartDateSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
-            message.EndDateSMS = Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                                        CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+            if (message.StartDate == message.EndDate)
+            {
+                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzDateForSMS();
+            }
+            else
+            {
+                message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            }
 
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
