@@ -194,6 +194,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Subject = DataForEmails.SubjectDescription;
             message.Grade = DataForEmails.Grade;
             message.Location = DataForEmails.AbsenceLocation;
+            message.School = DataForEmails.OrganizationName;
             message.Notes = DataForEmails.SubstituteNotes;
             message.Reason = DataForEmails.AbsenceReasonDescription;
             message.Photo = DataForEmails.EmployeeProfilePicUrl;
@@ -796,6 +797,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
@@ -861,6 +863,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Reason = absenceDetail.AbsenceReasonDescription;
@@ -941,6 +944,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
@@ -1024,6 +1028,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Reason = absenceDetail.AbsenceReasonDescription;
@@ -1120,6 +1125,7 @@ namespace Subzz.Api.Controllers.Absence
             message.Location = absenceDetail.AbsenceLocation;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
+            message.School = absenceDetail.OrganizationName;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             var employeeDetail = _userService.GetUserDetail(absenceDetail.EmployeeId);
