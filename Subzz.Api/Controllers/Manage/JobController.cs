@@ -87,6 +87,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.Subject = absenceDetail.SubjectDescription;
                     message.Grade = absenceDetail.Grade;
                     message.Location = absenceDetail.AbsenceLocation;
+                    message.School = absenceDetail.OrganizationName;
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
                     message.Reason = absenceDetail.AbsenceReasonDescription;
@@ -150,6 +151,7 @@ namespace Subzz.Api.Controllers.Manage
                 message.Subject = absenceDetail.SubjectDescription;
                 message.Grade = absenceDetail.Grade;
                 message.Location = absenceDetail.AbsenceLocation;
+                message.School = absenceDetail.OrganizationName;
                 message.Notes = absenceDetail.SubstituteNotes;
                 message.SubstituteName = absenceDetail.SubstituteName;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;

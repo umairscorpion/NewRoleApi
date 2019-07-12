@@ -54,14 +54,14 @@ namespace Subzz.Api.Controllers.Twilio
                 var AbsenceId = _absenceService.GetAbsenceIdByConfirmationNumber(body[0]);
                 if (AbsenceId == 0)
                 {
-                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid entry! Please enter correct Job ID", AbsenceId);
+                    //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid entry! Please enter correct Job ID", AbsenceId);
                     messagingResponse.Message("Invalid entry! Please enter correct Job ID.");
                     return TwiML(messagingResponse);
                 }
                 var userId = _userService.GetUserIdByPhoneNumber(incomingMessage.From);
                 if (string.IsNullOrEmpty(userId))
                 {
-                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You're not register user", AbsenceId);
+                    //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You're not register user", AbsenceId);
                     messagingResponse.Message("You're not register user");
                     return TwiML(messagingResponse);
                 }
@@ -101,6 +101,7 @@ namespace Subzz.Api.Controllers.Twilio
                             message.Subject = absenceDetail.SubjectDescription;
                             message.Grade = absenceDetail.Grade;
                             message.Location = absenceDetail.AbsenceLocation;
+                            message.School = absenceDetail.OrganizationName;
                             message.Notes = absenceDetail.SubstituteNotes;
                             message.SubstituteName = absenceDetail.SubstituteName;
                             message.Reason = absenceDetail.AbsenceReasonDescription;
@@ -111,39 +112,39 @@ namespace Subzz.Api.Controllers.Twilio
                         }
                         else if (status.ToLower() == "blocked")
                         {
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You Are Blocked By Employee To Accept This Job", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You Are Blocked By Employee To Accept This Job", AbsenceId);
                             messagingResponse.Message("You Are Blocked By Employee To Accept This Job");
                         }
                         else if (status.ToLower() == "cancelled")
                         {
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Has Been Cancelled", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Has Been Cancelled", AbsenceId);
                             messagingResponse.Message("Job Has Been Cancelled");
                         }
                         else if (status.ToLower() == "accepted")
                         {
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Already Accepted", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Already Accepted", AbsenceId);
                             messagingResponse.Message("Job Already Accepted");
                         }
                         else if (status.ToLower() == "conflict")
                         {
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Already Accepted Job on This Date", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Already Accepted Job on This Date", AbsenceId);
                             messagingResponse.Message("Already Accepted Job on This Date");
                         }
                         else if (status.ToLower() == "declined")
                         {
 
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", AbsenceId);
                             messagingResponse.Message("Declined Successfully");
                         }
                         else if (status.ToLower() == "unavailable")
                         {
 
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are unavailable", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are unavailable", AbsenceId);
                             messagingResponse.Message("You are unavailable");
                         }
                         else
                         {
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Problem Occured While Process you Request.Please Try Again Later", AbsenceId);
                             messagingResponse.Message("Problem Occured While Process your Request.Please Try Again Later");
                         }
                     }
@@ -188,13 +189,14 @@ namespace Subzz.Api.Controllers.Twilio
                         message.Subject = absenceDetail.SubjectDescription;
                         message.Grade = absenceDetail.Grade;
                         message.Location = absenceDetail.AbsenceLocation;
+                        message.School = absenceDetail.OrganizationName;
                         message.Notes = absenceDetail.SubstituteNotes;
                         message.SubstituteName = absenceDetail.SubstituteName;
                         message.Photo = absenceDetail.EmployeeProfilePicUrl;
                         message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                         //Notification notification = new Notification();
                         Task.Run(() => SendJobDeclinEmails(users, message));
-                        messagingResponse.Message("Job Decline Successfully");
+                        //messagingResponse.Message("Job Decline Successfully");
                     }
                     else if (body[1].ToLower() == "r")
                     {
@@ -215,24 +217,24 @@ namespace Subzz.Api.Controllers.Twilio
                             _audit.InsertAuditLog(audit);
                             Task.Run(() => SendNotificationsOnJobReleased(AbsenceId));
                             CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Job Release Successfully.", AbsenceId);
-                            messagingResponse.Message("Job Release Successfully");
+                            //messagingResponse.Message("Job Release Successfully");
                         }
                         else
                         {
-                            CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are not authorized to reject this job.", AbsenceId);
+                            //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are not authorized to reject this job.", AbsenceId);
                             messagingResponse.Message("You are not authorized to reject this job.");
                         }
                     }
                 }
                 else
                 {
-                    CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid entry! Please enter correct Job ID", AbsenceId);
+                    //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid entry! Please enter correct Job ID", AbsenceId);
                     messagingResponse.Message("Invalid entry! Please enter correct Job ID.");
                 }
             }
             else
             {
-                CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Format!", Convert.ToInt32(body[0]));
+                //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Invalid Format!", Convert.ToInt32(body[0]));
                 messagingResponse.Message("Not a valid format.");
             }
             return TwiML(messagingResponse);
@@ -361,6 +363,7 @@ namespace Subzz.Api.Controllers.Twilio
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Reason = absenceDetail.AbsenceReasonDescription;

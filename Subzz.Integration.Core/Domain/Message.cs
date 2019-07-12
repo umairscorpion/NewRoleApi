@@ -32,6 +32,7 @@ namespace Subzz.Integration.Core.Domain
         public string Subject { get; set; }
         public string Grade { get; set; }
         public string Location { get; set; }
+        public string School { get; set; }
         public string Notes { get; set; }
         public string Duration { get; set; }
         public string Email { get; set; }
