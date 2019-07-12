@@ -329,6 +329,7 @@ namespace Subzz.Api.Controllers.Leave
             AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(Convert.ToInt32(leave.AbsenceId));
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",

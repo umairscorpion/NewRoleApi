@@ -171,6 +171,7 @@ namespace Subzz.Api.Controllers.Absence
             //SubstituteId Contains All Substitute Ids in case Of Request specific Substitute.
             var DataForEmails = _userService.GetUsersForSendingAbsenceNotificationOnEntireSub(absenceModel.DistrictId, absenceModel.OrganizationId, absenceModel.AbsenceId, absenceModel.SubstituteId);
             message.ConfirmationNumber = absenceModel.ConfirmationNumber;
+            message.AbsenceId = absenceModel.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceModel.StartTime), "HH:mm:ss",
                                         CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
@@ -774,6 +775,7 @@ namespace Subzz.Api.Controllers.Absence
             IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -840,6 +842,7 @@ namespace Subzz.Api.Controllers.Absence
             IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -921,6 +924,7 @@ namespace Subzz.Api.Controllers.Absence
             IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -1003,6 +1007,7 @@ namespace Subzz.Api.Controllers.Absence
             IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -1100,6 +1105,7 @@ namespace Subzz.Api.Controllers.Absence
             IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
