@@ -150,7 +150,7 @@ namespace Subzz.Api.Controllers.User
                 model.UserId = base.CurrentUser.Id;
                 model.CreatedBy = base.CurrentUser.Id;
                 var result = _service.InsertAvailability(model);
-                return Ok(result);
+                return Json(result);
             }
             catch (Exception ex)
             {
@@ -169,7 +169,7 @@ namespace Subzz.Api.Controllers.User
             {
                 model.ModifiedBy = base.CurrentUser.Id;
                 var result = _service.UpdateAvailability(model);
-                return Ok(result);
+                return Json(result);
             }
             catch (Exception ex)
             {
@@ -255,7 +255,8 @@ namespace Subzz.Api.Controllers.User
                     a.AvailabilityContentBackgroundColor == "#0ea8ea" && a.IsAllDayOut == false ? Convert.ToDateTime(a.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(a.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring",
                     description = a.AvailabilityStatusTitle,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                    end = DateTime.Parse(a.StartTime) == DateTime.Parse(a.EndTime) ? DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s") :
+                    end = DateTime.Parse(a.StartTime) == DateTime.Parse(a.EndTime) || DateTime.Parse(a.EndTime) < DateTime.Parse("9:00 AM") ? 
+                    DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s") :
                     DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
                     backgroundColor = a.AvailabilityContentBackgroundColor,
                     allDay = a.IsAllDayOut,
@@ -288,7 +289,7 @@ namespace Subzz.Api.Controllers.User
                     description = a.SubstituteName + " for " + a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
                     end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-                    organizationName = a.AbsenceLocation,
+                    organizationName = a.OrganizationId == "-1" ? a.AbsenceLocation : a.OrganizationName,
                     backgroundColor = "#15A315",
                     allDay = false,
                     className = new string[] { "" }
