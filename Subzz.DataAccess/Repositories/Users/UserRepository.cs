@@ -808,7 +808,7 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public UserAvailability InsertAvailability(UserAvailability availability)
+        public string InsertAvailability(UserAvailability availability)
         {
             const string query = "[Users].[InsertAvailability]";
             var queryParams = new DynamicParameters();
@@ -829,10 +829,10 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);
             queryParams.Add("@Notes", availability.Notes);
             queryParams.Add("@CreatedBy", availability.CreatedBy);
-            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return Db.Query<string>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public UserAvailability UpdateAvailability(UserAvailability availability)
+        public string UpdateAvailability(UserAvailability availability)
         {
             const string query = "[Users].[UpdateAvailability]";
             var queryParams = new DynamicParameters();
@@ -854,7 +854,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);
             queryParams.Add("@Notes", availability.Notes);
             queryParams.Add("@ModifiedBy", availability.ModifiedBy);
-            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return Db.Query<string>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         public UserAvailability DeleteAvailability(UserAvailability availability)

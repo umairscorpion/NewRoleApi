@@ -73,8 +73,8 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model);
         IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
-        UserAvailability InsertAvailability(UserAvailability availability);
-        UserAvailability UpdateAvailability(UserAvailability availability);
+        string InsertAvailability(UserAvailability availability);
+        string UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
         int CheckSubAvailability(UserAvailability availability);
         IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
