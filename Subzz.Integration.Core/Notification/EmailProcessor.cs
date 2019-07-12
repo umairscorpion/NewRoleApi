@@ -50,6 +50,10 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     message.resetPassUrl = web + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
                 }
+                if (message.TemplateId == 25)
+                {
+                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo;
+                }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
                 string[] to;
@@ -60,8 +64,16 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     body += mailTemplate.EmailDisclaimerContent;
                 }
-                await CommunicationContainer.MailClient.SendAsync(body, mailTemplate.Title, to,
+                if (string.IsNullOrEmpty(message.AttachedFileName))
+                {
+                    await CommunicationContainer.MailClient.SendAsync(body, mailTemplate.Title, to,
                      mailTemplate.SenderEmail, true, message.ImageBase64);
+                }
+                else
+                {
+                    await CommunicationContainer.MailClient.SendRawEmail(body, mailTemplate.Title, to,
+                    mailTemplate.SenderEmail, true, message.AttachedFileName, message.FileContentType);
+                }
                 DateTime updatedOn = DateTime.Now;
                 CommunicationContainer.Logger.LogEmail(message.SendTo, body, mailTemplate.Notes , null, updatedOn, Convert.ToString(message.AbsenceId), "OK");
             }
@@ -146,6 +158,9 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
+                ["{Email}"] = message.SendTo ?? "",
+                ["{Password}"] = message.Password ?? "",
+                ["{VerifyUrl}"] = message.VerifyUrl ?? "",
                 ["{Start Date}"] = message.StartDate ?? "",
                 ["{End Date}"] = message.EndDate ?? "",
                 ["{Start Time}"] = message.StartTime ?? "",
@@ -156,7 +171,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Grade}"] = !string.IsNullOrEmpty(message.Grade) ? message.Grade : "N/A",
                 ["{StartDateAndTime}"] = !string.IsNullOrEmpty(message.StartTime)? message.StartTime + " " + message.StartDate : "",
                 ["{EndDateAndTime}"] = !string.IsNullOrEmpty(message.EndTime) ? message.EndTime + " " + message.EndDate: "",
-                ["{Location}"] = !string.IsNullOrEmpty(message.Location) ? message.Location: "",
+                ["{Location}"] = !string.IsNullOrEmpty(message.School) && message.School != "N/A" ? message.School : !string.IsNullOrEmpty(message.Location) && message.School == "N/A" ? message.Location : "" ,
                 ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "",
                 ["{Duration}"] = message.Duration ?? "",
                 ["{AcceptUrl}"] = message.AcceptUrl ?? "",

@@ -78,7 +78,7 @@ namespace Subzz.Api.Controllers.Leave
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Approved,
                         DistrictId = CurrentUser.DistrictId,
@@ -91,7 +91,7 @@ namespace Subzz.Api.Controllers.Leave
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Denied,
                         DistrictId = CurrentUser.DistrictId,
@@ -104,7 +104,7 @@ namespace Subzz.Api.Controllers.Leave
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Archived,
                         DistrictId = CurrentUser.DistrictId,
@@ -353,6 +353,7 @@ namespace Subzz.Api.Controllers.Leave
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Reason = absenceDetail.AbsenceReasonDescription;
@@ -407,6 +408,7 @@ namespace Subzz.Api.Controllers.Leave
                             if (user.IsSubscribedEmail)
                             {
                                 if (jobPostedEvent.EmailAlert)
+                                    message.PhoneNumber = user.PhoneNumber;
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
 

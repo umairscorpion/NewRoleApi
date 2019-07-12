@@ -59,18 +59,6 @@ namespace Subzz.Api.Controllers.Manage
                 string AcceptJob = await _jobService.AcceptJob(AbsenceId, SubstituteId, AcceptVia);
                 if (AcceptJob == "success")
                 {
-                    // Audit Log
-                    var audit = new AuditLog
-                    {
-                        UserId = CurrentUser.Id,
-                        EntityId = AbsenceId.ToString(),
-                        EntityType = AuditLogs.EntityType.Absence,
-                        ActionType = AuditLogs.ActionType.Accepted,
-                        DistrictId = CurrentUser.DistrictId,
-                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                    };
-                    _audit.InsertAuditLog(audit);
-
                     //Send Notification here
                     AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
                     IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
@@ -99,6 +87,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.Subject = absenceDetail.SubjectDescription;
                     message.Grade = absenceDetail.Grade;
                     message.Location = absenceDetail.AbsenceLocation;
+                    message.School = absenceDetail.OrganizationName;
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
                     message.Reason = absenceDetail.AbsenceReasonDescription;
@@ -106,6 +95,18 @@ namespace Subzz.Api.Controllers.Manage
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                     //Notification notification = new Notification();
                     Task.Run(() => SendJobAcceptEmails(users, message));
+
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = absenceDetail.ConfirmationNumber.ToString(),
+                        EntityType = AuditLogs.EntityType.Absence,
+                        ActionType = AuditLogs.ActionType.Accepted,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
                 }
                 return AcceptJob;
             }
@@ -122,17 +123,6 @@ namespace Subzz.Api.Controllers.Manage
         {
             try
             {
-                // Audit Log
-                var audit = new AuditLog
-                {
-                    UserId = CurrentUser.Id,
-                    EntityId = AbsenceId.ToString(),
-                    EntityType = AuditLogs.EntityType.Absence,
-                    ActionType = AuditLogs.ActionType.Declined,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
                 AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
                 IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                 Message message = new Message();
@@ -161,12 +151,24 @@ namespace Subzz.Api.Controllers.Manage
                 message.Subject = absenceDetail.SubjectDescription;
                 message.Grade = absenceDetail.Grade;
                 message.Location = absenceDetail.AbsenceLocation;
+                message.School = absenceDetail.OrganizationName;
                 message.Notes = absenceDetail.SubstituteNotes;
                 message.SubstituteName = absenceDetail.SubstituteName;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
                 message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                 //Notification notification = new Notification();
                 Task.Run(() => SendJobDeclinEmails(users, message));
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = absenceDetail.ConfirmationNumber.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = AuditLogs.ActionType.Declined,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
 
                 return "Declined";
             }

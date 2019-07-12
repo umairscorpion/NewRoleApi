@@ -185,6 +185,18 @@ namespace Subzz.Api
             Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Site")),
                 RequestPath = "/Site"
             });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+          Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Attachment")),
+                RequestPath = "/Site"
+            });
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Attachment")),
+                RequestPath = "/Attachment"
+            });
             app.UseMvc();
         }
     }

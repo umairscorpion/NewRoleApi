@@ -12,6 +12,8 @@ using SubzzV2.Integration.Core.Notification.Interface;
 using Subzz.Integration.Core.Domain;
 using Amazon.SimpleEmail.Model;
 using Amazon.SimpleEmail;
+using System.Reflection;
+using System.Net.Http;
 
 namespace SubzzV2.Integration.Core.Notification
 {
@@ -434,6 +436,73 @@ namespace SubzzV2.Integration.Core.Notification
                 emailAddressCollection.Add(emailAddress);
             }
             return emailAddressCollection;
+        }
+
+        public Task SendRawEmail(string htmlBody, string subject, string[] to, string from, bool isHtmlBody, string attachedFileName, string fileContent)
+        {
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, "text/html");
+
+            MailMessage mailMessage = new MailMessage();
+
+            mailMessage.From = new MailAddress(from);
+            mailMessage.To.Add(new MailAddress( to.FirstOrDefault() ));
+
+            mailMessage.Subject = subject;
+            mailMessage.SubjectEncoding = Encoding.UTF8;
+
+            if (htmlBody != null)
+            {
+                mailMessage.AlternateViews.Add(htmlView);
+            }
+
+            if (attachedFileName.Trim() != "")
+            {
+                string folderName = "Attachment";
+                string attachPath = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folderName);
+
+                if (System.IO.File.Exists(Path.Combine(attachPath, attachedFileName)))
+                {
+                    try
+                    {
+                        System.Net.Mail.Attachment objAttach = new System.Net.Mail.Attachment(attachPath);
+                        objAttach.ContentType = new ContentType(fileContent);
+                        System.Net.Mime.ContentDisposition disposition = objAttach.ContentDisposition;
+                        disposition.DispositionType = "attachment";
+                        disposition.CreationDate = System.IO.File.GetCreationTime(attachPath);
+                        disposition.ModificationDate = System.IO.File.GetLastWriteTime(attachPath);
+                        disposition.ReadDate = System.IO.File.GetLastAccessTime(attachPath);
+                        mailMessage.Attachments.Add(objAttach);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    
+                }
+            }
+            RawMessage rawMessage = new RawMessage(ConvertMailMessageToMemoryStream(mailMessage));
+            SendRawEmailRequest request = new SendRawEmailRequest(rawMessage);
+            Amazon.RegionEndpoint regionEndPoint = Amazon.RegionEndpoint.USWest2;
+            AmazonSimpleEmailServiceConfig config = new AmazonSimpleEmailServiceConfig();
+            config.RegionEndpoint = regionEndPoint;
+            AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(_mailSettings.AwsAccessKeyId, _mailSettings.AwsSecretAccessKey, config);
+            return client.SendRawEmailAsync(request);
+        }
+
+        public static MemoryStream ConvertMailMessageToMemoryStream(MailMessage message)
+        {
+            Assembly assembly = typeof(SmtpClient).Assembly;
+            Type mailWriterType = assembly.GetType("System.Net.Mail.MailWriter");
+            using (MemoryStream stream = new MemoryStream())
+            {
+                ConstructorInfo mailWriterContructor = mailWriterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Stream) }, null);
+                object mailWriter = mailWriterContructor.Invoke(new object[] { stream });
+                MethodInfo sendMethod = typeof(MailMessage).GetMethod("Send", BindingFlags.Instance | BindingFlags.NonPublic);
+                sendMethod.Invoke(message, BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { mailWriter, true, true }, null);
+                MethodInfo closeMethod = mailWriter.GetType().GetMethod("Close", BindingFlags.Instance | BindingFlags.NonPublic);
+                closeMethod.Invoke(mailWriter, BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { }, null);
+                return stream;
+            }
         }
     }
 }
