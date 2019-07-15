@@ -32,22 +32,31 @@ namespace Subzz.Api.Controllers.User
             {
                 model.UserId = base.CurrentUser.Id;
                 var startDate = Convert.ToDateTime(model.StartDate);
-                var endDate = Convert.ToDateTime(model.EndDate);
-                var acceptedAbsences = await _jobService.GetAvailableJobs(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId, base.CurrentUser.OrganizationId, base.CurrentUser.DistrictId, 2, false);
-                //Set this to null after getting absences beacause it generates error in stored Procedure
-                model.StartDate = null;
-                model.EndDate = null;
-                var result = _service.GetAvailabilities(model);
-                var calendarEvents = CalendarEvents(result);
-                //var calendarEvents = CalendarEvents(result.Where(o => o.AvailabilityStatusId != 3));
-                //var recurringEvents = CalendarRecurringEvents(result.Where(o => o.AvailabilityStatusId == 3), startDate, endDate);
-                var absenceEvents = AbsencesToEvents(acceptedAbsences);
-                var events = _absenceService.GetEvents(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
-                var eventsCalendarView = CalendarEvents(events);
-                absenceEvents.AddRange(eventsCalendarView);
-                var allEvents = calendarEvents.Concat(absenceEvents);
-                //var all = allEvents.Concat(recurringEvents);
-                return Ok(allEvents);
+                var endDate = Convert.ToDateTime(model.EndDate);               
+                if (model.UserRoleId == 4)
+                {
+                    var acceptedAbsences = await _jobService.GetAvailableJobs(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId, base.CurrentUser.OrganizationId, base.CurrentUser.DistrictId, 2, false);
+                    //Set this to null after getting absences beacause it generates error in stored Procedure
+                    model.StartDate = null;
+                    model.EndDate = null;
+                    var result = _service.GetAvailabilities(model);
+                    var calendarEvents = CalendarEvents(result);
+                    //var calendarEvents = CalendarEvents(result.Where(o => o.AvailabilityStatusId != 3));
+                    //var recurringEvents = CalendarRecurringEvents(result.Where(o => o.AvailabilityStatusId == 3), startDate, endDate);
+                    var absenceEvents = AbsencesToEvents(acceptedAbsences);
+                    var events = _absenceService.GetEvents(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
+                    var eventsCalendarView = CalendarEvents(events);
+                    absenceEvents.AddRange(eventsCalendarView);
+                    var allEvents = calendarEvents.Concat(absenceEvents);
+                    //var all = allEvents.Concat(recurringEvents);
+                    return Ok(allEvents);
+                }
+                else
+                {
+                    var Absences = await _absenceService.GetAbsencesForCalendar(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
+                    var absenceEvents = AbsencesToEvents(Absences);
+                    return Ok(absenceEvents);
+                }
             }
             catch (Exception ex)
             {
@@ -286,9 +295,9 @@ namespace Subzz.Api.Controllers.User
                 {
                     id = -1,
                     title = DateTime.Today.Add(a.StartTime).ToString("h:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("h:mm tt") + " " + a.EmployeeName,
-                    description = a.SubstituteName + " for " + a.EmployeeName,
+                    description = a.SubstituteId != "-1" ? a.SubstituteName + " for " + a.EmployeeName : a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s"),
                     organizationName = a.OrganizationId == "-1" ? a.AbsenceLocation : a.OrganizationName,
                     backgroundColor = "#15A315",
                     allDay = false,

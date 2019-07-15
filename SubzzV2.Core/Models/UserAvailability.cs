@@ -32,5 +32,6 @@ namespace SubzzV2.Core.Models
         public string ArchivedBy { get; set; }
         public string AvailabilityStatusName { get; set; }
         public string AvailabilityStatusTitle { get; set; }
+        public int UserRoleId { get; set; }
     }
 }

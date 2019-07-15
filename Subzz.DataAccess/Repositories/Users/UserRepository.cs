@@ -128,7 +128,6 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
-            queryParams.Add("@Password", model.Password);
             model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             if (model.SecondarySchools != null)
@@ -171,7 +170,6 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@IsActive", model.IsActive);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
-            queryParams.Add("@Password", model.Password);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             if(model.SecondarySchools != null)
