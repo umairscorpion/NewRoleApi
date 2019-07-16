@@ -63,6 +63,8 @@ namespace SubzzV2.Core.Models
         public string EmployeeProfilePicUrl { get; set; }
         public int AbsenceType { get; set; }
         public string ConfirmationNumber { get; set; }
+        public bool OnlyCertified { get; set; }
+        public bool OnlySubjectSpecialist { get; set; }
     }
 
 }
