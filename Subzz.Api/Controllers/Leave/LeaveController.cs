@@ -358,6 +358,8 @@ namespace Subzz.Api.Controllers.Leave
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Reason = absenceDetail.AbsenceReasonDescription;
+            message.AttachedFileName = absenceDetail.AttachedFileName;
+            message.FileContentType = absenceDetail.FileContentType;
             message.ApprovedBy = _userService.GetUserDetail(leave.ApprovedBy).FirstName;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             var employeeDetail = _userService.GetUserDetail(absenceDetail.EmployeeId);

@@ -459,8 +459,9 @@ namespace SubzzV2.Integration.Core.Notification
             {
                 string folderName = "Attachment";
                 string attachPath = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folderName);
+                attachPath = (Path.Combine(attachPath, attachedFileName));
 
-                if (System.IO.File.Exists(Path.Combine(attachPath, attachedFileName)))
+                if (System.IO.File.Exists(attachPath))
                 {
                     try
                     {

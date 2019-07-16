@@ -40,13 +40,15 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@DistrictId", model.DistrictId);
                 queryParams.Add("@RegionId", -1);
                 //If Length is greater than 10 ,it means its not direct assign so we are not saving substitute ID
-                queryParams.Add("@SubstituteId", model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId);
+                queryParams.Add("@SubstituteId", model.SubstituteId.Length > 10 ? "-1" : model.SubstituteId.Length == 10 && model.AbsenceScope == 1 ? "-1":  model.SubstituteId);
                 queryParams.Add("@SubstituteRequired", model.SubstituteRequired);
                 queryParams.Add("@ApprovalRequired", model.IsApprovalRequired);
                 queryParams.Add("@AbsenceScope", model.AbsenceScope);
                 queryParams.Add("@PayrollNotes", model.PayrollNotes);
                 queryParams.Add("@SubstituteNotes", model.SubstituteNotes);
                 queryParams.Add("@AnyAttachment", model.AnyAttachment);
+                queryParams.Add("@OnlyCertified", model.OnlyCertified);
+                queryParams.Add("@OnlySubjectSpecialist", model.OnlySubjectSpecialist);
                 var absenceConfirmation = connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
                 model.AbsenceId = absenceConfirmation.AbsenceId;
                 model.ConfirmationNumber = absenceConfirmation.ConfirmationNumber;
