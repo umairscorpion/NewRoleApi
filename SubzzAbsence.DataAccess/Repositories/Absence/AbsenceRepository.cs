@@ -346,5 +346,33 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
+
+        public IEnumerable<AbsenceModel> GetAbsencesForSharedCalendar(AbsenceModel model)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[GetAbsencesForSharedCalendar]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@StartDate", model.StartDate);
+                queryParams.Add("@EndDate", model.EndDate);
+                queryParams.Add("@UserId", model.EmployeeId);
+                queryParams.Add("@DistrictId", model.DistrictId);
+                queryParams.Add("@OrganizationId", model.OrganizationId);
+                return connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public async Task<IEnumerable<AbsenceModel>> GetAbsencesForCalendar(DateTime StartDate, DateTime EndDate, string UserId)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[GetAbsencesForCalendar]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@StartDate", StartDate);
+                queryParams.Add("@EndDate", EndDate);
+                queryParams.Add("@UserId", UserId);
+                return await connection.QueryAsync<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
     }
 }

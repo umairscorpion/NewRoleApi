@@ -704,14 +704,14 @@ namespace Subzz.Api.Controllers.Absence
             return null;
         }
 
-        [Route("views/calendar/{StartDate}/{EndDate}/{UserId}/{CampusId}")]
-        [HttpGet]
-        public IActionResult CalendarView(DateTime StartDate, DateTime EndDate, string UserId, string CampusId)
+        [Route("views/calendar")]
+        [HttpPost]
+        public IActionResult CalendarView([FromBody]AbsenceModel model)
         {
             try
             {
-                var result = _service.GetAbsences(StartDate, EndDate, UserId, CampusId);
-                var events = _service.GetEvents(StartDate, EndDate, UserId);
+                var result = _service.GetAbsencesForSharedCalendar(model);
+                var events = _service.GetEvents(model.StartDate, model.EndDate, model.EmployeeId);
                 var absencesCalendarView = CalendarEvents(result);
                 var eventsCalendarView = CalendarEvents(events);
                 absencesCalendarView.AddRange(eventsCalendarView);
@@ -736,8 +736,8 @@ namespace Subzz.Api.Controllers.Absence
                     title = DateTime.Today.Add(a.StartTime).ToString("h:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("h:mm tt") + " " + a.EmployeeName,
                     description = a.SubstituteId != "-1" ? a.SubstituteName + " for " +  a.EmployeeName : a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
-                    organizationName = a.AbsenceLocation,
+                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    organizationName = a.OrganizationId == "-1" ? a.AbsenceLocation : a.OrganizationName,
                     backgroundColor = "#15A315",
                 }).ToList();
                 return events;
