@@ -120,5 +120,15 @@ namespace SubzzAbsence.Business.Absence
         {
             return _repo.GetAbsenceIdByConfirmationNumber(ConfirmationNumber);
         }
+
+        public IEnumerable<AbsenceModel> GetAbsencesForSharedCalendar(AbsenceModel model)
+        {
+            return _repo.GetAbsencesForSharedCalendar(model);
+        }
+
+        public async Task<IEnumerable<AbsenceModel>> GetAbsencesForCalendar(DateTime StartDate, DateTime EndDate, string UserId)
+        {
+            return await _repo.GetAbsencesForCalendar(StartDate, EndDate, UserId);
+        }
     }
 }
