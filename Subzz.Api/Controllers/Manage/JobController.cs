@@ -42,12 +42,9 @@ namespace Subzz.Api.Controllers.Manage
             }
         }
 
-        [Route("getAvailableJobs/{StartDate}/{EndDate}/{UserId}/{OrganizationId}/{DistrictId}/{Requested}/{Status}")]
-        [HttpGet]
-        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int Status, bool Requested)
-        {
-                var result = await _jobService.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, Status, Requested);
-                return result;          
+        [Route("getAvailableJobs")]        [HttpPost]        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs([FromBody]AbsenceModel absenceModel)        {
+            var result = await _jobService.GetAvailableJobs(absenceModel.StartDate, absenceModel.EndDate, absenceModel.SubstituteId, absenceModel.OrganizationId, absenceModel.DistrictId, absenceModel.Status, absenceModel.Requested);
+            return result;
         }
 
         [Route("acceptJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]

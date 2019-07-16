@@ -128,6 +128,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@ProfilePicture", model.ProfilePicture);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
+            queryParams.Add("@Password", model.Password);
             model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             if (model.SecondarySchools != null)
@@ -821,7 +822,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@IsRepeat", availability.IsRepeat);
             queryParams.Add("@RepeatType", availability.RepeatType);
             queryParams.Add("@RepeatValue", availability.RepeatValue);
-            queryParams.Add("@RepeatOnWeekDays", availability.RepeatOnWeekDays);
+            queryParams.Add("@RepeatOnWeekDays", 1);
             queryParams.Add("@IsEndsNever", availability.IsEndsNever);
             queryParams.Add("@EndsOnAfterNumberOfOccurrance", availability.EndsOnAfterNumberOfOccurrance);
             queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);

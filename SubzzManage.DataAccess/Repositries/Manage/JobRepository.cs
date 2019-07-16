@@ -24,11 +24,11 @@ namespace SubzzManage.DataAccess.Repositries.Manage
                     queryParams.Add("@StartDate", StartDate);
                     queryParams.Add("@EndDate", EndDate);
                     queryParams.Add("@UserId", UserId);
-                    queryParams.Add("@OrganizationId", OrganizationId);
+                    queryParams.Add("@OrganizationId", OrganizationId == null ? "-1" : OrganizationId);
                     queryParams.Add("@DistrictId", DistrictId);
                     queryParams.Add("@Status", status);
-                    queryParams.Add("@IsAgainstAllSchool", OrganizationId.Length == 5 ? 0 : 1);
-                    queryParams.Add("@IamRequested", Requested == false ? 0 : 1);
+                    queryParams.Add("@IsAgainstAllSchool", OrganizationId?.Length == 5 ? 0 : 1);
+                    queryParams.Add("@IamRequested", !Requested ? 0 : 1);
                     return await connection.QueryAsync<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
                 }
                 catch (Exception ex)
