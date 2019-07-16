@@ -24,7 +24,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
                     queryParams.Add("@StartDate", StartDate);
                     queryParams.Add("@EndDate", EndDate);
                     queryParams.Add("@UserId", UserId);
-                    queryParams.Add("@OrganizationId", OrganizationId == null ? "-1" : OrganizationId);
+                    queryParams.Add("@OrganizationId", OrganizationId == null ? "-1": OrganizationId);
                     queryParams.Add("@DistrictId", DistrictId);
                     queryParams.Add("@Status", status);
                     queryParams.Add("@IsAgainstAllSchool", OrganizationId?.Length == 5 ? 0 : 1);
