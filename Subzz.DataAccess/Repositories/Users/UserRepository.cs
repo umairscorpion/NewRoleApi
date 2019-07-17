@@ -343,6 +343,44 @@ namespace Subzz.DataAccess.Repositories.Users
             
         }
 
+        public IEnumerable<SubstituteCategoryModel> GetGradeLevelsForNotification(string SubstituteId)
+        {
+            try
+            {
+                var sql = "[Users].[GetGradeLevelsForNotification]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", SubstituteId);
+                return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+
+        }
+
+        public IEnumerable<SubstituteCategoryModel> GetSubjectsForNotifications(string SubstituteId)
+        {
+            try
+            {
+                var sql = "[users].[GetSubjectsForNotifications]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", SubstituteId);
+                return Db.Query<SubstituteCategoryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+
+        }
+
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)
         {
             var sql = "[users].[UpdateUserCategories]";
@@ -371,6 +409,52 @@ namespace Subzz.DataAccess.Repositories.Users
             finally
             {
                 
+            }
+            return 0;
+
+        }
+
+        public int UpdateGradeLevelNotification(SubstituteCategoryModel substituteEventModel)
+        {
+            try
+            {
+                var sql = "[users].[UpdateGradeLevelNotification]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", substituteEventModel.SubstituteId);
+                queryParams.Add("@TeachingLevelId", substituteEventModel.TeachingLevelId);
+                queryParams.Add("@GradeNotification", substituteEventModel.GradeNotification);
+                return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+
+            }
+            return 0;
+
+        }
+
+        public int UpdateSubjectNotification(SubstituteCategoryModel substituteEventModel)
+        {
+            try
+            {
+                var sql = "[users].[UpdateSubjectNotification]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@SubstituteId", substituteEventModel.SubstituteId);
+                queryParams.Add("@TeacherSpecialityId", substituteEventModel.TeacherSpecialityId);
+                queryParams.Add("@SubjectNotification", substituteEventModel.SubjectNotification);
+                return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+
             }
             return 0;
 

@@ -123,6 +123,16 @@ namespace Subzz.Business.Services.Users
             return _repo.GetSubstituteNotificationEvents(SubstituteId);
         }
 
+        public IEnumerable<SubstituteCategoryModel> GetGradeLevelsForNotification(string SubstituteId)
+        {
+            return _repo.GetGradeLevelsForNotification(SubstituteId);
+        }
+
+        public IEnumerable<SubstituteCategoryModel> GetSubjectsForNotifications(string SubstituteId)
+        {
+            return _repo.GetSubjectsForNotifications(SubstituteId);
+        }
+
         public int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel)
         {
             return _repo.UpdateUserCategories(substituteCategoryModel);
@@ -131,6 +141,16 @@ namespace Subzz.Business.Services.Users
         public int UpdateNotificationEvents(SubstituteCategoryModel substituteEventModel)
         {
             return _repo.UpdateNotificationEvents(substituteEventModel);
+        }
+
+        public int UpdateGradeLevelNotification(SubstituteCategoryModel substituteEventModel)
+        {
+            return _repo.UpdateGradeLevelNotification(substituteEventModel);
+        }
+
+        public int UpdateSubjectNotification(SubstituteCategoryModel substituteEventModel)
+        {
+            return _repo.UpdateSubjectNotification(substituteEventModel);
         }
 
         public LocationTime GetUserLocationTime(string userId, int userLevel)

@@ -35,8 +35,12 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
 
         IEnumerable<SubstituteCategoryModel> GetSubstituteCategories(string SubstituteId);
         IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents(string SubstituteId);
+        IEnumerable<SubstituteCategoryModel> GetGradeLevelsForNotification(string SubstituteId);
+        IEnumerable<SubstituteCategoryModel> GetSubjectsForNotifications(string SubstituteId);
         int UpdateUserCategories(SubstituteCategoryModel substituteCategoryModel);
         int UpdateNotificationEvents(SubstituteCategoryModel substituteEventModel);
+        int UpdateGradeLevelNotification(SubstituteCategoryModel substituteEventModel);
+        int UpdateSubjectNotification(SubstituteCategoryModel substituteEventModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
 
