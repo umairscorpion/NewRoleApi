@@ -171,7 +171,6 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@IsActive", model.IsActive);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
-            queryParams.Add("@Password", model.Password);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             if(model.SecondarySchools != null)
@@ -892,7 +891,7 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public UserAvailability InsertAvailability(UserAvailability availability)
+        public string InsertAvailability(UserAvailability availability)
         {
             const string query = "[Users].[InsertAvailability]";
             var queryParams = new DynamicParameters();
@@ -907,16 +906,16 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@IsRepeat", availability.IsRepeat);
             queryParams.Add("@RepeatType", availability.RepeatType);
             queryParams.Add("@RepeatValue", availability.RepeatValue);
-            queryParams.Add("@RepeatOnWeekDays", availability.RepeatOnWeekDays);
+            queryParams.Add("@RepeatOnWeekDays", 1);
             queryParams.Add("@IsEndsNever", availability.IsEndsNever);
             queryParams.Add("@EndsOnAfterNumberOfOccurrance", availability.EndsOnAfterNumberOfOccurrance);
             queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);
             queryParams.Add("@Notes", availability.Notes);
             queryParams.Add("@CreatedBy", availability.CreatedBy);
-            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return Db.Query<string>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public UserAvailability UpdateAvailability(UserAvailability availability)
+        public string UpdateAvailability(UserAvailability availability)
         {
             const string query = "[Users].[UpdateAvailability]";
             var queryParams = new DynamicParameters();
@@ -938,7 +937,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@EndsOnUntilDate", availability.EndsOnUntilDate);
             queryParams.Add("@Notes", availability.Notes);
             queryParams.Add("@ModifiedBy", availability.ModifiedBy);
-            return Db.Query<UserAvailability>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return Db.Query<string>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         public UserAvailability DeleteAvailability(UserAvailability availability)

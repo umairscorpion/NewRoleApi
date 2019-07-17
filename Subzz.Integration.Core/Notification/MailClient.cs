@@ -459,11 +459,12 @@ namespace SubzzV2.Integration.Core.Notification
             {
                 string folderName = "Attachment";
                 string attachPath = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folderName);
-                if (System.IO.File.Exists(Path.Combine(attachPath, attachedFileName)))
+                attachPath = (Path.Combine(attachPath, attachedFileName));
+
+                if (System.IO.File.Exists(attachPath))
                 {
                     try
                     {
-                        mailMessage.Attachments.Add(new Attachment(attachPath));
                         System.Net.Mail.Attachment objAttach = new System.Net.Mail.Attachment(attachPath);
                         objAttach.ContentType = new ContentType(fileContent);
                         System.Net.Mime.ContentDisposition disposition = objAttach.ContentDisposition;
@@ -471,10 +472,11 @@ namespace SubzzV2.Integration.Core.Notification
                         disposition.CreationDate = System.IO.File.GetCreationTime(attachPath);
                         disposition.ModificationDate = System.IO.File.GetLastWriteTime(attachPath);
                         disposition.ReadDate = System.IO.File.GetLastAccessTime(attachPath);
+                        mailMessage.Attachments.Add(objAttach);
                     }
                     catch (Exception ex)
                     {
-
+                        
                     }
                 }
             }

@@ -329,6 +329,7 @@ namespace Subzz.Api.Controllers.Leave
             AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(Convert.ToInt32(leave.AbsenceId));
             Message message = new Message();
             message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+            message.AbsenceId = absenceDetail.AbsenceId;
             message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                 CultureInfo.InvariantCulture).ToSubzzTime();
             message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -353,9 +354,12 @@ namespace Subzz.Api.Controllers.Leave
             message.Subject = absenceDetail.SubjectDescription;
             message.Grade = absenceDetail.Grade;
             message.Location = absenceDetail.AbsenceLocation;
+            message.School = absenceDetail.OrganizationName;
             message.Notes = absenceDetail.SubstituteNotes;
             message.SubstituteName = absenceDetail.SubstituteName;
             message.Reason = absenceDetail.AbsenceReasonDescription;
+            message.AttachedFileName = absenceDetail.AttachedFileName;
+            message.FileContentType = absenceDetail.FileContentType;
             message.ApprovedBy = _userService.GetUserDetail(leave.ApprovedBy).FirstName;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
             var employeeDetail = _userService.GetUserDetail(absenceDetail.EmployeeId);
