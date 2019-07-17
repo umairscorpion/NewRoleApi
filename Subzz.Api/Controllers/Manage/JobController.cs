@@ -42,12 +42,12 @@ namespace Subzz.Api.Controllers.Manage
             }
         }
 
-        [Route("getAvailableJobs/{StartDate}/{EndDate}/{UserId}/{OrganizationId}/{DistrictId}/{Requested}/{Status}")]
-        [HttpGet]
-        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int Status, bool Requested)
+        [Route("getAvailableJobs")]
+        [HttpPost]
+        public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs([FromBody]AbsenceModel absenceModel)
         {
-                var result = await _jobService.GetAvailableJobs(StartDate, EndDate, UserId, OrganizationId, DistrictId, Status, Requested);
-                return result;          
+                var result = await _jobService.GetAvailableJobs(absenceModel.StartDate, absenceModel.EndDate, absenceModel.SubstituteId, absenceModel.OrganizationId, absenceModel.DistrictId, absenceModel.Status, absenceModel.Requested);
+            return result;
         }
 
         [Route("acceptJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
@@ -64,6 +64,7 @@ namespace Subzz.Api.Controllers.Manage
                     IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                     Message message = new Message();
                     message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+                    message.AbsenceId = absenceDetail.AbsenceId;
                     message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                         CultureInfo.InvariantCulture).ToSubzzTime();
                     message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -87,10 +88,13 @@ namespace Subzz.Api.Controllers.Manage
                     message.Subject = absenceDetail.SubjectDescription;
                     message.Grade = absenceDetail.Grade;
                     message.Location = absenceDetail.AbsenceLocation;
+                    message.School = absenceDetail.OrganizationName;
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
                     message.Reason = absenceDetail.AbsenceReasonDescription;
                     message.Photo = absenceDetail.EmployeeProfilePicUrl;
+                    message.AttachedFileName = absenceDetail.AttachedFileName;
+                    message.FileContentType = absenceDetail.FileContentType;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                     //Notification notification = new Notification();
                     Task.Run(() => SendJobAcceptEmails(users, message));
@@ -126,6 +130,7 @@ namespace Subzz.Api.Controllers.Manage
                 IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
                 Message message = new Message();
                 message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+                message.AbsenceId = absenceDetail.AbsenceId;
                 message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
                                     CultureInfo.InvariantCulture).ToSubzzTime();
                 message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
@@ -150,9 +155,12 @@ namespace Subzz.Api.Controllers.Manage
                 message.Subject = absenceDetail.SubjectDescription;
                 message.Grade = absenceDetail.Grade;
                 message.Location = absenceDetail.AbsenceLocation;
+                message.School = absenceDetail.OrganizationName;
                 message.Notes = absenceDetail.SubstituteNotes;
                 message.SubstituteName = absenceDetail.SubstituteName;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
+                message.AttachedFileName = absenceDetail.AttachedFileName;
+                message.FileContentType = absenceDetail.FileContentType;
                 message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                 //Notification notification = new Notification();
                 Task.Run(() => SendJobDeclinEmails(users, message));

@@ -223,12 +223,12 @@ namespace Subzz.Business.Services.Users
             return _repo.GetAvailabilityById(id);
         }
 
-        public UserAvailability InsertAvailability(UserAvailability availability)
+        public string InsertAvailability(UserAvailability availability)
         {
             return _repo.InsertAvailability(availability);
         }
 
-        public UserAvailability UpdateAvailability(UserAvailability availability)
+        public string UpdateAvailability(UserAvailability availability)
         {
             return _repo.UpdateAvailability(availability);
         }

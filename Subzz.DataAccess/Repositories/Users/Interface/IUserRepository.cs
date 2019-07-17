@@ -51,8 +51,8 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
         IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model);
         IEnumerable<UserAvailability> GetAvailabilities(UserAvailability availability);
-        UserAvailability InsertAvailability(UserAvailability availability);
-        UserAvailability UpdateAvailability(UserAvailability availability);
+        string InsertAvailability(UserAvailability availability);
+        string UpdateAvailability(UserAvailability availability);
         UserAvailability DeleteAvailability(UserAvailability availability);
         int CheckSubAvailability(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);

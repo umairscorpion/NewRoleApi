@@ -36,7 +36,7 @@ namespace SubzzV2.Integration.Core.Notification
             Dictionary<string, string> param = new Dictionary<string, string>()
             {
                 ["{User Name}"] = message.UserName ?? "",
-                ["{Confirmation}"] = message.AbsenceId > 0 ? message.AbsenceId.ToString() : "",
+                ["{Confirmation}"] = message.ConfirmationNumber ?? "N/A",
                 ["{Employee Name}"] = message.EmployeeName ?? "",
                 ["{Substitute Name}"] = message.SubstituteName ?? "",
                 ["{Position}"] = message.Position ?? "",
@@ -49,7 +49,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{Grade}"] = !string.IsNullOrEmpty(message.Grade) ? message.Grade : "N/A",
                 ["{StartDateAndTime}"] = !string.IsNullOrEmpty(message.StartTime) ? message.StartTime + " " + message.StartDate : "",
                 ["{EndDateAndTime}"] = !string.IsNullOrEmpty(message.EndTime) ? message.EndTime + " " + message.EndDate : "",
-                ["{Location}"] = !string.IsNullOrEmpty(message.Location) ? message.Location : "",
+                ["{Location}"] = !string.IsNullOrEmpty(message.School) && message.School != "N/A" ? message.School : !string.IsNullOrEmpty(message.Location) && message.School == "N/A" ? message.Location : "",
                 ["{Notes}"] = !string.IsNullOrEmpty(message.Notes) ? message.Notes : "",
                 ["{Duration}"] = message.Duration ?? "",
                 ["{AcceptUrl}"] = message.AcceptUrl ?? "",

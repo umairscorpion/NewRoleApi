@@ -31,5 +31,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence.Interface
         void UpdateMailAndSmsFlag(int id, bool IsSendSms, bool IsSendEmail);
         void UpdateNotificationflagForAll(int absenceId);
         int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber);
+        IEnumerable<AbsenceModel> GetAbsencesForSharedCalendar(AbsenceModel model);
+        Task<IEnumerable<AbsenceModel>> GetAbsencesForCalendar(DateTime StartDate, DateTime EndDate, string UserId);
     }
 }
