@@ -465,8 +465,6 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     try
                     {
-                    try
-                    {
                         System.Net.Mail.Attachment objAttach = new System.Net.Mail.Attachment(attachPath);
                         objAttach.ContentType = new ContentType(fileContent);
                         System.Net.Mime.ContentDisposition disposition = objAttach.ContentDisposition;
@@ -479,8 +477,6 @@ namespace SubzzV2.Integration.Core.Notification
                     catch (Exception ex)
                     {
                         
-                    }
-
                     }
                 }
             }
