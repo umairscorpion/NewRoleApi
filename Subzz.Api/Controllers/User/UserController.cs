@@ -649,6 +649,44 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        [Route("getGradeLevelsForNotification")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetGradeLevelsForNotification()
+        {
+            try
+            {
+                var UserId = base.CurrentUser.Id;
+                var events = _service.GetGradeLevelsForNotification(UserId);
+                return events;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("getSubjectsForNotifications")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetSubjectsForNotifications()
+        {
+            try
+            {
+                var UserId = base.CurrentUser.Id;
+                var events = _service.GetSubjectsForNotifications(UserId);
+                return events;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
         //[Route("updateUserCategories")]
         //[HttpPatch]
         //public int UpdateUserCategories([FromBody]SubstituteCategoryModel substituteCategoryModel)
@@ -702,6 +740,76 @@ namespace Subzz.Api.Controllers.User
                 {
                     cate.SubstituteId = base.CurrentUser.Id;
                     var events = _service.UpdateNotificationEvents(cate);
+                }
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedNotifySettings,
+                    PostValue = Serializer.Serialize(substituteEventModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return 1;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return 0;
+
+        }
+
+        [Route("updateGradeLevelNotification")]
+        [HttpPatch]
+        public int UpdateGradeLevelNotification([FromBody] List<SubstituteCategoryModel> substituteEventModel)
+        {
+            try
+            {
+                foreach (SubstituteCategoryModel cate in substituteEventModel)
+                {
+                    cate.SubstituteId = base.CurrentUser.Id;
+                    var events = _service.UpdateGradeLevelNotification(cate);
+                }
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedNotifySettings,
+                    PostValue = Serializer.Serialize(substituteEventModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return 1;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return 0;
+
+        }
+
+        [Route("updateSubjectNotification")]
+        [HttpPatch]
+        public int UpdateSubjectNotification([FromBody] List<SubstituteCategoryModel> substituteEventModel)
+        {
+            try
+            {
+                foreach (SubstituteCategoryModel cate in substituteEventModel)
+                {
+                    cate.SubstituteId = base.CurrentUser.Id;
+                    var events = _service.UpdateSubjectNotification(cate);
                 }
                 // Audit Log
                 var audit = new AuditLog
