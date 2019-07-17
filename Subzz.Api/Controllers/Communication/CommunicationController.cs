@@ -95,26 +95,10 @@ namespace Subzz.Api.Controllers.Communication
                 message.School = absenceDetail.OrganizationName;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
                 message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
-                var employeeDetail = _service.GetUserDetail(absenceDetail.EmployeeId);
+                
                 message.TemplateId = 10;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
-                try
-                {
-                    message.Password = employeeDetail.Password;
-                    message.UserName = employeeDetail.FirstName;
-                    message.SendTo = employeeDetail.Email;
-                    if (employeeDetail.IsSubscribedEmail)
-                    {
-                        var events = _service.GetSubstituteNotificationEvents(employeeDetail.UserId);
-                        var jobPostedEvent = events.Where(x => x.EventId == 2).First();
-                        if (jobPostedEvent.EmailAlert)
-                            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                    }
-                    return Json("success");
-                }
-                catch (Exception ex)
-                {
-                }
+                Task.Run(() => SendEmails(users, message, absenceDetail));
             }
             catch (Exception ex)
             {
@@ -123,6 +107,60 @@ namespace Subzz.Api.Controllers.Communication
             {
             }
             return null;
+        }
+
+        async Task SendEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message, AbsenceModel absenceModel)
+        {
+            if (absenceModel.IsApprovalRequired && absenceModel.SubstituteRequired)
+            {
+                foreach (var user in users)
+                {
+                    try
+                    {
+                        message.Password = user.Password;
+                        message.UserName = user.FirstName;
+                        message.SendTo = user.Email;
+                        //For Substitutes
+                        if (user.RoleId == 4)
+                        {
+                            message.TemplateId = 1;
+                            if (user.IsSubscribedEmail)
+                            {
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                            if (user.IsSubscribedSMS)
+                            {
+                                message.PhoneNumber = user.PhoneNumber;
+                                CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+
+                        else if (user.RoleId == 3)
+                        {
+                            message.TemplateId = 10;
+                            if (user.IsSubscribedEmail)
+                            {
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+
+                        //For Admins
+                        else
+                        {
+                            message.TemplateId = 2;
+                            if (user.IsSubscribedEmail)
+                            {
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
         }
     }
 }

@@ -224,8 +224,8 @@ namespace Subzz.Api.Controllers.Absence
                                 {
                                     if (jobPostedEvent.EmailAlert)
                                     {
-                                        if(absenceModel.OnlySubjectSpecialist ? user.Speciality == absenceModel.SubjectDescription : true &&
-                                            absenceModel.OnlyCertified ? user.IsCertified == 1: true)
+                                        //if(absenceModel.OnlySubjectSpecialist ? user.Speciality == absenceModel.SubjectDescription : true &&
+                                        //    absenceModel.OnlyCertified ? user.IsCertified == 1: true)
                                         await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                                     }
                                 }
@@ -235,8 +235,8 @@ namespace Subzz.Api.Controllers.Absence
                                     message.PhoneNumber = user.PhoneNumber;
                                     if (jobPostedEvent.TextAlert)
                                         message.PhoneNumber = user.PhoneNumber;
-                                    if (absenceModel.OnlySubjectSpecialist ? user.Speciality == absenceModel.SubjectDescription : true &&
-                                            absenceModel.OnlyCertified ? user.IsCertified == 1 : true)
+                                    //if (absenceModel.OnlySubjectSpecialist ? user.Speciality == absenceModel.SubjectDescription : true &&
+                                    //        absenceModel.OnlyCertified ? user.IsCertified == 1 : true)
                                         CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                                 }
                             }
@@ -244,7 +244,7 @@ namespace Subzz.Api.Controllers.Absence
                             else if (user.RoleId == 3)
                             {
                                 message.TemplateId = 10;
-                                if (user.IsSubscribedEmail && absenceModel.OnlySubjectSpecialist ? user.Speciality == absenceModel.SubjectDescription: 1 == 1)
+                                if (user.IsSubscribedEmail)
                                 {
                                     var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                                     var jobPostedEvent = events.Where(x => x.EventId == 2).First();
