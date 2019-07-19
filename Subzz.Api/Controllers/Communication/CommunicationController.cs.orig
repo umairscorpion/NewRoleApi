@@ -98,7 +98,27 @@ namespace Subzz.Api.Controllers.Communication
                 
                 message.TemplateId = 10;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
+<<<<<<< HEAD
                 Task.Run(() => SendEmails(users, message, absenceDetail));
+=======
+                try
+                {
+                    message.Password = employeeDetail.Password;
+                    message.UserName = employeeDetail.FirstName;
+                    message.SendTo = employeeDetail.Email;
+                    if (employeeDetail.IsSubscribedEmail)
+                    {
+                        var events = _service.GetSubstituteNotificationEvents(employeeDetail.UserId);
+                        var jobPostedEvent = events.Where(x => x.EventId == 2).First();
+                        if (jobPostedEvent.EmailAlert)
+                            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                    }                    
+                }
+                catch (Exception ex)
+                {
+                }
+                return Json("success");
+>>>>>>> e83fca13df010417d9b850352ffe8aa98811a1ea
             }
             catch (Exception ex)
             {
@@ -106,7 +126,7 @@ namespace Subzz.Api.Controllers.Communication
             finally
             {
             }
-            return Json("success"); 
+            return null;
         }
 
         async Task SendEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message, AbsenceModel absenceModel)

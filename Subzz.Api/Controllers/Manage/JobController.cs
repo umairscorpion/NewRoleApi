@@ -97,7 +97,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.FileContentType = absenceDetail.FileContentType;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                     //Notification notification = new Notification();
-                    Task.Run(() => SendJobAcceptEmails(users, message));
+                    Task.Run(() => SendJobAcceptEmails(users, message, absenceDetail));
 
                     // Audit Log
                     var audit = new AuditLog
@@ -185,7 +185,7 @@ namespace Subzz.Api.Controllers.Manage
             return null;
         }
 
-        async Task SendJobAcceptEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message)
+        async Task SendJobAcceptEmails(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message, AbsenceModel absenceDetail)
         {
             foreach (var user in users)
             {
@@ -200,12 +200,20 @@ namespace Subzz.Api.Controllers.Manage
                         message.TemplateId = 12;
                         if (user.IsSubscribedEmail)
                         {
-                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                            var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                            var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
+                            if (absenceDetail.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                                absenceDetail.OnlyCertified ? user.IsCertified == 1 : true)
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
                         if (user.IsSubscribedSMS)
                         {
                             message.PhoneNumber = user.PhoneNumber;
-                            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                            var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                            var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
+                            if (absenceDetail.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                                absenceDetail.OnlyCertified ? user.IsCertified == 1 : true)
+                                CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
 
