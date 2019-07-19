@@ -478,7 +478,6 @@ namespace SubzzV2.Integration.Core.Notification
                     {
                         
                     }
-                    
                 }
             }
             RawMessage rawMessage = new RawMessage(ConvertMailMessageToMemoryStream(mailMessage));

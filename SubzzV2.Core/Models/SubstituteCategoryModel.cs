@@ -23,5 +23,16 @@ namespace SubzzV2.Core.Models
         public string EventName { get; set; }
         public string SubstituteId { get; set; }
 
+        //Grade Levels for Notifications
+        public int GradeNotificationId { get; set; }
+        public int TeachingLevelId { get; set; }
+        public string GradeName { get; set; }
+        public bool GradeNotification { get; set; }
+
+        //Subjects for Notifications
+        public int SubjectNotificationId { get; set; }
+        public int TeacherSpecialityId { get; set; }
+        public string SubjectName { get; set; }
+        public bool SubjectNotification { get; set; }
     }
 }
