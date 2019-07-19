@@ -109,12 +109,12 @@ namespace Subzz.Api.Controllers.Communication
                         var jobPostedEvent = events.Where(x => x.EventId == 2).First();
                         if (jobPostedEvent.EmailAlert)
                             CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                    }
-                    return Json("success");
+                    }                    
                 }
                 catch (Exception ex)
                 {
                 }
+                return Json("success");
             }
             catch (Exception ex)
             {
