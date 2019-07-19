@@ -466,9 +466,10 @@ namespace SubzzV2.Integration.Core.Notification
                     try
                     {
 <<<<<<< HEAD
-                        mailMessage.Attachments.Add(new Attachment(attachPath));
+                    try
+                    {
 =======
->>>>>>> f0d6cb7ea999e7f89c5284ab69af491ed0631070
+>>>>>>> 8db4d37d05a35dd0cfc4d225caa662fd687b4ef0
                         System.Net.Mail.Attachment objAttach = new System.Net.Mail.Attachment(attachPath);
                         objAttach.ContentType = new ContentType(fileContent);
                         System.Net.Mime.ContentDisposition disposition = objAttach.ContentDisposition;
@@ -476,21 +477,17 @@ namespace SubzzV2.Integration.Core.Notification
                         disposition.CreationDate = System.IO.File.GetCreationTime(attachPath);
                         disposition.ModificationDate = System.IO.File.GetLastWriteTime(attachPath);
                         disposition.ReadDate = System.IO.File.GetLastAccessTime(attachPath);
-<<<<<<< HEAD
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-=======
                         mailMessage.Attachments.Add(objAttach);
                     }
                     catch (Exception ex)
                     {
                         
                     }
-                    
->>>>>>> f0d6cb7ea999e7f89c5284ab69af491ed0631070
+<<<<<<< HEAD
+
+                    }
+=======
+>>>>>>> 8db4d37d05a35dd0cfc4d225caa662fd687b4ef0
                 }
             }
             RawMessage rawMessage = new RawMessage(ConvertMailMessageToMemoryStream(mailMessage));
