@@ -20,7 +20,6 @@ namespace SubzzV2.Core.Models
         public int? RepeatValue { get; set; }
         public int[] RepeatOnWeekDays { get; set; }
         public string RepeatOnWeekDay { get; set; }
-        public bool IsEndsNever { get; set; }
         public int? EndsOnAfterNumberOfOccurrance { get; set; }
         public string EndsOnUntilDate { get; set; }
         public string Notes { get; set; }
@@ -34,5 +33,8 @@ namespace SubzzV2.Core.Models
         public string AvailabilityStatusName { get; set; }
         public string AvailabilityStatusTitle { get; set; }
         public int UserRoleId { get; set; }
+        public bool IsEndsOnDate { get; set; }
+        public bool IsEndsOnAfterNumberOfOccurrance { get; set; }
+        public string EndDateAfterNumberOfOccurrances { get; set; }
     }
 }

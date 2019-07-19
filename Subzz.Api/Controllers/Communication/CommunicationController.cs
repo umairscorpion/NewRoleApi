@@ -142,6 +142,7 @@ namespace Subzz.Api.Controllers.Communication
                             {
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
+                return Json("success");
                         }
 
                         //For Admins

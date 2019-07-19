@@ -271,7 +271,10 @@ namespace Subzz.Api.Controllers.User
         [HttpPost]
         public void ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
         {
-            SendWelcomeLetter(user);
+            if (user.IsActive == true)
+            {
+                SendWelcomeLetter(user);
+            }
         }
 
         private void SendWelcomeLetter(SubzzV2.Core.Entities.User user)
