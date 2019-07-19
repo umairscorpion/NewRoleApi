@@ -27,9 +27,10 @@ namespace SubzzV2.Core.Models
         public string repeatType { get; set; }
         public int? repeatValue { get; set; }
         public int[] repeatOnWeekDays { get; set; }
-        public bool isEndsNever { get; set; }
         public int? endsOnAfterNumberOfOccurrance { get; set; }
         public string endsOnUntilDate { get; set; }
+        public bool isEndsOnDate { get; set; }
+        public bool isEndsOnAfterNumberOfOccurrance { get; set; }
 
         public List<CalendarResource> Resources { get; set; }
     }

@@ -734,9 +734,11 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     id = a.AbsenceId,
                     title = DateTime.Today.Add(a.StartTime).ToString("h:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("h:mm tt") + " " + a.EmployeeName,
-                    description = a.SubstituteId != "-1" ? a.SubstituteName + " for " +  a.EmployeeName : a.EmployeeName,
+                    description = a.SubstituteName + " for " + a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    end = a.StartTime.ToString() == a.EndTime.ToString() || DateTime.Parse(a.EndTime.ToString()) < DateTime.Parse("9:00:00") ?
+                    DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s") :
+                    DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
                     organizationName = a.OrganizationId == "-1" ? a.AbsenceLocation : a.OrganizationName,
                     backgroundColor = "#15A315",
                 }).ToList();

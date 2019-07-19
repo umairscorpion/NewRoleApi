@@ -41,15 +41,14 @@ namespace Subzz.Api.Controllers.User
                     model.StartDate = null;
                     model.EndDate = null;
                     var result = _service.GetAvailabilities(model);
-                    var calendarEvents = CalendarEvents(result);
-                    //var calendarEvents = CalendarEvents(result.Where(o => o.AvailabilityStatusId != 3));
-                    //var recurringEvents = CalendarRecurringEvents(result.Where(o => o.AvailabilityStatusId == 3), startDate, endDate);
+                    var calendarEvents = CalendarEvents(result.Where(o => o.AvailabilityStatusId != 3));
+                    var recurringEvents = CalendarRecurringEvents(result.Where(o => o.AvailabilityStatusId == 3), startDate, endDate);
                     var absenceEvents = AbsencesToEvents(acceptedAbsences);
                     var events = _absenceService.GetEvents(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
                     var eventsCalendarView = CalendarEvents(events);
                     absenceEvents.AddRange(eventsCalendarView);
-                    var allevents = calendarEvents.Concat(absenceEvents);
-                    //var all = calendarevents.concat(recurringevents);
+                    var allCalendarEvents = calendarEvents.Concat(recurringEvents);
+                    var allevents = allCalendarEvents.Concat(absenceEvents);
                     return Ok(allevents);
                 }
                 else
@@ -289,9 +288,11 @@ namespace Subzz.Api.Controllers.User
                 {
                     id = -1,
                     title = DateTime.Today.Add(a.StartTime).ToString("h:mm tt") + "-" + DateTime.Today.Add(a.EndTime).ToString("h:mm tt") + " " + a.EmployeeName,
-                    description = a.SubstituteId != "-1" ? a.SubstituteName + " for " + a.EmployeeName : a.EmployeeName,
+                    description = a.SubstituteName + " for " + a.EmployeeName,
                     start = DateTime.Parse(Convert.ToDateTime(a.StartDate).ToShortDateString() + " " + a.StartTime).ToString("s"),
-                    end = DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s"),
+                    end = a.StartTime.ToString() == a.EndTime.ToString() || DateTime.Parse(a.EndTime.ToString()) < DateTime.Parse("9:00:00") ?
+                    DateTime.Parse(Convert.ToDateTime(a.EndDate).AddDays(1).ToShortDateString() + " " + a.EndTime).ToString("s") :
+                    DateTime.Parse(Convert.ToDateTime(a.EndDate).ToShortDateString() + " " + a.EndTime).ToString("s"),
                     organizationName = a.OrganizationId == "-1" ? a.AbsenceLocation : a.OrganizationName,
                     backgroundColor = "#15A315",
                     allDay = false,
@@ -318,12 +319,12 @@ namespace Subzz.Api.Controllers.User
                 CalendarEvent evt;
                 foreach (var av in availabilities)
                 {
-                    if (!av.IsEndsNever)
+                    if (!av.IsEndsOnAfterNumberOfOccurrance)
                     {
                         if (Convert.ToDateTime(av.EndsOnUntilDate) > endDate)
                         {
                             List<DateTime> dateTime = GetDaydBetweenTwoDates(Convert.ToDateTime(av.StartDate), Convert.ToDateTime(endDate), Convert.ToInt32(av.RepeatOnWeekDay));
-                            foreach(var dates in dateTime)
+                            foreach (var dates in dateTime)
                             {
                                 evt = new CalendarEvent();
                                 evt.id = av.AvailabilityId;
@@ -351,16 +352,33 @@ namespace Subzz.Api.Controllers.User
                     }
                     else
                     {
-                        List<DateTime> dateTime = GetDaydBetweenTwoDates(startDate, endDate, Convert.ToInt32(av.RepeatOnWeekDay));
-                        foreach (var dates in dateTime)
+                        if (Convert.ToDateTime(av.EndDateAfterNumberOfOccurrances) > endDate)
                         {
-                            evt = new CalendarEvent();
-                            evt.id = av.AvailabilityId;
-                            evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
-                            evt.description = av.AvailabilityStatusTitle;
-                            evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
-                            evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
-                            list.Add(evt);
+                            List<DateTime> dateTime = GetDaydBetweenTwoDates(Convert.ToDateTime(av.StartDate), Convert.ToDateTime(endDate), Convert.ToInt32(av.RepeatOnWeekDay));
+                            foreach (var dates in dateTime)
+                            {
+                                evt = new CalendarEvent();
+                                evt.id = av.AvailabilityId;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
+                                evt.description = av.AvailabilityStatusTitle;
+                                evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                list.Add(evt);
+                            }
+                        }
+                        else
+                        {
+                            List<DateTime> dateTime = GetDaydBetweenTwoDates(Convert.ToDateTime(av.StartDate), Convert.ToDateTime(av.EndDateAfterNumberOfOccurrances), Convert.ToInt32(av.RepeatOnWeekDay));
+                            foreach (var dates in dateTime)
+                            {
+                                evt = new CalendarEvent();
+                                evt.id = av.AvailabilityId;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
+                                evt.description = av.AvailabilityStatusTitle;
+                                evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                list.Add(evt);
+                            }
                         }
                     }
                 }
@@ -377,10 +395,10 @@ namespace Subzz.Api.Controllers.User
         {
             List<DateTime> dateTimes = new List<DateTime>();
             double totalDays = (endDate - startDate).TotalDays;
-            var StartDateWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(startDate,CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-            var EndDateWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(endDate, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            var StartDateWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(startDate,CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Sunday);
+            var EndDateWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(endDate, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Sunday);
             var TotalWeeks = EndDateWeek - StartDateWeek;
-            for (int counter= 0, arrayCounter = 0; arrayCounter < TotalWeeks; counter++)
+            for (int counter= 0, arrayCounter = 0; arrayCounter <= TotalWeeks; counter++)
             {
                 DateTime currentDate = startDate;
                 int Day = Convert.ToInt32(startDate.DayOfWeek);
