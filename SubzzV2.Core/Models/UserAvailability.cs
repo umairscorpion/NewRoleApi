@@ -33,6 +33,7 @@ namespace SubzzV2.Core.Models
         public string AvailabilityStatusName { get; set; }
         public string AvailabilityStatusTitle { get; set; }
         public int UserRoleId { get; set; }
+        public int EndsOnStatusId { get; set; }
         public bool IsEndsOnDate { get; set; }
         public bool IsEndsOnAfterNumberOfOccurrance { get; set; }
         public string EndDateAfterNumberOfOccurrances { get; set; }

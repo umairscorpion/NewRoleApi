@@ -8,7 +8,6 @@ using Subzz.Business.Services.Users.Interface;
 using SubzzManage.Business.Manage.Interface;
 using System.Threading.Tasks;
 using SubzzAbsence.Business.Absence.Interface;
-using System.Globalization;
 
 namespace Subzz.Api.Controllers.User
 {
@@ -328,10 +327,11 @@ namespace Subzz.Api.Controllers.User
                             {
                                 evt = new CalendarEvent();
                                 evt.id = av.AvailabilityId;
-                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
-                                evt.description = av.AvailabilityStatusTitle;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Unavailable" : " Unavailable";
+                                evt.description = "Unavailable";
                                 evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
-                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.EndTime).ToString("s");
+                                evt.allDay = av.IsAllDayOut;
                                 list.Add(evt);
                             }
                         }
@@ -342,10 +342,11 @@ namespace Subzz.Api.Controllers.User
                             {
                                 evt = new CalendarEvent();
                                 evt.id = av.AvailabilityId;
-                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
-                                evt.description = av.AvailabilityStatusTitle;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Unavailable" : " Unavailable";
+                                evt.description = "Unavailable";
                                 evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
-                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.EndTime).ToString("s");
+                                evt.allDay = av.IsAllDayOut;
                                 list.Add(evt);
                             }
                         }
@@ -359,10 +360,11 @@ namespace Subzz.Api.Controllers.User
                             {
                                 evt = new CalendarEvent();
                                 evt.id = av.AvailabilityId;
-                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
-                                evt.description = av.AvailabilityStatusTitle;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Unavailable" : " Unavailable";
+                                evt.description = "Unavailable";
                                 evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
-                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.EndTime).ToString("s");
+                                evt.allDay = av.IsAllDayOut;
                                 list.Add(evt);
                             }
                         }
@@ -373,10 +375,11 @@ namespace Subzz.Api.Controllers.User
                             {
                                 evt = new CalendarEvent();
                                 evt.id = av.AvailabilityId;
-                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Recurring" : " Recurring";
-                                evt.description = av.AvailabilityStatusTitle;
+                                evt.title = av.IsAllDayOut == false ? Convert.ToDateTime(av.StartTime).ToString("h:mm tt") + "-" + Convert.ToDateTime(av.EndTime).ToString("h:mm tt") + " Unavailable" : " Unavailable";
+                                evt.description = "Unavailable";
                                 evt.start = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
-                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.StartTime).ToString("s");
+                                evt.end = DateTime.Parse(Convert.ToDateTime(dates).ToShortDateString() + " " + av.EndTime).ToString("s");
+                                evt.allDay = av.IsAllDayOut;
                                 list.Add(evt);
                             }
                         }
@@ -395,10 +398,8 @@ namespace Subzz.Api.Controllers.User
         {
             List<DateTime> dateTimes = new List<DateTime>();
             double totalDays = (endDate - startDate).TotalDays;
-            var StartDateWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(startDate,CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Sunday);
-            var EndDateWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(endDate, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Sunday);
-            var TotalWeeks = EndDateWeek - StartDateWeek;
-            for (int counter= 0, arrayCounter = 0; arrayCounter <= TotalWeeks; counter++)
+            int total = (int)((totalDays / 7) + 1);
+            for (int counter= 0, arrayCounter = 0; arrayCounter < total; counter++)
             {
                 DateTime currentDate = startDate;
                 int Day = Convert.ToInt32(startDate.DayOfWeek);

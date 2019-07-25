@@ -532,7 +532,8 @@ namespace Subzz.Api.Controllers.User
         {
             try
             { 
-                return _service.GetEmployeeSuggestions(searchText, isSearchSubstitute, orgId, districtId);
+                var EmployeeSuggestions = _service.GetEmployeeSuggestions(searchText, isSearchSubstitute, orgId, districtId);
+                return EmployeeSuggestions;
             }
             catch (Exception ex)
             {

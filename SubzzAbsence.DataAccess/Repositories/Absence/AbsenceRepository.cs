@@ -374,5 +374,16 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 return await connection.QueryAsync<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
+
+        public int UpdateAbsenceResendCounter(int AbsenceId)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateAbsenceResendCounter]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@AbsenceId", AbsenceId);;
+                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
     }
 }
