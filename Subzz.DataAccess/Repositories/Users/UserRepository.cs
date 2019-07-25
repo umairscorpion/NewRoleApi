@@ -52,7 +52,7 @@ namespace Subzz.DataAccess.Repositories.Users
             if (userDetail != null)
             {
                 userDetail.SecondarySchools = GetUserSecondarySchools(userId);
-                userDetail.Permissions = GetUserPermissions(userDetail.RoleId);
+                userDetail.Permissions = GetUserPermissions(userDetail.RoleId, userDetail.UserId);
             }
             return userDetail;
         }
@@ -65,11 +65,12 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
-        private List<RolePermission> GetUserPermissions(int userRoleId)
+        private List<RolePermission> GetUserPermissions(int userRoleId, string userId)
         {
             var sql = "[Users].[GetRolePermissions]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@RoleId", userRoleId);
+            queryParams.Add("@UserId", userId);
             return Db.Query<RolePermission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
@@ -971,6 +972,24 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@EndDate", availability.EndDate);
             queryParams.Add("@StartTime", availability.StartTime);
             queryParams.Add("@EndTime", availability.EndTime);
+            return Db.Query<int>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public bool GetUserAvailability(string UserId, int AbsenceId)
+        {
+            const string query = "[Users].[sp_getUserAvailability]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@UserId", UserId);
+            queryParams.Add("@AbsenceId", AbsenceId);
+            return Db.Query<bool>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public int UpdateSubscription(User user)
+        {
+            const string query = "[Users].[sp_updateSubscription]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@Email", user.Email);
+            queryParams.Add("@Status", user.IsSubscribedEmail);
             return Db.Query<int>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
         #endregion

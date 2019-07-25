@@ -31,12 +31,12 @@ namespace Subzz.Business.Services.Users
             return _repo.GetUserRoles();
         }
 
-        public Role GetRolePermissions(int roleId, int districtId)
+        public Role GetRolePermissions(int roleId, int districtId, string userId)
         {
             var role = new Role();
             role.Role_Id = roleId;
             var permissionCategories = _repo.GetPermissionCategories();
-            var rolePermissions = _repo.RolePermissions(roleId);
+            var rolePermissions = _repo.RolePermissions(roleId, userId);
             if (rolePermissions == null || rolePermissions.Count <= 0) return role;
             role.Name = rolePermissions.First().RoleName;
             foreach (var category in permissionCategories)

@@ -56,12 +56,14 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         UserAvailability DeleteAvailability(UserAvailability availability);
         int CheckSubAvailability(UserAvailability availability);
         UserAvailability GetAvailabilityById(int id);
+        bool GetUserAvailability(string UserId, int AbsenceId);
 
         PositionDetail InsertPositions(PositionDetail position);
         IEnumerable<PositionDetail> GetPositions(int districtId);
         PayRateSettings DeletePayRate(PayRateSettings payRateSettings);
         PayRateRule DeletePayRateRule(PayRateRule payRateRule);
         bool DeletePosition(int id);
+        int UpdateSubscription(User user);
 
         #region Substitute
         IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);

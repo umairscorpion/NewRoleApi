@@ -140,7 +140,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             var sql = "[Leaves].[DeleteLeaveType]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@leaveTpeId", leaveTypeId);
-            return Db.Execute(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
         }
     }
 }

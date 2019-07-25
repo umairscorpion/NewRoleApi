@@ -339,5 +339,16 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.GetUserIdByPhoneNumber(phoneNumber);
         }
+
+        public bool GetUserAvailability(string UserId, int AbsenceId)
+        {
+            return _repo.GetUserAvailability(UserId, AbsenceId);
+        }
+
+        public int UpdateSubscription(User user)
+        {
+            return _repo.UpdateSubscription(user);
+        }
+
     }
 }

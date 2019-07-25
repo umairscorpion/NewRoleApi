@@ -1439,7 +1439,25 @@ namespace Subzz.Api.Controllers.User
             }
             return null;
         }
-      
+
         #endregion
+
+        [Route("updateSubscription")]
+        [HttpGet]
+        public IActionResult UpdateSubscription([FromBody]SubzzV2.Core.Entities.User user)
+        {
+            try
+            {
+                var result = _service.UpdateSubscription(user);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
     }
 }
