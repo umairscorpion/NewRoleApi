@@ -32,5 +32,6 @@ namespace SubzzAbsence.Business.Absence.Interface
         int GetAbsenceIdByConfirmationNumber(string ConfirmationNumber);
         IEnumerable<AbsenceModel> GetAbsencesForSharedCalendar(AbsenceModel model);
         Task<IEnumerable<AbsenceModel>> GetAbsencesForCalendar(DateTime StartDate, DateTime EndDate, string UserId);
+        int UpdateAbsenceResendCounter(int AbsenceId);
     }
 }

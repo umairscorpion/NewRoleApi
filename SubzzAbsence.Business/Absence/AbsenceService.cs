@@ -130,5 +130,10 @@ namespace SubzzAbsence.Business.Absence
         {
             return await _repo.GetAbsencesForCalendar(StartDate, EndDate, UserId);
         }
+
+        public int UpdateAbsenceResendCounter(int AbsenceId)
+        {
+            return _repo.UpdateAbsenceResendCounter(AbsenceId);
+        }
     }
 }
