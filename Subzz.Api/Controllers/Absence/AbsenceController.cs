@@ -515,7 +515,8 @@ namespace Subzz.Api.Controllers.Absence
         {
             try
             {
-                return _service.GetAbsences(StartDate, EndDate, UserId, null);
+                var Absences = _service.GetAbsences(StartDate, EndDate, UserId, null);
+                return Absences;
             }
             catch (Exception ex)
             {

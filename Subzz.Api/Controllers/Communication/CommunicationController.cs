@@ -99,6 +99,7 @@ namespace Subzz.Api.Controllers.Communication
                 message.TemplateId = 10;
                 message.Photo = absenceDetail.EmployeeProfilePicUrl;
                 Task.Run(() => SendEmails(users, message, absenceDetail));
+                _absenceService.UpdateAbsenceResendCounter(model.AbsenceId);
             }
             catch (Exception ex)
             {
@@ -153,8 +154,6 @@ namespace Subzz.Api.Controllers.Communication
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
-
-
                     }
                     catch (Exception ex)
                     {
