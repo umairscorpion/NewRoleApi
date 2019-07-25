@@ -43,5 +43,7 @@ namespace SubzzV2.Core.Models
         public int AbsenceType { get; set; }
         public string ConfirmationNumber { get; set; }
         public int AbsenceResendCounter { get; set; }
+        public string EmployeeFirstName { get; set; }
+        public string EmployeeLastName { get; set; }
     }
 }
