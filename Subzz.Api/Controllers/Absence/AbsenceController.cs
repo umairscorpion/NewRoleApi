@@ -733,7 +733,7 @@ namespace Subzz.Api.Controllers.Absence
 
         [Route("views/calendar")]
         [HttpPost]
-        public IActionResult CalendarView([FromBody]AbsenceModel model)
+        public IActionResult CalendarViewGetAvailableJobs()([FromBody]AbsenceModel model)
         {
             try
             {

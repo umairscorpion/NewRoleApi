@@ -53,7 +53,7 @@ namespace Subzz.Business.Services.Users.Interface
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
         PositionDetail InsertPositions(PositionDetail position);
         IEnumerable<PositionDetail> GetPositions(int districtId);
-        bool DeletePosition(int id);
+        int DeletePosition(int id);
         #endregion
 
         #region Substitute
