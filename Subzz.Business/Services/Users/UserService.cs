@@ -257,7 +257,7 @@ namespace Subzz.Business.Services.Users
             return _repo.GetPositions(districtId);
         }
 
-        public bool DeletePosition(int id)
+        public int DeletePosition(int id)
         {
             return _repo.DeletePosition(id);
         }

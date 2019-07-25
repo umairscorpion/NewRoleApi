@@ -61,7 +61,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<PositionDetail> GetPositions(int districtId);
         PayRateSettings DeletePayRate(PayRateSettings payRateSettings);
         PayRateRule DeletePayRateRule(PayRateRule payRateRule);
-        bool DeletePosition(int id);
+        int DeletePosition(int id);
 
         #region Substitute
         IEnumerable<User> GetAvailableSubstitutes(AbsenceModel absence);
