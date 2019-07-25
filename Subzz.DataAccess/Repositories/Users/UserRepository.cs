@@ -589,15 +589,15 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<PositionDetail>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
-        public bool DeletePosition(int id)
+        public int DeletePosition(int id)
         {
             int hasSucceeded = 0;
             var sql = "[users].[sp_deletePosition]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@Id", id);
             queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
-            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
-            return result;
+            //var result = Delete(sql, queryParams, CommandType.StoredProcedure);
+            return Db.Execute(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public string GetUserIdByPhoneNumber(string phoneNumber)
