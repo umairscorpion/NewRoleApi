@@ -61,13 +61,14 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<PermissionsCategory>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
-        public List<RolePermission> RolePermissions(int roleId)
+        public List<RolePermission> RolePermissions(int roleId, string userId)
         {
             try
             {
                 var sql = "[Users].[GetRolePermissions]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@RoleId", roleId);
+                queryParams.Add("@UserId", userId);
                 return Db.Query<RolePermission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
             catch (Exception ex)
@@ -113,14 +114,21 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             if (model != null)
             {
-                // Remove previous permissions for role
-                DeleteRolePermissions(model);
-
+                // Remove previous permissions for role if userId Is Empty Other wise delete roles against User Id
+                if (model.UserId?.Length >= 10)
+                {
+                    DeleteRolePermissionsAgainstUser(model);
+                }
+                else
+                {
+                    DeleteRolePermissions(model);
+                }
                 // Insert Permissions for role
                 var sql = "[Users].[InsertRolePermission]";
                 var queryParams = new DynamicParameters();
                 queryParams.Add("@DistrictId", model.DistrictId);
                 queryParams.Add("@RoleId", model.Role_Id);
+                queryParams.Add("@UserId", model.UserId);
 
                 foreach (var cat in model.PermissionsCategories)
                 {
@@ -145,6 +153,16 @@ namespace Subzz.DataAccess.Repositories.Users
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@RoleId", model.Role_Id);
+            Db.Query<bool>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        private void DeleteRolePermissionsAgainstUser(Role model)
+        {
+            var sql = "[Users].[DeleteRolePermissionForUser]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@RoleId", model.Role_Id);
+            queryParams.Add("@UserId", model.UserId);
             Db.Query<bool>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
         }
     }

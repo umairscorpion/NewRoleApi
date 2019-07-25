@@ -28,12 +28,12 @@ namespace Subzz.Api.Controllers.User
 
 
         [HttpGet]
-        [Route("role/{id}")]
-        public IActionResult Get(int id)
+        [Route("role/{id}/{userId}")]
+        public IActionResult Get(int id, string userId)
         {
             try
             {
-                var result = _service.GetRolePermissions(id, CurrentUser.DistrictId);
+                var result = _service.GetRolePermissions(id, CurrentUser.DistrictId, userId);
                 return Ok(result);
             }
             catch (Exception ex)

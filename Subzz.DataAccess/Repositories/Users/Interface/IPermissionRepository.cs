@@ -14,7 +14,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         User InsertUserRole(string RoleName);
         IEnumerable<User> GetUserRoles();
         List<PermissionsCategory> GetPermissionCategories();
-        List<RolePermission> RolePermissions(int roleId);
+        List<RolePermission> RolePermissions(int roleId, string userId);
         RolePermission Post(RolePermission model);
         RolePermission Put(RolePermission model);
         bool Delete(int id);
