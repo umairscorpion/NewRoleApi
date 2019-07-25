@@ -235,16 +235,20 @@ namespace Subzz.Api.Controllers.Leave
             try
             {
                 var response = _service.DeleteLeaveType(leaveTypeId);
-                var audit = new AuditLog
+                if (response == 1)
                 {
-                    UserId = CurrentUser.Id,
-                    EntityId = leaveTypeId.ToString(),
-                    EntityType = AuditLogs.EntityType.LeaveType,
-                    ActionType = AuditLogs.ActionType.DeletedLeaveType,
-                    DistrictId = CurrentUser.DistrictId,
-                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                };
-                _audit.InsertAuditLog(audit);
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = leaveTypeId.ToString(),
+                        EntityType = AuditLogs.EntityType.LeaveType,
+                        ActionType = AuditLogs.ActionType.DeletedLeaveType,
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                
                 return Ok(response);
             }
             catch (Exception ex)

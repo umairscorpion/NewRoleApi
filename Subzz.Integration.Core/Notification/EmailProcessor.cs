@@ -41,6 +41,7 @@ namespace SubzzV2.Integration.Core.Notification
                 string apiUrl = root.GetSection("URL").GetSection("api").Value;
                 string web = root.GetSection("URL").GetSection("web").Value;
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
+                message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
                 if (message.TemplateId == 1)
                 {
                     message.AcceptUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
@@ -178,6 +179,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{DeclineUrl}"] = message.DeclineUrl ?? "",
                 ["{resetPasswordKey}"] = !string.IsNullOrEmpty(message.resetPassUrl) ? message.resetPassUrl: "",
                 ["{photo}"] = !string.IsNullOrEmpty(message.ProfilePicUrl) ? message.ProfilePicUrl : "",
+                ["{UnsubscriptionUrl}"] = !string.IsNullOrEmpty(message.UnsubscriptionUrl) ? message.UnsubscriptionUrl : "",
             };
             return param;
         }

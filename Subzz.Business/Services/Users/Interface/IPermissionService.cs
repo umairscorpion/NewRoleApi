@@ -15,7 +15,7 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<User> GetUserRoles();
 
         #region Role Permissions
-        Role GetRolePermissions(int roleId, int districtId);
+        Role GetRolePermissions(int roleId, int districtId, string userId);
         Role UpdatePermissions(Role model);
         RolePermission Post(RolePermission model);
         RolePermission Put(RolePermission model);

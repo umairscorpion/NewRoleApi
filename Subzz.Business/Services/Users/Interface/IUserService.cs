@@ -53,7 +53,7 @@ namespace Subzz.Business.Services.Users.Interface
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
         PositionDetail InsertPositions(PositionDetail position);
         IEnumerable<PositionDetail> GetPositions(int districtId);
-        bool DeletePosition(int id);
+        int DeletePosition(int id);
         #endregion
 
         #region Substitute
@@ -82,7 +82,7 @@ namespace Subzz.Business.Services.Users.Interface
         UserAvailability DeleteAvailability(UserAvailability availability);
         int CheckSubAvailability(UserAvailability availability);
         IEnumerable<SubstituteAvailabilitySummary> GetSubstituteAvailabilitySummary(SubstituteAvailability model);
-
+        bool GetUserAvailability(string UserId, int AbsenceId);
         #endregion
 
         List<UserSummary> GetUsersSummaryList(int districtId);
@@ -93,5 +93,6 @@ namespace Subzz.Business.Services.Users.Interface
         #endregion
 
         string GetUserIdByPhoneNumber(string phoneNumber);
+        int UpdateSubscription(User user);
     }
 }
