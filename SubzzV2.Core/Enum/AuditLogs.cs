@@ -15,6 +15,7 @@
             public static string ChangedPassword = "ChangedPassword";
             public static string PayRate         = "PayRate";
             public static string PayRateRule     = "PayRateRule";
+            public static string Unavailability = "Unavailability";
         }
 
         public static class ActionType
@@ -105,6 +106,11 @@
             public static string UpdatedPayRateRule = "Updated Pay Rate Rule";
             public static string DeletedPayRateRule = "Deleted Pay Rate Rule";
             public static string ViewedPayRateRule  = "Viewed Pay Rate Rule";
+
+            // For Availability/Unavailability Related Actions
+            public static string CreatedUnavailability = "Added Unavailability";
+            public static string UpdatedUnavailability = "Updated Unavailability";
+            public static string DeletedUnavailability = "Deleted Unavailability";
         }
     }
 }

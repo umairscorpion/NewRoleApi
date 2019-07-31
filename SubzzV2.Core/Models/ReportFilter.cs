@@ -26,5 +26,6 @@ namespace SubzzV2.Core.Models
         public string Year { get; set; }
         public int AbsencePosition { get; set; }
         public string LocationId { get; set; }
+        public string ConfirmationNumber { get; set; }
     }
 }
