@@ -66,6 +66,8 @@ namespace SubzzV2.Core.Models
         public bool OnlyCertified { get; set; }
         public bool OnlySubjectSpecialist { get; set; }
         public int AbsenceResendCounter { get; set; }
+        public string DistrictPhoneNumber { get; set; }
+        public string OrganizationPhoneNumber { get; set; }
     }
 
 }
