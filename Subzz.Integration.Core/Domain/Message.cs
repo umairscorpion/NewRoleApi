@@ -68,6 +68,7 @@ namespace Subzz.Integration.Core.Domain
         public string DateToDisplayInSMS { get; set; }
         public string ConfirmationNumber { get; set; }
         public string UnsubscriptionUrl { get; set; }
+        public string FromPhoneNumber { get; set; }
 
     }
 

@@ -135,11 +135,11 @@ namespace Subzz.DataAccess.Repositories.Users
                     if (cat?.Permissions == null || !cat.Permissions.Any()) continue;
                     foreach (var pr in cat.Permissions)
                     {
-                        if (pr.IsChecked)
-                        {
+                            sql = "[Users].[InsertRolePermission]";
                             queryParams.Add("@PermissionId", pr.PermissionId);
+                            queryParams.Add("@IsHided", pr.IsHided);
+                            queryParams.Add("@IsChecked", pr.IsChecked);
                             Db.Query<Role>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
-                        }
                     }
                 }
             }
