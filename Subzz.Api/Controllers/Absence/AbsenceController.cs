@@ -182,6 +182,14 @@ namespace Subzz.Api.Controllers.Absence
                                 CultureInfo.InvariantCulture).ToSubzzTimeForSms();
             message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceModel.EndTime), "HH:mm:ss",
                                         CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+            if(!string.IsNullOrEmpty(DataForEmails.OrganizationPhoneNumber) && DataForEmails.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = DataForEmails.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = DataForEmails.DistrictPhoneNumber;
+            }
             if (message.StartDate == message.EndDate)
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceModel.StartDate).ToSubzzDateForSMS();
@@ -830,6 +838,14 @@ namespace Subzz.Api.Controllers.Absence
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
             }
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
+            }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -841,17 +857,18 @@ namespace Subzz.Api.Controllers.Absence
             message.AttachedFileName = absenceDetail.AttachedFileName;
             message.FileContentType = absenceDetail.FileContentType;
             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
-            message.TemplateId = 15;
             message.Photo = absenceDetail.EmployeeProfilePicUrl;
             foreach (var user in users)
             {
                 try
                 {
+                    message.TemplateId = 15;
                     message.Password = user.Password;
                     message.UserName = user.FirstName;
                     message.SendTo = user.Email;
                     if (user.IsSubscribedSMS && user.RoleId == 4 && absenceDetail.SubstituteRequired)
                     {
+                        message.TemplateId = 26;
                         var events = _userService.GetSubstituteNotificationEvents(user.UserId);
                         var jobPostedEvent = events.Where(x => x.EventId == 5).First();
                         message.PhoneNumber = user.PhoneNumber;
@@ -913,6 +930,14 @@ namespace Subzz.Api.Controllers.Absence
             else
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            }
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
             }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
@@ -1009,6 +1034,14 @@ namespace Subzz.Api.Controllers.Absence
             else
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            }
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
             }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
@@ -1109,7 +1142,14 @@ namespace Subzz.Api.Controllers.Absence
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
             }
-
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
+            }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -1219,6 +1259,14 @@ namespace Subzz.Api.Controllers.Absence
             else
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            }
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
             }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;

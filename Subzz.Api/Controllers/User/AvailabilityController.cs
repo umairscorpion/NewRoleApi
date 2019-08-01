@@ -8,6 +8,8 @@ using Subzz.Business.Services.Users.Interface;
 using SubzzManage.Business.Manage.Interface;
 using System.Threading.Tasks;
 using SubzzAbsence.Business.Absence.Interface;
+using SubzzV2.Core.Enum;
+using Subzz.Integration.Core.Helper;
 
 namespace Subzz.Api.Controllers.User
 {
@@ -17,11 +19,13 @@ namespace Subzz.Api.Controllers.User
         private readonly IUserService _service;
         private readonly IJobService _jobService;
         private readonly IAbsenceService _absenceService;
-        public AvailabilityController(IUserService service, IJobService jobService, IAbsenceService absenceService)
+        private readonly IAuditingService _audit;
+        public AvailabilityController(IUserService service, IJobService jobService, IAbsenceService absenceService, IAuditingService audit)
         {
             _service = service;
             _jobService = jobService;
             _absenceService = absenceService;
+            _audit = audit;
         }
 
         [Route("events")]
@@ -158,6 +162,22 @@ namespace Subzz.Api.Controllers.User
                 model.UserId = base.CurrentUser.Id;
                 model.CreatedBy = base.CurrentUser.Id;
                 var result = _service.InsertAvailability(model);
+                if (result != "accepted" && result != "unavailable")
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = result.ToString(),
+                        EntityType = AuditLogs.EntityType.Unavailability,
+                        ActionType = AuditLogs.ActionType.CreatedUnavailability,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                    return Json("success");
+                }
                 return Json(result);
             }
             catch (Exception ex)
@@ -177,6 +197,22 @@ namespace Subzz.Api.Controllers.User
             {
                 model.ModifiedBy = base.CurrentUser.Id;
                 var result = _service.UpdateAvailability(model);
+                if (result != "accepted" && result != "unavailable")
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = id.ToString(),
+                        EntityType = AuditLogs.EntityType.Unavailability,
+                        ActionType = AuditLogs.ActionType.UpdatedUnavailability,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                    return Json("success");
+                }
                 return Json(result);
             }
             catch (Exception ex)
@@ -198,6 +234,17 @@ namespace Subzz.Api.Controllers.User
                 model.AvailabilityId = id;
                 model.ArchivedBy = base.CurrentUser.Id;
                 var result = _service.DeleteAvailability(model);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityId = id.ToString(),
+                    EntityType = AuditLogs.EntityType.Unavailability,
+                    ActionType = AuditLogs.ActionType.DeletedUnavailability,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
                 return Ok(result);
             }
             catch (Exception ex)

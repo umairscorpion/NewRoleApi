@@ -45,13 +45,13 @@ namespace Subzz.Api.Controllers.User
             }
         }
 
-        [Route("list/summary")]
+        [Route("list/summary/{districtId}")]
         [HttpGet]
-        public IActionResult GetUsersList()
+        public IActionResult GetUsersList(int districtId)
         {
             try
             {
-                var result = _service.GetUsersSummaryList(CurrentUser.DistrictId);
+                var result = _service.GetUsersSummaryList(districtId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -562,7 +562,7 @@ namespace Subzz.Api.Controllers.User
             _audit.InsertAuditLog(audit);
             return result;
         }
-
+        
         [Route("{id}")]
         [HttpGet]
         public IEnumerable<SubzzV2.Core.Entities.User> GetEmployee(int id)
@@ -1338,14 +1338,13 @@ namespace Subzz.Api.Controllers.User
 
         #region Substitutes
         [Route("schoolSubList")]
-        [HttpGet]
-        public IEnumerable<SchoolSubList> GetSchoolSubList()
+        [HttpPost]
+        public IEnumerable<SchoolSubList> GetSchoolSubList([FromBody] SchoolSubList model)
         {
             try
             { 
                 var userId = base.CurrentUser.Id;
-                var districtId = base.CurrentUser.DistrictId;
-                var schoolSubs = _service.GetSchoolSubList(userId, districtId);
+                var schoolSubs = _service.GetSchoolSubList(userId, model.DistrictId);
                 return schoolSubs;
             }
             catch (Exception ex)
@@ -1390,14 +1389,13 @@ namespace Subzz.Api.Controllers.User
         }
 
         [Route("blockedSchoolSubList")]
-        [HttpGet]
-        public IEnumerable<SchoolSubList> GetBlockedSchoolSubList()
+        [HttpPost]
+        public IEnumerable<SchoolSubList> GetBlockedSchoolSubList([FromBody]SchoolSubList model)
         {
             try
             { 
                 var userId = base.CurrentUser.Id;
-                var districtId = base.CurrentUser.DistrictId;
-                var schoolSubs = _service.GetBlockedSchoolSubList(userId, districtId);
+                var schoolSubs = _service.GetBlockedSchoolSubList(userId, model.DistrictId);
                 return schoolSubs;
             }
             catch (Exception ex)
@@ -1442,23 +1440,5 @@ namespace Subzz.Api.Controllers.User
         }
 
         #endregion
-
-        [Route("updateSubscription")]
-        [HttpGet]
-        public IActionResult UpdateSubscription([FromBody]SubzzV2.Core.Entities.User user)
-        {
-            try
-            {
-                var result = _service.UpdateSubscription(user);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-            }
-            return null;
-        }
     }
 }

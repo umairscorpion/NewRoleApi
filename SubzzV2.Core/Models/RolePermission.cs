@@ -12,5 +12,6 @@ namespace SubzzV2.Core.Models
         public int PermissionCategoryId { get; set; }
         public string DisplayName { get; set; }
         public bool IsChecked { get; set; }
+        public bool IsHided { get; set; }
     }
 }

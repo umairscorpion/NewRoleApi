@@ -33,17 +33,23 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                         param.Add("@ToDate", filter.ToDate);
                     }
                 }
-                if (filter.LocationId == null || filter.LocationId == "")
+                if (filter.DistrictId == 0)
                 {
-                    param.Add("@LocationId", filter.OrganizationId);
                     param.Add("@DistrictId", filter.District);
                 }
                 else
                 {
-                    param.Add("@LocationId", filter.LocationId);
-                    param.Add("@DistrictId", filter.District);
+                    param.Add("@DistrictId", filter.DistrictId);
                 }
-                param.Add("@JobNumber", filter.JobNumber);
+                if (filter.LocationId == null || filter.LocationId == "")
+                {
+                    param.Add("@LocationId", filter.OrganizationId);
+                }
+                else
+                {
+                    param.Add("@LocationId", filter.LocationId);
+                }
+                param.Add("@ConfirmationNumber", filter.ConfirmationNumber);
                 param.Add("@AbsenceTypeId", filter.AbsenceTypeId);
                 param.Add("@ReasonId", filter.ReasonId);
                 param.Add("@EmployeeName", filter.EmployeeName);
@@ -78,17 +84,23 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                         param.Add("@ToDate", filter.ToDate);
                     }
                 }
-                if (filter.LocationId == null || filter.LocationId == "")
+                if (filter.DistrictId == 0)
                 {
-                    param.Add("@LocationId", filter.OrganizationId);
                     param.Add("@DistrictId", filter.District);
                 }
                 else
                 {
-                    param.Add("@LocationId", filter.LocationId);
-                    param.Add("@DistrictId", filter.District);
+                    param.Add("@DistrictId", filter.DistrictId);
                 }
-                param.Add("@JobNumber", filter.JobNumber);
+                if (filter.LocationId == null || filter.LocationId == "")
+                {
+                    param.Add("@LocationId", filter.OrganizationId);
+                }
+                else
+                {
+                    param.Add("@LocationId", filter.LocationId);
+                }
+                param.Add("@ConfirmationNumber", filter.ConfirmationNumber);
                 param.Add("@AbsenceTypeId", filter.AbsenceTypeId);
                 param.Add("@ReasonId", filter.ReasonId);
                 param.Add("@EmployeeName", filter.EmployeeName);
@@ -115,7 +127,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                 }
                 param.Add("@FromDate", filter.FromDate);
                 param.Add("@ToDate", filter.ToDate);
-                param.Add("@JobNumber", filter.JobNumber);
+                param.Add("@ConfirmationNumber", filter.ConfirmationNumber);
                 param.Add("@AbsenceTypeId", filter.AbsenceTypeId);
                 param.Add("@ReasonId", filter.ReasonId);
                 param.Add("@EmployeeName", filter.EmployeeName);

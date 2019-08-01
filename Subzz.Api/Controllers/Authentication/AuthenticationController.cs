@@ -164,5 +164,23 @@ namespace Subzz.Api.Controllers.Authentication
 
         }
 
+        [Route("updateSubscription")]
+        [HttpPost]
+        public IActionResult UpdateSubscription([FromBody]SubzzV2.Core.Entities.User user)
+        {
+            try
+            {
+                var result = _userService.UpdateSubscription(user);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
     }
 }
