@@ -143,7 +143,6 @@ namespace Subzz.DataAccess.Repositories.Users
                     }
                 }
             }
-
             return model;
         }
 
