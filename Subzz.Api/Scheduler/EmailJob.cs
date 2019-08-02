@@ -94,6 +94,14 @@ namespace Subzz.Api.Schedules
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
             }
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
+            }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
             message.Subject = absenceDetail.SubjectDescription;
@@ -163,6 +171,14 @@ namespace Subzz.Api.Schedules
             else
             {
                 message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+            }
+            if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+            {
+                message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+            }
+            else
+            {
+                message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
             }
             message.EmployeeName = absenceDetail.EmployeeName;
             message.Position = absenceDetail.PositionDescription;
