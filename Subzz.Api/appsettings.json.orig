@@ -17,36 +17,36 @@
     "web": "https://sv2.loginsubzz.com"
   },
   "ConnectionStrings": {
+<<<<<<< HEAD
     "MembershipContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Users;Integrated Security=True",
     "LocationsContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Locations;Integrated Security=True",
     "LookupsContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Lookups;Integrated Security=True",
     "LeaveContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Leaves;Integrated Security=True",
     "SettingContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True",
     "LogContext": "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Logs;Integrated Security=True"
+=======
+    "MembershipContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Users;Integrated Security=True",
+    "LocationsContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Locations;Integrated Security=True",
+    "LookupsContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Lookups;Integrated Security=True",
+    "LeaveContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Leaves;Integrated Security=True",
+    "SettingContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True",
+    "LogContext": "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Logs;Integrated Security=True"
+>>>>>>> d0ca1c7235c11b2d32348080391226f4ec0e243d
   }
   //"connectionstrings": {
-  //  "membershipcontext": "data source=162.241.138.178;initial catalog=subzz_users;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
-  //  "locationscontext": "data source=162.241.138.178;initial catalog=subzz_locations;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
-  //  "lookupscontext": "data source=162.241.138.178;initial catalog=subzz_lookups;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
-  //  "leavecontext": "data source=162.241.138.178;initial catalog=subzz_leaves;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
-  //  "settingcontext": "data source=162.241.138.178;initial catalog=subzz_settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
-  //  "logcontext": "data source=162.241.138.178;initial catalog=subzz_logs;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"
-  //}
-  //"connectionstrings": {
-<<<<<<< HEAD
-  //  "membershipcontext": "data source=162.241.138.178\\stg;initial catalog=subzz_users;user id=tamoor;password=password;multipleactiveresultsets=true",
-  //  "locationscontext": "data source=162.241.138.178\\stg;initial catalog=subzz_locations;user id=tamoor;password=password;multipleactiveresultsets=true",
-  //  "lookupscontext": "data source=162.241.138.178\\stg;initial catalog=subzz_lookups;user id=tamoor;password=password;multipleactiveresultsets=true",
-  //  "leavecontext": "data source=162.241.138.178\\stg;initial catalog=subzz_leaves;user id=tamoor;password=password;multipleactiveresultsets=true",
-  //  "settingcontext": "data source=162.241.138.178\\stg;initial catalog=subzz_settings;user id=tamoor;password=password;multipleactiveresultsets=true",
-  //  "logcontext": "data source=162.241.138.178\\stg;initial catalog=subzz_logs;user id=tamoor;password=password;multipleactiveresultsets=true"
-=======
   //  "membershipcontext": "data source=162.241.138.178;initial catalog=subzz_users_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
   //  "locationscontext": "data source=162.241.138.178;initial catalog=subzz_locations_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
   //  "lookupscontext": "data source=162.241.138.178;initial catalog=subzz_lookups_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
   //  "leavecontext": "data source=162.241.138.178;initial catalog=subzz_leaves_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
   //  "settingcontext": "data source=162.241.138.178;initial catalog=subzz_settings_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",
   //  "logcontext": "data source=162.241.138.178;initial catalog=subzz_logs_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"
->>>>>>> cfdd63c3fcc426abee39c1a971df686f31b07eaa
+  //}
+  //"connectionstrings": {
+  //  "membershipcontext": "data source=162.241.138.178\\stg;initial catalog=subzz_users;user id=tamoor;password=password;multipleactiveresultsets=true",
+  //  "locationscontext": "data source=162.241.138.178\\stg;initial catalog=subzz_locations;user id=tamoor;password=password;multipleactiveresultsets=true",
+  //  "lookupscontext": "data source=162.241.138.178\\stg;initial catalog=subzz_lookups;user id=tamoor;password=password;multipleactiveresultsets=true",
+  //  "leavecontext": "data source=162.241.138.178\\stg;initial catalog=subzz_leaves;user id=tamoor;password=password;multipleactiveresultsets=true",
+  //  "settingcontext": "data source=162.241.138.178\\stg;initial catalog=subzz_settings;user id=tamoor;password=password;multipleactiveresultsets=true",
+  //  "logcontext": "data source=162.241.138.178\\stg;initial catalog=subzz_logs;user id=tamoor;password=password;multipleactiveresultsets=true"
   //}
 }
