@@ -130,6 +130,9 @@ namespace Subzz.Api
             services.AddTransient<IErrorLogService, ErrorLogService>();
             services.AddTransient<IErrorLogRepository, ErrorLogRepository>();
 
+            services.AddTransient<IAnnouncementService, AnnouncementService>();
+            services.AddTransient<IAnnouncementRepository, AnnouncementRepository>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            .AddJwtBearer(options =>
            {

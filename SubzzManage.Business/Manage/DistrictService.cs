@@ -28,7 +28,7 @@ namespace SubzzManage.Business.District
         {
             return _repo.GetDistricts();
         }
-        public bool DeleteDistrict(int id)
+        public int DeleteDistrict(int id)
         {
             return _repo.DeleteDistrict(id);
         }
@@ -52,7 +52,7 @@ namespace SubzzManage.Business.District
             return _repo.GetAllowances(districtId);
         }
 
-        public bool DeleteAllowance(int id)
+        public int DeleteAllowance(int id)
         {
             return _repo.DeleteAllowance(id);
         }

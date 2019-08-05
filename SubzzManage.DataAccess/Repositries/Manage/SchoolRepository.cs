@@ -22,7 +22,6 @@ namespace SubzzManage.DataAccess.Repositries.Manage
         {
             Configuration = configuration;
         }
-
         protected IDbConnection Db
         {
             get
@@ -31,6 +30,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             }
         }
         public IConfiguration Configuration { get; }
+
         public OrganizationModel InsertSchool(OrganizationModel model)
         {
             var sql = "[Location].[InsertAndUpdateSchool]";
@@ -57,6 +57,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             model.SchoolId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }
+
         public OrganizationModel UpdateSchool(OrganizationModel model)
         {
             try
@@ -91,21 +92,23 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             
             return model;
         }
+
         public IEnumerable<OrganizationModel> GetSchools()
         {
             var sql = "[Location].[GetSchools]";
             var queryParams = new DynamicParameters();
             return Db.Query<OrganizationModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
-        public bool DeleteSchool(string SchoolId)
+        
+        public int DeleteSchool(string SchoolId)
         {
             int hasSucceeded = 0;
             var sql = "[Location].[DeleteSchool]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@SchoolId", SchoolId);
             queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
-            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
-            return result;
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+
 
         }
 

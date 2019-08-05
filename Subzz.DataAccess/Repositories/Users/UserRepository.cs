@@ -420,7 +420,7 @@ namespace Subzz.DataAccess.Repositories.Users
             {
                 var sql = "[users].[UpdateGradeLevelNotification]";
                 var queryParams = new DynamicParameters();
-                queryParams.Add("@SubstituteId", substituteEventModel.SubstituteId);
+                queryParams.Add("@SubstituteId", substituteEventModel.UserId);
                 queryParams.Add("@TeachingLevelId", substituteEventModel.TeachingLevelId);
                 queryParams.Add("@GradeNotification", substituteEventModel.GradeNotification);
                 return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
@@ -443,7 +443,7 @@ namespace Subzz.DataAccess.Repositories.Users
             {
                 var sql = "[users].[UpdateSubjectNotification]";
                 var queryParams = new DynamicParameters();
-                queryParams.Add("@SubstituteId", substituteEventModel.SubstituteId);
+                queryParams.Add("@SubstituteId", substituteEventModel.UserId);
                 queryParams.Add("@TeacherSpecialityId", substituteEventModel.TeacherSpecialityId);
                 queryParams.Add("@SubjectNotification", substituteEventModel.SubjectNotification);
                 return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);

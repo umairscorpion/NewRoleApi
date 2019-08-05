@@ -33,7 +33,7 @@ namespace SubzzManage.Business.Manage
             return _repo.GetSchools();
         }
 
-        public bool DeleteSchool(string schoolId)
+        public int DeleteSchool(string schoolId)
         {
             return _repo.DeleteSchool(schoolId);
         }

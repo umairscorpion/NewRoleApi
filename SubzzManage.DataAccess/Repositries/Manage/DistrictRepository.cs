@@ -91,15 +91,14 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             return Db.Query<DistrictModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
-        public bool DeleteDistrict(int id)
+        public int DeleteDistrict(int id)
         {
             int hasSucceeded = 0;
             var sql = "[Location].[DeleteDistrict]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", id);
             queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
-            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
-            return result;
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
 
         }
         public IEnumerable<DistrictModel> GetDistrict(int id)
@@ -148,15 +147,14 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             return Db.Query<Allowance>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
-        public bool DeleteAllowance(int id)
+        public int DeleteAllowance(int id)
         {
             int hasSucceeded = 0;
             var sql = "[Location].[sp_deleteAllowance]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@Id", id);
             queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
-            var result = Delete(sql, queryParams, CommandType.StoredProcedure);
-            return result;
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
         }
 
         public bool Delete(string sql, DynamicParameters param, CommandType commandType)
