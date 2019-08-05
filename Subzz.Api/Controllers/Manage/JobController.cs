@@ -46,7 +46,7 @@ namespace Subzz.Api.Controllers.Manage
         [HttpPost]
         public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs([FromBody]AbsenceModel absenceModel)
         {
-                var result = await _jobService.GetAvailableJobs(absenceModel.StartDate, absenceModel.EndDate, absenceModel.SubstituteId, absenceModel.OrganizationId, absenceModel.DistrictId, absenceModel.Status, absenceModel.Requested);
+            var result = await _jobService.GetAvailableJobs(absenceModel.StartDate, absenceModel.EndDate, absenceModel.SubstituteId, absenceModel.OrganizationId, absenceModel.DistrictId, absenceModel.Status, absenceModel.Requested);
             return result;
         }
 
@@ -82,6 +82,14 @@ namespace Subzz.Api.Controllers.Manage
                     else
                     {
                         message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
+                    }
+                    if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+                    {
+                        message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+                    }
+                    else
+                    {
+                        message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
                     }
                     message.EmployeeName = absenceDetail.EmployeeName;
                     message.Position = absenceDetail.PositionDescription;
@@ -149,7 +157,14 @@ namespace Subzz.Api.Controllers.Manage
                 {
                     message.DateToDisplayInSMS = Convert.ToDateTime(absenceDetail.StartDate).ToSubzzShortDateForSMS() + "-" + Convert.ToDateTime(absenceDetail.EndDate).ToSubzzDateForSMS();
                 }
-
+                if (!string.IsNullOrEmpty(absenceDetail.OrganizationPhoneNumber) && absenceDetail.OrganizationPhoneNumber.Length > 5)
+                {
+                    message.FromPhoneNumber = absenceDetail.OrganizationPhoneNumber;
+                }
+                else
+                {
+                    message.FromPhoneNumber = absenceDetail.DistrictPhoneNumber;
+                }
                 message.EmployeeName = absenceDetail.EmployeeName;
                 message.Position = absenceDetail.PositionDescription;
                 message.Subject = absenceDetail.SubjectDescription;
@@ -284,6 +299,5 @@ namespace Subzz.Api.Controllers.Manage
                 }
             }
         }
-
     }
 }

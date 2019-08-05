@@ -60,8 +60,15 @@ namespace SubzzV2.Integration.Core.Notification
             };
 
             string body = PrepareBodyMessage(param, smsTemplate.TextContent);
-
-            CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body, message.AbsenceId);
+            if (!string.IsNullOrEmpty(message.FromPhoneNumber))
+            {
+                CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, message.PhoneNumber, body, message.AbsenceId);
+            }
+            else
+            {
+                CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body, message.AbsenceId);
+            }
+            
            
 		}
 
