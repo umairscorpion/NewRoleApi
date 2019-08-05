@@ -22,6 +22,7 @@ namespace SubzzV2.Core.Models
         public bool TextAlert { get; set; }
         public string EventName { get; set; }
         public string SubstituteId { get; set; }
+        public bool IsSubscribedEmail { get; set; }
 
         //Grade Levels for Notifications
         public int GradeNotificationId { get; set; }

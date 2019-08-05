@@ -126,7 +126,7 @@ namespace Subzz.Api.Controllers.Manage
 
         [Route("{id}")]
         [HttpDelete]
-        public bool Delete(int id)
+        public int Delete(int id)
         {
             var DeleteDistrict = _service.DeleteDistrict(id);
             // Audit Log
@@ -234,6 +234,7 @@ namespace Subzz.Api.Controllers.Manage
         {
             try
             {
+                var UserId = base.CurrentUser.RoleId;
                 var allowance = _service.GetAllowances(districtId);
             return Ok(allowance);
             }

@@ -20,6 +20,7 @@ namespace SubzzV2.Core.Models
         public DateTime ExpirationEndDate { get; set; }
         public bool IsExpired { get; set; }
         public bool IsExpiredAtEndOfYear { get; set; }
+        public string DistrictName { get; set; }
 
 
     }

@@ -634,6 +634,24 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        [Route("getSubstituteCategoriesById/{id}")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetSubstituteCategoriesById(string id)
+        {
+            try
+            {
+                var Categories = _service.GetSubstituteCategories(id);
+                return Categories;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
         [Route("getSubstituteNotificationEvents")]
         [HttpGet]
         public IEnumerable<SubstituteCategoryModel> GetSubstituteNotificationEvents()
@@ -672,6 +690,24 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        [Route("getGradeLevelsForNotificationById/{id}")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetGradeLevelsForNotificationById(string id)
+        {
+            try
+            {
+                var events = _service.GetGradeLevelsForNotification(id);
+                return events;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
         [Route("getSubjectsForNotifications")]
         [HttpGet]
         public IEnumerable<SubstituteCategoryModel> GetSubjectsForNotifications()
@@ -680,6 +716,24 @@ namespace Subzz.Api.Controllers.User
             {
                 var UserId = base.CurrentUser.Id;
                 var events = _service.GetSubjectsForNotifications(UserId);
+                return events;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("getSubjectsForNotificationsById/{id}")]
+        [HttpGet]
+        public IEnumerable<SubstituteCategoryModel> GetSubjectsForNotificationsById(string id)
+        {
+            try
+            {
+                var events = _service.GetSubjectsForNotifications(id);
                 return events;
             }
             catch (Exception ex)
@@ -777,7 +831,7 @@ namespace Subzz.Api.Controllers.User
             {
                 foreach (SubstituteCategoryModel cate in substituteEventModel)
                 {
-                    cate.SubstituteId = base.CurrentUser.Id;
+                    //cate.SubstituteId = base.CurrentUser.Id;
                     var events = _service.UpdateGradeLevelNotification(cate);
                 }
                 // Audit Log
