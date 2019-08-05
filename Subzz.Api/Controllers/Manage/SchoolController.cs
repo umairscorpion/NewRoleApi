@@ -105,7 +105,7 @@ namespace Subzz.Api.Controllers.Manage
 
         [Route("{id}")]
         [HttpDelete]
-        public bool Delete(string id)
+        public int Delete(string id)
         {
             var DeleteSchool = _service.DeleteSchool(id);
             // Audit Log

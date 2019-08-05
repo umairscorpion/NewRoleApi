@@ -12,7 +12,7 @@ namespace SubzzManage.DataAccess.Repositries.Manage.Interface
         OrganizationModel InsertSchool(OrganizationModel user);
         OrganizationModel UpdateSchool(OrganizationModel model);
         IEnumerable<OrganizationModel> GetSchools();
-        bool DeleteSchool(string schoolId);
+        int DeleteSchool(string schoolId);
         IEnumerable<OrganizationModel> GetSchool(string schoolId);
         IEnumerable<OrganizationModel> GetOrganizationsByDistrictId(int districtId);
         LocationTime GetOrganizationTimeByOrganizationId(string OrganizationId);
