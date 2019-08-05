@@ -67,9 +67,11 @@ namespace SubzzV2.Integration.Core.Notification
         public SmsTemplate GetSmsTemplateById(int id)
         {
             string connectionString = "data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true";
-            //string connectionString = "Data Source=DESKTOP-BQ3LKMC\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
+            //string connectionString = "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
             List<SmsTemplate> smsTemplatesList;
+
             using (var dc = new SqlConnection(connectionString))
+            //using (var dc = new SqlConnection("data source=162.241.138.178\\stg;Initial Catalog=Subzz_Settings;user id=tamoor;password=password;multipleactiveresultsets=true"))
             {
                 smsTemplatesList = dc.Query<SmsTemplate>(@"
 					SELECT
@@ -88,8 +90,9 @@ namespace SubzzV2.Integration.Core.Notification
         public async Task<MailTemplate> GetMailTemplateByIdAsync(int id)
         {
             List<MailTemplate> mailTemplatesList;
-            //using (var dc = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
-            using (var dc = new SqlConnection("data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"))
+            using (var dc = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
+            //using (var dc = new SqlConnection("data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"))
+            //using (var dc = new SqlConnection("data source=162.241.138.178\\stg;Initial Catalog=Subzz_Settings;user id=tamoor;password=password;multipleactiveresultsets=true"))
             {
                 try
                 {
@@ -105,7 +108,7 @@ namespace SubzzV2.Integration.Core.Notification
 						,[EmailDisclaimerContent]
 						,[SupportEmail]
 					FROM [Settings].[EmailTemplate]
-					WHERE [EmailTemplate_Id] = " + id +"").Result.ToList();
+					WHERE [EmailTemplate_Id] = " + id + "").Result.ToList();
                     if (!mailTemplatesList.Any())
                     {
                         throw new ArgumentException(string.Format("Template with specified id {0} doesn't exist", id), "id");
@@ -115,9 +118,9 @@ namespace SubzzV2.Integration.Core.Notification
                 }
                 catch (Exception ex)
                 {
-                   
+
                 }
-                
+
             }
             return null;
         }

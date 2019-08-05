@@ -159,7 +159,6 @@ namespace Subzz.Api
             }
             app.UseCors("EnableCORS");
             app.UseAuthentication();
-            //app.ConfigureExceptionHandler();
             app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseStaticFiles();// For the wwwroot folder
