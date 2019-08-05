@@ -24,6 +24,7 @@ namespace Subzz.Api.Controllers.Manage
             _service = service;
             _audit = audit;
         }
+
         [Route("insertSchool")]
         [HttpPost]
         public OrganizationModel InsertSchool([FromBody]OrganizationModel model)

@@ -46,7 +46,7 @@ namespace Subzz.Api.Controllers.Manage
         [HttpPost]
         public async Task<IEnumerable<AbsenceModel>> GetAvailableJobs([FromBody]AbsenceModel absenceModel)
         {
-                var result = await _jobService.GetAvailableJobs(absenceModel.StartDate, absenceModel.EndDate, absenceModel.SubstituteId, absenceModel.OrganizationId, absenceModel.DistrictId, absenceModel.Status, absenceModel.Requested);
+            var result = await _jobService.GetAvailableJobs(absenceModel.StartDate, absenceModel.EndDate, absenceModel.SubstituteId, absenceModel.OrganizationId, absenceModel.DistrictId, absenceModel.Status, absenceModel.Requested);
             return result;
         }
 
@@ -299,6 +299,5 @@ namespace Subzz.Api.Controllers.Manage
                 }
             }
         }
-
     }
 }
