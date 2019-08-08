@@ -12,10 +12,15 @@ namespace Subzz.Business.Services.Users
         {
             _repo = repo;
         }
-        public string InsertAnnouncement(OrganizationModel model)
+
+        public string InsertAnnouncement(Announcements model)
         {
             return _repo.InsertAnnouncement(model);
         }
 
+        public List<Announcements> GetAnnouncements(Announcements model)
+        {
+            return _repo.GetAnnouncements(model);
+        }
     }
 }
