@@ -350,5 +350,30 @@ namespace Subzz.Business.Services.Users
             return _repo.UpdateSubscription(user);
         }
 
+        #region SubstituteList
+
+        public SubstituteCategory InsertSubstituteCategory(SubstituteCategory substituteCategory)
+        {
+
+            return _repo.InsertSubstituteCategory(substituteCategory);
+        }
+
+        public SubstituteCategory UpdateSubstituteCategory(SubstituteCategory substituteCategory)
+        {
+            return _repo.UpdateSubstituteCategory(substituteCategory);
+        }
+
+        public List<SubstituteCategory> GetSubstituteCategoryList(int districtId)
+        {
+            return _repo.GetSubstituteCategoryList(districtId);
+        }
+
+        public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId)
+        {
+            return _repo.GetSubstituteByCategoryId(CategoryId);
+        }
+
+        #endregion
+
     }
 }

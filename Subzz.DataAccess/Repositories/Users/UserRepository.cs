@@ -1010,5 +1010,63 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<Event>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
         #endregion
+
+        #region SubstituteList
+
+        public SubstituteCategory InsertSubstituteCategory(SubstituteCategory substituteCategory)
+        {
+            const string query = "[Users].[sp_insertSubstituteCategory]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@CategoryId", substituteCategory.CategoryId);
+            queryParams.Add("@Title", substituteCategory.Title);
+            queryParams.Add("@OrganizationId", "-1");
+            queryParams.Add("@DistrictId", substituteCategory.DistrictId);
+            queryParams.Add("@CreatedDate", DateTime.Now);
+            return Db.Query<SubstituteCategory>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public SubstituteCategory UpdateSubstituteCategory(SubstituteCategory substituteCategory)
+        {
+            //Delete Existing List
+            DeleteSubstituteListAgainstCategory(substituteCategory.CategoryId);
+
+            //Update Substitute List Category
+            const string query = "[Users].[sp_updateSubstituteCategory]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@CategoryId", substituteCategory.CategoryId);
+            foreach(SubstituteList sub in substituteCategory.SubstituteList)
+            {
+                queryParams.Add("@UserId", sub.UserId);
+                queryParams.Add("@CreatedDate", DateTime.Now);
+                if (sub.IsAdded)
+                    Db.Query<SubstituteCategory>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return substituteCategory;
+        }
+
+        private void DeleteSubstituteListAgainstCategory(int CategoryId)
+        {
+            const string query = "[Users].[sp_DeleteSubstituteList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@CategoryId", CategoryId);
+            Db.Query<int>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+        
+        public List<SubstituteCategory> GetSubstituteCategoryList(int districtId)
+        {
+            const string query = "[Users].[sp_getSubstituteCategoryList]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@districtId", districtId);
+            return Db.Query<SubstituteCategory>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId)
+        {
+            const string query = "[Users].[sp_getSubstituteListByCategoryId]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@CategoryId", CategoryId);
+            return Db.Query<SubstituteList>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+        #endregion
     }
 }

@@ -97,7 +97,9 @@
     <Compile Include="Models\StateModel.cs" />
     <Compile Include="Models\SubstituteAvailability.cs" />
     <Compile Include="Models\SubstituteAvailabilitySummary.cs" />
+    <Compile Include="Models\SubstituteCategory.cs" />
     <Compile Include="Models\SubstituteCategoryModel.cs" />
+    <Compile Include="Models\SubstituteList.cs" />
     <Compile Include="Models\SubstitutePreferenceModel.cs" />
     <Compile Include="Models\SubzzVersion.cs" />
     <Compile Include="Models\Test.cs" />
