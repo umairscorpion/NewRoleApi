@@ -4,6 +4,7 @@ using SubzzManage.DataAccess.Repositries.Manage.Interface;
 using SubzzV2.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,6 +59,13 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             catch (Exception ex) { }
             finally { }
             return null;
+        }
+        public IEnumerable<AbsenceModel> GetRunningLate()
+        {
+            var connection = base.GetConnection;
+            var sql = "[Job].[GetRunningLate]";
+            var queryParams = new DynamicParameters();
+            return connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
     }
 }

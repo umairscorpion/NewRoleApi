@@ -460,6 +460,28 @@ namespace Subzz.DataAccess.Repositories.Users
 
         }
 
+        public int UpdateUserNotifications(SubstituteCategoryModel substituteEventModel)
+        {
+            try
+            {
+                var sql = "[users].[UpdateUserNotifications]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@UserId", substituteEventModel.UserId);
+                queryParams.Add("@isSubscribedEmail", substituteEventModel.IsSubscribedEmail);
+                return Db.ExecuteScalar<int>(sql, queryParams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+
+            }
+            return 0;
+
+        }
+
         public LocationTime GetUserLocationTime(string userId, int userLevel)
         {
             var sql = "[users].[GetUserLocationTime]";

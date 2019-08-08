@@ -19,12 +19,21 @@
     "web": "https://stg.loginsubzz.com"
   },
   "connectionstrings": {
+<<<<<<< HEAD
     "membershipcontext": "data source=DESKTOP-BQ3LKMC\\SQLEXPRESS;initial catalog=subzz_users;integrated security=true",
     "locationscontext": "data source=DESKTOP-BQ3LKMC\\SQLEXPRESS;initial catalog=subzz_locations;integrated security=true",
     "lookupscontext": "data source=DESKTOP-BQ3LKMC\\SQLEXPRESS;initial catalog=subzz_lookups;integrated security=true",
     "leavecontext": "data source=DESKTOP-BQ3LKMC\\SQLEXPRESS;initial catalog=subzz_leaves;integrated security=true",
     "settingcontext": "data source=DESKTOP-BQ3LKMC\\SQLEXPRESS;initial catalog=subzz_settings;integrated security=true",
     "logcontext": "data source=DESKTOP-BQ3LKMC\\SQLEXPRESS;initial catalog=subzz_logs;integrated security=true"
+=======
+    "membershipcontext": "data source=DESKTOP-V00GN3I\\SQLEXPRESS;initial catalog=subzz_users;integrated security=true",
+    "locationscontext": "data source=DESKTOP-V00GN3I\\SQLEXPRESS;initial catalog=subzz_locations;integrated security=true",
+    "lookupscontext": "data source=DESKTOP-V00GN3I\\SQLEXPRESS;initial catalog=subzz_lookups;integrated security=true",
+    "leavecontext": "data source=DESKTOP-V00GN3I\\SQLEXPRESS;initial catalog=subzz_leaves;integrated security=true",
+    "settingcontext": "data source=DESKTOP-V00GN3I\\SQLEXPRESS;initial catalog=subzz_settings;integrated security=true",
+    "logcontext": "data source=DESKTOP-V00GN3I\\SQLEXPRESS;initial catalog=subzz_logs;integrated security=true"
+>>>>>>> 85bab80068e872f212579ca1f769879746f222e6
   }
   //"connectionstrings": {
   //  "membershipcontext": "data source=162.241.138.178;initial catalog=subzz_users_stg;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true",

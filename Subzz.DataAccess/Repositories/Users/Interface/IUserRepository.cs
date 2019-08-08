@@ -41,6 +41,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         int UpdateNotificationEvents(SubstituteCategoryModel substituteEventModel);
         int UpdateGradeLevelNotification(SubstituteCategoryModel substituteEventModel);
         int UpdateSubjectNotification(SubstituteCategoryModel substituteEventModel);
+        int UpdateUserNotifications(SubstituteCategoryModel substituteEventModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
 

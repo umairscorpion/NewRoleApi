@@ -68,8 +68,11 @@ namespace SubzzV2.Core.Models
         public int AbsenceResendCounter { get; set; }
         public string DistrictPhoneNumber { get; set; }
         public string OrganizationPhoneNumber { get; set; }
+<<<<<<< HEAD
         public int RunningLateId { get; set; }
         public string RunningLateTitle { get; set; }
+=======
         public string AcceptedVia { get; set; }
+>>>>>>> 85bab80068e872f212579ca1f769879746f222e6
     }
 }
