@@ -24,24 +24,42 @@ namespace Subzz.Api.Controllers.Announcement
 
         [Route("insertAnnouncement")]
         [HttpPost]
-        public IActionResult InsertAnnouncement([FromBody]OrganizationModel model)
+        public IActionResult InsertAnnouncement([FromBody]Announcements model)
         {
             try
             {
-                var announcement = _service.InsertAnnouncement(model);
+                var AnnouncementId = _service.InsertAnnouncement(model);
                 // Audit Log
                 var audit = new AuditLog
                 {
                     UserId = CurrentUser.Id,
-                    EntityId = model.SchoolId.ToString(),
-                    EntityType = AuditLogs.EntityType.School,
-                    ActionType = AuditLogs.ActionType.CreatedSchool,
+                    EntityId = model.AnnouncementId.ToString(),
+                    EntityType = AuditLogs.EntityType.Announcement,
+                    ActionType = AuditLogs.ActionType.CreatedAnnouncement,
                     PostValue = Serializer.Serialize(model),
                     DistrictId = CurrentUser.DistrictId,
                     OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                 };
                 _audit.InsertAuditLog(audit);
-                return Json(announcement);
+                return Json(AnnouncementId);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("getAnnouncement")]
+        [HttpPost]
+        public IActionResult GetAnnouncements([FromBody]Announcements model)
+        {
+            try
+            {
+                var Announcements = _service.GetAnnouncements(model);
+                return Ok(Announcements);
             }
             catch (Exception ex)
             {

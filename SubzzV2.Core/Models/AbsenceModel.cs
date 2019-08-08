@@ -70,6 +70,6 @@ namespace SubzzV2.Core.Models
         public string OrganizationPhoneNumber { get; set; }
         public int RunningLateId { get; set; }
         public string RunningLateTitle { get; set; }
+        public string AcceptedVia { get; set; }
     }
-
 }
