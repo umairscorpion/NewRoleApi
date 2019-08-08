@@ -50,6 +50,25 @@ namespace Subzz.Api.Controllers.Manage
             return result;
         }
 
+        [Route("getRunningLate")]
+        [HttpGet]
+        public IEnumerable<AbsenceModel> GetRunningLate()
+        {
+            try
+            {
+                var msg = _jobService.GetRunningLate();
+                return msg;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+
+        }
+
         [Route("acceptJob/{AbsenceId}/{SubstituteId}/{AcceptVia}")]
         [HttpGet]
         public async Task<string> AcceptJob(int AbsenceId, string SubstituteId, string AcceptVia)

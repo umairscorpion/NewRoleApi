@@ -26,5 +26,10 @@ namespace SubzzManage.Business.Manage
         {
             return await _jobRepository.AcceptJob(AbsenceId, SubstituteId, AcceptVia);
         }
+
+        public IEnumerable<AbsenceModel> GetRunningLate()
+        {
+            return _jobRepository.GetRunningLate();
+        }
     }
 }

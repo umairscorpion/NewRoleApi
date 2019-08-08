@@ -892,6 +892,38 @@ namespace Subzz.Api.Controllers.User
             return 0;
 
         }
+        [Route("updateUserNotifications")]
+        [HttpPatch]
+        public int UpdateUserNotifications([FromBody] SubstituteCategoryModel substituteEventModel)
+        {
+            try
+            {
+
+                    substituteEventModel.SubstituteId = base.CurrentUser.Id;
+                    var events = _service.UpdateUserNotifications(substituteEventModel);
+                // Audit Log
+                var audit = new AuditLog
+                {
+                    UserId = CurrentUser.Id,
+                    EntityType = AuditLogs.EntityType.User,
+                    ActionType = AuditLogs.ActionType.UpdatedNotifySettings,
+                    PostValue = Serializer.Serialize(substituteEventModel),
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
+                return 1;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return 0;
+
+        }
 
         [Route("getUserLocationTime/{userId}/{userLevel}")]
         [HttpGet]
