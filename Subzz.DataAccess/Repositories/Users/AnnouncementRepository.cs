@@ -30,7 +30,7 @@ namespace Subzz.DataAccess.Repositories.Users
             }
         }
         public IConfiguration Configuration { get; }
-
+        
         public string InsertAnnouncement(Announcements model)
         {
             var sql = "[Users].[CreateAnnouncement]";
