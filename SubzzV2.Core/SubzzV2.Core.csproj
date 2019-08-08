@@ -59,6 +59,7 @@
     <Compile Include="Models\AbsenceSummary.cs" />
     <Compile Include="Models\AbsenceSummaryTotal.cs" />
     <Compile Include="Models\Allowance.cs" />
+    <Compile Include="Models\Announcements.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\AuditLogFilter.cs" />
     <Compile Include="Models\CalendarEvent.cs" />

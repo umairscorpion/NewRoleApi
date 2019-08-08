@@ -15,7 +15,8 @@
             public static string ChangedPassword = "ChangedPassword";
             public static string PayRate         = "PayRate";
             public static string PayRateRule     = "PayRateRule";
-            public static string Unavailability = "Unavailability";
+            public static string Unavailability  = "Unavailability";
+            public static string Announcement    = "Unavailability";
         }
 
         public static class ActionType
@@ -82,7 +83,6 @@
             public static string UpdatedSubList     = "Updated School Substitute List";
             public static string UpdatedBlockedList = "Updated School Blocked Substitute List";
 
-
             // For LeaveType Related Actions
             public static string CreatedLeaveType   = "Added Leave Type";
             public static string UpdatedLeaveType   = "Updated Leave Type";
@@ -111,6 +111,11 @@
             public static string CreatedUnavailability = "Added Unavailability";
             public static string UpdatedUnavailability = "Updated Unavailability";
             public static string DeletedUnavailability = "Deleted Unavailability";
+
+            // For Announcement Related Actions
+            public static string CreatedAnnouncement = "Added Announcement";
+            public static string UpdatedAnnouncement = "Updated Announcement";
+            public static string DeletedAnnouncement = "Deleted Announcement";
         }
     }
 }

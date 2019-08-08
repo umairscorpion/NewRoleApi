@@ -5,6 +5,7 @@ namespace Subzz.Business.Services.Users.Interface
 {
     public interface IAnnouncementService
     {
-        string InsertAnnouncement(OrganizationModel model);
+        string InsertAnnouncement(Announcements model);
+        List<Announcements> GetAnnouncements(Announcements model);
     }
 }
