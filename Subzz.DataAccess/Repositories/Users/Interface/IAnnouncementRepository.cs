@@ -9,6 +9,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
 {
     public interface IAnnouncementRepository
     {
-        string InsertAnnouncement(OrganizationModel model);
+        string InsertAnnouncement(Announcements model);
+        List<Announcements> GetAnnouncements(Announcements model);
     }
 }
