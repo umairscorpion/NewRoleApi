@@ -44,6 +44,7 @@ namespace Subzz.Business.Services.Users.Interface
         int UpdateNotificationEvents(SubstituteCategoryModel substituteEventModel);
         int UpdateGradeLevelNotification(SubstituteCategoryModel substituteEventModel);
         int UpdateSubjectNotification(SubstituteCategoryModel substituteEventModel);
+        int UpdateUserNotifications(SubstituteCategoryModel substituteEventModel);
         AbsenceModel GetUsersForSendingAbsenceNotificationOnEntireSub(int DistrictId, string OrganizationId, int AbsenceId, string SubstituteId);
         Task<int> UpdateSubstitutePeferrence(SubstitutePreferenceModel substitutePreferenceModel);
         IEnumerable<User> GetFavoriteSubstitutes(string UserId);

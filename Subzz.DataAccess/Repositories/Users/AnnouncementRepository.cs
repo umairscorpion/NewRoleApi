@@ -30,26 +30,34 @@ namespace Subzz.DataAccess.Repositories.Users
             }
         }
         public IConfiguration Configuration { get; }
-
-        public string InsertAnnouncement(OrganizationModel model)
+        
+        public string InsertAnnouncement(Announcements model)
         {
-            var sql = "[User].[InsertAnnouncement]";
+            var sql = "[Users].[CreateAnnouncement]";
             var queryParams = new DynamicParameters();
-            queryParams.Add("@SchoolId", model.SchoolId);
-            queryParams.Add("@SchoolName", model.SchoolName);
-            queryParams.Add("@SchoolEmail", model.SchoolEmail);
-            queryParams.Add("@SchoolDistrictId", model.SchoolDistrictId);
-            queryParams.Add("@SchoolAddress", model.SchoolAddress);
-            queryParams.Add("@SchoolEmployees", model.SchoolEmployees);
-            queryParams.Add("@SchoolTimeZone", model.SchoolTimeZone);
-            queryParams.Add("@SchoolStartTime", model.SchoolStartTime);
-            queryParams.Add("@SchoolEndTime", model.SchoolEndTime);
-            queryParams.Add("@School1stHalfEnd", model.School1stHalfEnd);
-            queryParams.Add("@School2ndHalfStart", model.School2ndHalfStart);
-            queryParams.Add("@SchoolCity", model.SchoolCity);
-            queryParams.Add("@SchoolPhone", model.SchoolPhone);
-            queryParams.Add("@SchoolZipCode", model.SchoolZipCode);
+            queryParams.Add("@AnnouncementId", model.AnnouncementId);
+            queryParams.Add("@Recipients", model.Recipients);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@OrganizationId", model.OrganizationId);
+            queryParams.Add("@Title", model.Title);
+            queryParams.Add("@Message", model.Message);
+            queryParams.Add("@ScheduleAnnouncement", model.ScheduleAnnouncement);
+            queryParams.Add("@ShowOn", model.ShowOn);
+            queryParams.Add("@HideOn", model.HideOn);
+            queryParams.Add("@ShowOnDate", model.ShowOnDate);
+            queryParams.Add("@HideOnDate", model.HideOnDate);
+            queryParams.Add("@ShowOnTime", model.ShowOnTime);
+            queryParams.Add("@HideOnTime", model.HideOnTime);
             var result = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public List<Announcements> GetAnnouncements(Announcements model)
+        {
+            var sql = "[Users].[GetAnnouncement]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", model.DistrictId);
+            var result = Db.Query<Announcements>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
             return result;
         }
     }

@@ -10,5 +10,6 @@ namespace SubzzManage.DataAccess.Repositries.Manage.Interface
     {
         Task<IEnumerable<AbsenceModel>> GetAvailableJobs(DateTime StartDate, DateTime EndDate, string UserId, string OrganizationId, int DistrictId, int status, bool Requested);
         Task<string> AcceptJob(int AbsenceId, string SubstituteId, string AcceptVia);
+        IEnumerable<AbsenceModel> GetRunningLate();
     }
 }
