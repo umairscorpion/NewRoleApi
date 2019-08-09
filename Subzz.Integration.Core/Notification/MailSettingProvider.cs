@@ -17,7 +17,7 @@ namespace SubzzV2.Integration.Core.Notification
 			{
 				//string connectionString = ConfigurationManager.ConnectionStrings["DatabaseContext"].ConnectionString;
 				List<MailSettings> mailSettings;
-                //using (var connection = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
+                using (var connection = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
                 //using (var connection = new SqlConnection("data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"))
                 using (var connection = new SqlConnection("data source=162.241.138.178\\stg;Initial Catalog=Subzz_Settings;user id=tamoor;password=password;multipleactiveresultsets=true"))
                 {
