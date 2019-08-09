@@ -180,6 +180,7 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{resetPasswordKey}"] = !string.IsNullOrEmpty(message.resetPassUrl) ? message.resetPassUrl: "",
                 ["{photo}"] = !string.IsNullOrEmpty(message.ProfilePicUrl) ? message.ProfilePicUrl : "",
                 ["{UnsubscriptionUrl}"] = !string.IsNullOrEmpty(message.UnsubscriptionUrl) ? message.UnsubscriptionUrl : "",
+                ["{RunningLateMessage}"] = message.RunningLateMessage ?? "",
             };
             return param;
         }

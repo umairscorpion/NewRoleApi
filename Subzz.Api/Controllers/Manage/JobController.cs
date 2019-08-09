@@ -119,7 +119,7 @@ namespace Subzz.Api.Controllers.Manage
                     message.Notes = absenceDetail.SubstituteNotes;
                     message.SubstituteName = absenceDetail.SubstituteName;
                     message.Reason = absenceDetail.AbsenceReasonDescription;
-                    message.Photo = absenceDetail.EmployeeProfilePicUrl;
+                    message.Photo = absenceDetail.SubstituteProfilePicUrl;
                     message.AttachedFileName = absenceDetail.AttachedFileName;
                     message.FileContentType = absenceDetail.FileContentType;
                     message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
@@ -317,6 +317,90 @@ namespace Subzz.Api.Controllers.Manage
                 {
                 }
             }
+        }
+        async Task SendRunningLateEmail(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message, AbsenceModel absenceDetail)
+        {
+            foreach (var user in users)
+            {
+                try
+                {
+                    message.Password = user.Password;
+                    message.UserName = user.FirstName;
+                    message.SendTo = user.Email;
+                    //For Admins And Substitutes
+                    if (user.RoleId != 4)
+                    {
+                        message.TemplateId = 27;
+                        if (user.IsSubscribedEmail)
+                        {
+                            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        }
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+        [Route("sendRunningLateMessage/{RunningMessage}/{AbsenceId}")]
+        [HttpGet]
+        public async Task<string> SendRunningLateMessage(string RunningMessage, int AbsenceId)
+        {
+            try
+            {
+                //Send Notification here
+                AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
+                IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
+                Message message = new Message();
+                message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+                message.AbsenceId = absenceDetail.AbsenceId;
+                message.StartTime = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                                    CultureInfo.InvariantCulture).ToSubzzTime();
+                message.EndTime = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                            CultureInfo.InvariantCulture).ToSubzzTime();
+                message.StartDate = Convert.ToDateTime(absenceDetail.StartDate).ToString("D");
+                message.EndDate = Convert.ToDateTime(absenceDetail.EndDate).ToString("D");
+                message.StartTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.StartTime), "HH:mm:ss",
+                            CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                message.EndTimeSMS = DateTime.ParseExact(Convert.ToString(absenceDetail.EndTime), "HH:mm:ss",
+                                            CultureInfo.InvariantCulture).ToSubzzTimeForSms();
+                message.EmployeeName = absenceDetail.EmployeeName;
+                message.Position = absenceDetail.PositionDescription;
+                message.Subject = absenceDetail.SubjectDescription;
+                message.Grade = absenceDetail.Grade;
+                message.Location = absenceDetail.AbsenceLocation;
+                message.School = absenceDetail.OrganizationName;
+                message.Notes = absenceDetail.SubstituteNotes;
+                message.SubstituteName = absenceDetail.SubstituteName;
+                message.Reason = absenceDetail.AbsenceReasonDescription;
+                message.Photo = absenceDetail.SubstituteProfilePicUrl;
+                message.AttachedFileName = absenceDetail.AttachedFileName;
+                message.FileContentType = absenceDetail.FileContentType;
+                message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
+                message.RunningLateMessage = RunningMessage;
+                //Notification notification = new Notification();
+                Task.Run(() => SendRunningLateEmail(users, message, absenceDetail));
+
+                // Audit Log
+                //var audit = new AuditLog
+                //{
+                //    UserId = CurrentUser.Id,
+                //    EntityId = absenceDetail.ConfirmationNumber.ToString(),
+                //    EntityType = AuditLogs.EntityType.Absence,
+                //    ActionType = AuditLogs.ActionType.Accepted,
+                //    DistrictId = CurrentUser.DistrictId,
+                //    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                //};
+                //_audit.InsertAuditLog(audit);
+                return "Sent";
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
     }
 }
