@@ -1526,5 +1526,36 @@ namespace Subzz.Api.Controllers.User
         }
 
         #endregion
+
+        #region SubstituteList
+
+        [Route("updateSubstituteList")]
+        [HttpPost]
+        public IActionResult InsertSubstituteList([FromBody]SubstituteCategory substituteCategory)
+        {
+            if (substituteCategory.CategoryId == 0)
+            {
+                var category = _service.InsertSubstituteCategory(substituteCategory);
+                substituteCategory.CategoryId = category.CategoryId;
+            }
+            if(substituteCategory.SubstituteList.Count > 0)
+                 _service.UpdateSubstituteCategory(substituteCategory);
+            return Ok(substituteCategory);
+        }
+
+        [Route("getSubstituteCategoryList/{districtId}")]
+        [HttpGet]
+        public IActionResult GetSubstituteCategoryList(int districtId)
+        {
+            var substituteCategories = new List<SubstituteCategory>();
+            substituteCategories = _service.GetSubstituteCategoryList(districtId);
+            foreach (var substituteCategory in substituteCategories)
+            {
+                substituteCategory.SubstituteList = _service.GetSubstituteByCategoryId(substituteCategory.CategoryId);
+            }
+            return Ok(substituteCategories);
+        }
+
+        #endregion
     }
 }

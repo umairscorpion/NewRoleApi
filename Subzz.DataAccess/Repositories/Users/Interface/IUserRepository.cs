@@ -86,5 +86,12 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         bool VerifyUser(User model);
         Event InsertEvent(Event model);
         string GetUserIdByPhoneNumber(string phoneNumber);
+
+        #region SubstituteList
+        SubstituteCategory InsertSubstituteCategory(SubstituteCategory substituteCategory);
+        SubstituteCategory UpdateSubstituteCategory(SubstituteCategory substituteCategory);
+        List<SubstituteCategory> GetSubstituteCategoryList(int districtId);
+        List<SubstituteList> GetSubstituteByCategoryId(int CategoryId);
+        #endregion
     }
 }

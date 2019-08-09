@@ -17,7 +17,7 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.InsertAnnouncement(model);
         }
-
+        
         public List<Announcements> GetAnnouncements(Announcements model)
         {
             return _repo.GetAnnouncements(model);

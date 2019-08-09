@@ -95,5 +95,13 @@ namespace Subzz.Business.Services.Users.Interface
 
         string GetUserIdByPhoneNumber(string phoneNumber);
         int UpdateSubscription(User user);
+
+        #region SubstituteList
+        SubstituteCategory InsertSubstituteCategory(SubstituteCategory substituteCategory);
+        SubstituteCategory UpdateSubstituteCategory(SubstituteCategory substituteCategory);
+        List<SubstituteCategory> GetSubstituteCategoryList(int districtId);
+        List<SubstituteList> GetSubstituteByCategoryId(int CategoryId);
+        #endregion
+
     }
 }
