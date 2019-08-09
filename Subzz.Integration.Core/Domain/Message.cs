@@ -70,6 +70,8 @@ namespace Subzz.Integration.Core.Domain
         public string UnsubscriptionUrl { get; set; }
         public string FromPhoneNumber { get; set; }
 
+        public string RunningLateMessage { get; set; }
+
     }
 
     public class MailsAttachment
