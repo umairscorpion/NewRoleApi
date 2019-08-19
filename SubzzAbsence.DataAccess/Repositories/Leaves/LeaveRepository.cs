@@ -59,7 +59,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
         {
             var sql = "[Leaves].[UpdateLeaveRequestStatus]";
             var queryParams = new DynamicParameters();
-            queryParams.Add("@LeaveRequestId", model.LeaveRequestId);
+            queryParams.Add("@AbsenceId", model.AbsenceId);
             queryParams.Add("@IsApproved", model.IsApproved);
             queryParams.Add("@IsDeniend", model.IsDeniend);
             queryParams.Add("@IsArchived", model.IsArchived);

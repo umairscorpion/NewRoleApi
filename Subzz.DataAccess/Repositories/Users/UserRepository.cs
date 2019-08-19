@@ -567,6 +567,14 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
+        public IEnumerable<User> GetUsersByDistrictId(int districtId)
+        {
+            var sql = "[users].[GetUsersByDistrictId]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", districtId);
+            return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
+        }
+
         public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
         {
             var sql = "[users].[GetSubstitutePreferredSchools]"; 

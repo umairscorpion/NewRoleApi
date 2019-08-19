@@ -188,6 +188,11 @@ namespace Subzz.Business.Services.Users
             return _repo.GetAdminListByAbsenceId(AbsenceId);
         }
 
+        public IEnumerable<User> GetUsersByDistrictId(int districtId)
+        {
+            return _repo.GetUsersByDistrictId(districtId);
+        }
+
         public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
         {
             return _repo.GetSubstitutePreferredSchools(UserId);

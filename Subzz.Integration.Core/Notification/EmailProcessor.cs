@@ -42,6 +42,11 @@ namespace SubzzV2.Integration.Core.Notification
                 string web = root.GetSection("URL").GetSection("web").Value;
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
+                if(message.TemplateId == 14)
+                {
+                    message.ApproveUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 3;
+                    message.DenyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 4;
+                }
                 if (message.TemplateId == 1)
                 {
                     message.AcceptUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
@@ -181,6 +186,8 @@ namespace SubzzV2.Integration.Core.Notification
                 ["{photo}"] = !string.IsNullOrEmpty(message.ProfilePicUrl) ? message.ProfilePicUrl : "",
                 ["{UnsubscriptionUrl}"] = !string.IsNullOrEmpty(message.UnsubscriptionUrl) ? message.UnsubscriptionUrl : "",
                 ["{RunningLateMessage}"] = message.RunningLateMessage ?? "",
+                ["{ApproveUrl}"] = message.ApproveUrl ?? "",
+                ["{DenyUrl}"] = message.DenyUrl ?? "",
             };
             return param;
         }

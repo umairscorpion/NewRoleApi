@@ -69,8 +69,9 @@ namespace Subzz.Integration.Core.Domain
         public string ConfirmationNumber { get; set; }
         public string UnsubscriptionUrl { get; set; }
         public string FromPhoneNumber { get; set; }
-
         public string RunningLateMessage { get; set; }
+        public string ApproveUrl { get; set; }
+        public string DenyUrl { get; set; }
 
     }
 
