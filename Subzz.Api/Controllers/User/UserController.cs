@@ -225,7 +225,6 @@ namespace Subzz.Api.Controllers.User
             try
             {
                 var userModel = _service.InsertUser(model);
-                SendWelcomeLetter(userModel);
                 if(model.RoleId == 4)
                 {
                     // Audit Log
@@ -267,6 +266,57 @@ namespace Subzz.Api.Controllers.User
             }
             return null;
         }
+
+        [Route("insertUserAndSendWelcomeEmail")]
+        [HttpPost]
+        public SubzzV2.Core.Entities.User InsertUserAndSendWelcomeEmail([FromBody]SubzzV2.Core.Entities.User model)
+        {
+            try
+            {
+                var userModel = _service.InsertUser(model);
+                SendWelcomeLetter(userModel);
+                if (model.RoleId == 4)
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Substitute,
+                        ActionType = AuditLogs.ActionType.CreatedSubstitute,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+                else
+                {
+                    // Audit Log
+                    var audit = new AuditLog
+                    {
+                        UserId = CurrentUser.Id,
+                        EntityId = model.UserId.ToString(),
+                        EntityType = AuditLogs.EntityType.Staff,
+                        ActionType = AuditLogs.ActionType.CreatedEmployee,
+                        PostValue = Serializer.Serialize(model),
+                        DistrictId = CurrentUser.DistrictId,
+                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                    };
+                    _audit.InsertAuditLog(audit);
+                }
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
         [Route("resendWelcomeLetter")]
         [HttpPost]
         public void ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
@@ -274,6 +324,50 @@ namespace Subzz.Api.Controllers.User
             if (user.IsActive == true)
             {
                 SendWelcomeLetter(user);
+            }
+        }
+
+        [Route("sendWellcomeLetterToAll/{DistrictId}")]
+        [HttpGet]
+        public IActionResult SendWelcomeLetterToAll(int districtId)
+        {
+            
+            try
+            {
+                
+                 IEnumerable<SubzzV2.Core.Entities.User> users = _service.GetUsersByDistrictId(districtId);
+                 Task.Run(() => SendWellcomeEmailToAll(users));
+                 return Ok();
+                
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return null;
+            
+
+        }
+
+        async Task SendWellcomeEmailToAll(IEnumerable<SubzzV2.Core.Entities.User> users)
+        {
+            foreach (var user in users)
+            {
+                try
+                {
+                    Message message = new Message();
+                    message.Password = user.Password;
+                    message.UserName = user.FirstName;
+                    message.SendTo = user.Email;
+                    message.Photo = user.ProfilePicture;
+                    message.TemplateId = 25;
+                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+
+                }
+                catch (Exception ex)
+                {
+                }
             }
         }
 
