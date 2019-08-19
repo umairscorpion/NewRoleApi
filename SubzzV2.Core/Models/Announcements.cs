@@ -4,8 +4,9 @@ namespace SubzzV2.Core.Models
 {
     public class Announcements
     {
+        public string UserId { get; set; }
         public int AnnouncementId { get; set; }
-        public int Recipients { get; set; }
+        public string Recipients { get; set; }
         public int DistrictId { get; set; }
         public string OrganizationId { get; set; }
         public string Title { get; set; }

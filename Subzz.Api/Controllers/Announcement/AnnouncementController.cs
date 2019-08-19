@@ -58,6 +58,7 @@ namespace Subzz.Api.Controllers.Announcement
         {
             try
             {
+                model.UserId = base.CurrentUser.Id;
                 var Announcements = _service.GetAnnouncements(model);
                 return Ok(Announcements);
             }
