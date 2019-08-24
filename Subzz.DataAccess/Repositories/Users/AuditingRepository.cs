@@ -62,7 +62,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@LoginUserId", model.LoginUserId);
             queryParams.Add("@SearchByEmployeeName", model.SearchByEmployeeName);
             queryParams.Add("@DistrictId", model.DistrictId);
-            queryParams.Add("@OrganizationId", model.OrganizationId);
+            queryParams.Add("@OrganizationId", model.OrganizationId == "0" ? null : model.OrganizationId);
             var result = Db.Query<AuditLogView>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
             return result;
         }

@@ -7,8 +7,6 @@ using SubzzV2.Core.Models;namespace Subzz.Api.Controllers.Authentication{   
             try
             {
                 model.LoginUserId = base.CurrentUser.Id;
-                model.DistrictId = base.CurrentUser.DistrictId;
-                model.OrganizationId = base.CurrentUser.OrganizationId == "-1" ? null : base.CurrentUser.OrganizationId;
                 var reportDetails = _audit.GetAuditView(model);
                 return Ok(reportDetails);
             }

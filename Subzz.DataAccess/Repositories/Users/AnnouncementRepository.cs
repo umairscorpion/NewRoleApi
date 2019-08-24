@@ -57,6 +57,8 @@ namespace Subzz.DataAccess.Repositories.Users
             var sql = "[Users].[GetAnnouncement]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@OrganizationId", model.OrganizationId);
+            queryParams.Add("@LoginUserId", model.UserId);
             var result = Db.Query<Announcements>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
             return result;
         }

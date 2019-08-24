@@ -49,13 +49,15 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
                 queryParams.Add("@AnyAttachment", model.AnyAttachment);
                 queryParams.Add("@OnlyCertified", model.OnlyCertified);
                 queryParams.Add("@OnlySubjectSpecialist", model.OnlySubjectSpecialist);
+                queryParams.Add("@TeachingLevelId", model.TeachingLevelId);
+                queryParams.Add("@SpecialityTypeId", model.SpecialityTypeId);
                 var absenceConfirmation = connection.Query<AbsenceModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
                 model.AbsenceId = absenceConfirmation.AbsenceId;
                 model.ConfirmationNumber = absenceConfirmation.ConfirmationNumber;
                 if (model.AnyAttachment && model.AbsenceId > 0)
                 {
                     sql = "[Absence].[InsertAttachment]";
-                    queryParams = new DynamicParameters();
+                    queryParams = new DynamicParameters();      
                     queryParams.Add("@AbsenceId", model.AbsenceId);
                     queryParams.Add("@AttachedFileName", model.AttachedFileName);
                     queryParams.Add("@OriginalFileName", model.OriginalFileName);

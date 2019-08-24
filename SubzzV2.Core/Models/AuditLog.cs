@@ -22,6 +22,9 @@ namespace SubzzV2.Core.Models
         public DateTime OccurredOn { get; set; }
         public string User { get; set; }
         public string Event { get; set; }
+        public string DistrictName { get; set; }
+        public string OrganizationName { get; set; }
+        public string UserRoleName { get; set; }
     }
 
     public class AuditLogAbsenceView

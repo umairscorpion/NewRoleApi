@@ -58,7 +58,8 @@ namespace SubzzV2.Core.Models
         public bool IsApprovalRequired { get; set; }
         public string UpdatedById { get; set; }
         public bool Requested { get; set; }
-        public int SpecialityTypeId { get; set; }
+        public int SpecialityTypeId { get; set; } // Subject
+        public int TeachingLevelId { get; set; } //Grade
         public string OriginalFileName { get; set; }
         public string EmployeeProfilePicUrl { get; set; }
         public string SubstituteProfilePicUrl { get; set; }

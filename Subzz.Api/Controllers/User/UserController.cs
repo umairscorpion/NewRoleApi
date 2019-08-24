@@ -112,7 +112,8 @@ namespace Subzz.Api.Controllers.User
                     IsViewedNewVersion = userModel.IsViewedNewVersion,
                     UserRoleDesciption = userModel.UserRoleDesciption,
                     OrganizationName = userModel.OrganizationName,
-                    DistrictName = userModel.DistrictName
+                    DistrictName = userModel.DistrictName,
+                    SecondarySchools = userModel.SecondarySchools
                 };
                 return referenceModel;
             }
@@ -1622,7 +1623,7 @@ namespace Subzz.Api.Controllers.User
         #endregion
 
         #region SubstituteList
-
+        //Update Substitute Category and Substitute list
         [Route("updateSubstituteList")]
         [HttpPost]
         public IActionResult InsertSubstituteList([FromBody]SubstituteCategory substituteCategory)
@@ -1636,7 +1637,7 @@ namespace Subzz.Api.Controllers.User
                  _service.UpdateSubstituteCategory(substituteCategory);
             return Ok(substituteCategory);
         }
-
+        //Get Both Categories against district and substitute list against all categories
         [Route("getSubstituteCategoryList/{districtId}")]
         [HttpGet]
         public IActionResult GetSubstituteCategoryList(int districtId)
@@ -1650,6 +1651,38 @@ namespace Subzz.Api.Controllers.User
             return Ok(substituteCategories);
         }
 
+        [Route("getSubstituteListForNewList")]
+        [HttpGet]
+        public IActionResult GetSubstituteListForNewList()
+        {
+            var SubList = _service.GetSubstituteByCategoryId(0);
+            return Ok(SubList);
+        }
+        //Get Only Categories against district
+        [Route("getSubstituteCategory/{districtId}")]
+        [HttpGet]
+        public IActionResult GetSubstituteCategory(int districtId)
+        {
+            var substituteCategories = new List<SubstituteCategory>();
+            substituteCategories = _service.GetSubstituteCategoryList(districtId);
+            return Ok(substituteCategories);
+        }
+
+        [Route("deleteSubstituteCategory/{id}")]
+        [HttpDelete]
+        public IActionResult DeleteSubstituteCategory(int id)
+        {
+            _service.DeleteSubstituteCategory(id);
+            return Ok();
+        }
+        //Update Substitute Catgory
+        [Route("updateSubstituteCategoryById")]
+        [HttpPost]
+        public IActionResult UpdateSubstituteCategoryById([FromBody]SubstituteCategory substituteCategory)
+        {
+            var Cat =_service.UpdateSubstituteCategoryById(substituteCategory);
+            return Ok(Cat);
+        }
         #endregion
     }
 }

@@ -39,7 +39,8 @@ namespace Subzz.Api.Controllers.User
                 var endDate = Convert.ToDateTime(model.EndDate);               
                 if (model.UserRoleId == 4)
                 {
-                    var acceptedAbsences = await _jobService.GetAvailableJobs(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId, base.CurrentUser.OrganizationId, base.CurrentUser.DistrictId, 2, false);
+                    //var acceptedAbsences = await _jobService.GetAvailableJobs(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId, base.CurrentUser.OrganizationId, base.CurrentUser.DistrictId, 2, false);
+                    var acceptedAbsences = await _absenceService.GetAbsencesForCalendar(Convert.ToDateTime(model.StartDate), Convert.ToDateTime(model.EndDate), model.UserId);
                     //Set this to null after getting absences beacause it generates error in stored Procedure
                     model.StartDate = null;
                     model.EndDate = null;
