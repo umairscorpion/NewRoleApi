@@ -50,7 +50,7 @@ namespace Subzz.Business.Services.Users.Interface
         IEnumerable<User> GetFavoriteSubstitutes(string UserId);
         IEnumerable<User> GetBlockedSubstitutes(string UserId);
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
-        IEnumerable<User> GetUsersByDistrictId(int DistrictId);
+        IEnumerable<User> GetUsersByDistrictId(int DistrictId, int userRole);
         IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
         PositionDetail InsertPositions(PositionDetail position);

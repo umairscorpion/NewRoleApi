@@ -119,7 +119,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             queryParams.Add("@OrgId", leaveBalance.OrganizationId);
             queryParams.Add("@Year", leaveBalance.Year);
             if (leaveBalance.UserId.Length >= 10)
-            queryParams.Add("@UserId", leaveBalance.UserId);
+                queryParams.Add("@UserId", leaveBalance.UserId);
             return Db.Query<LeaveBalance>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
@@ -128,9 +128,9 @@ namespace SubzzAbsence.DataAccess.Repositories.Leaves
             var sql = "[Leaves].[sp_getBalance]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", leaveBalance.DistrictId);
-            queryParams.Add("@OrgId", leaveBalance.OrganizationId);
-            queryParams.Add("@Year", leaveBalance.Year);
-            if (leaveBalance.UserId.Length >= 10)
+            //queryParams.Add("@OrgId", leaveBalance.OrganizationId);
+            //queryParams.Add("@Year", leaveBalance.Year);
+            //if (leaveBalance.UserId.Length >= 10)
                 queryParams.Add("@UserId", leaveBalance.UserId);
             return Db.Query<LeaveBalance>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }

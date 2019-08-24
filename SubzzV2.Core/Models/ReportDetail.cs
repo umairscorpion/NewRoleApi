@@ -46,5 +46,6 @@ namespace SubzzV2.Core.Models
         public string EmployeeFirstName { get; set; }
         public string EmployeeLastName { get; set; }
         public string AcceptedVia { get; set; }
+        public string JobId { get; set; }
     }
 }

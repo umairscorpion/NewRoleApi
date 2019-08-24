@@ -19,5 +19,14 @@ namespace SubzzV2.Core.Models
         public int LeaveTypeId { get; set; }
         public int Balance { get; set; }
         public bool IsAllowNegativeAllowance { get; set; }
+        public int BalanceId { get; set; }
+        public string AllowanceTitle { get; set; }
+        public Decimal AllowanceBalance { get; set; }
+        public int FirstColumn { get; set; }
+        public int SecondColumn { get; set; }
+        public int ThirdColumn { get; set; }
+        public string AbsenceStartDate { get; set; }
+        public string AbsenceEndDate { get; set; }
+        public int allowanceType { get; set; }
     }
 }

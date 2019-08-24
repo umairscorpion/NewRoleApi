@@ -567,11 +567,12 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
-        public IEnumerable<User> GetUsersByDistrictId(int districtId)
+        public IEnumerable<User> GetUsersByDistrictId(int districtId, int userRole)
         {
             var sql = "[users].[GetUsersByDistrictId]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", districtId);
+            queryParams.Add("@UserRole", userRole);
             return Db.Query<User>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 

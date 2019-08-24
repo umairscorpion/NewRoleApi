@@ -130,6 +130,20 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
+        public int CheckNegativeAllowance(int AllowanceType, string UserId, string EndDate, string StartDate)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[CheckNegativeAllowance]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@AllowanceType", AllowanceType);
+                queryParams.Add("@UserId", UserId);
+                queryParams.Add("@EndDate", Convert.ToDateTime(EndDate));
+                queryParams.Add("@StartDate", Convert.ToDateTime(StartDate));
+                return connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
         public AbsenceModel GetAbsenceDetailByAbsenceId(int AbsenceId)
         {
             using (var connection = base.GetConnection)

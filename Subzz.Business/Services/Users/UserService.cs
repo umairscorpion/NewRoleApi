@@ -188,9 +188,9 @@ namespace Subzz.Business.Services.Users
             return _repo.GetAdminListByAbsenceId(AbsenceId);
         }
 
-        public IEnumerable<User> GetUsersByDistrictId(int districtId)
+        public IEnumerable<User> GetUsersByDistrictId(int districtId, int userRole)
         {
-            return _repo.GetUsersByDistrictId(districtId);
+            return _repo.GetUsersByDistrictId(districtId, userRole);
         }
 
         public IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId)
