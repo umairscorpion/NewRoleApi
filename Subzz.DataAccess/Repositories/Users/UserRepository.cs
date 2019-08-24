@@ -1099,6 +1099,23 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@CategoryId", CategoryId);
             return Db.Query<SubstituteList>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
+
+        public int DeleteSubstituteCategory(int CategoryId)
+        {
+            const string query = "[Users].[sp_deleteSubstituteCategory]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@CategoryId", CategoryId);
+            return Db.Query<int>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public SubstituteCategory UpdateSubstituteCategoryById(SubstituteCategory substituteCategory)
+        {
+            const string query = "[Users].[sp_updateSubstituteCategorybyId]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@CategoryId", substituteCategory.CategoryId);
+            queryParams.Add("@Time", substituteCategory.TimeToSendNotification);
+            return Db.Query<SubstituteCategory>(query, queryParams, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
         #endregion
     }
 }
