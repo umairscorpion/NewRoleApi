@@ -118,7 +118,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@SpecialityTypeId", model.SpecialityTypeId);
             queryParams.Add("@RoleId", model.RoleId);
             queryParams.Add("@Gender", model.Gender);
-            queryParams.Add("@IsCertified", model.IsCertified);
+            queryParams.Add("@IsCertified", 0);
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@OrganizationId", model.OrganizationId);
             queryParams.Add("@Email", model.Email);
@@ -210,8 +210,10 @@ namespace Subzz.DataAccess.Repositories.Users
         {
             var sql = "[Users].[UpdateUserStatus]";
             var queryParams = new DynamicParameters();
-            queryParams.Add("@UserId", model.UserId);
+            queryParams.Add("@Email", model.Email);
             queryParams.Add("@IsActive", model.IsActive);
+            queryParams.Add("@IsCertified", model.IsCertified);
+            queryParams.Add("@ForUserVerification", model.ForUserVerification);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
             return model;
         }

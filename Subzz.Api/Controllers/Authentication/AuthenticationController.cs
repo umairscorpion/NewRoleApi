@@ -51,9 +51,13 @@ namespace Subzz.Api.Controllers.Authentication
 
                 if (UserInfo != null)
                 {
-                    if(!UserInfo.IsActive)
+                    if(!UserInfo.IsCertified)
                     {
-                        return Json("notactive");
+                        return BadRequest("NotCertified");
+                    }
+                    else if (!UserInfo.IsActive)
+                    {
+                        return BadRequest("notactive");
                     }
                     else
                     {
@@ -182,5 +186,22 @@ namespace Subzz.Api.Controllers.Authentication
             return null;
         }
 
+        [Route("updateUserStatus")]
+        [HttpPost]
+        public SubzzV2.Core.Entities.User UpdateUserStatus([FromBody]SubzzV2.Core.Entities.User model)
+        {
+            try
+            {
+                var Model = _userService.UpdateUserStatus(model);
+                return Model;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
     }
 }

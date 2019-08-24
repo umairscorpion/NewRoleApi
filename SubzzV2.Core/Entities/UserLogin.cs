@@ -44,5 +44,6 @@ namespace SubzzV2.Core.Entities
         public string Password { get; set; }
         public int DistrictId { get; set; }
         public string OrganizationId { get; set; }
+        public bool IsCertified { get; set; }
     }
 }
