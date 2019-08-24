@@ -127,7 +127,7 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.GetGradeLevelsForNotification(SubstituteId);
         }
-
+        
         public IEnumerable<SubstituteCategoryModel> GetSubjectsForNotifications(string SubstituteId)
         {
             return _repo.GetSubjectsForNotifications(SubstituteId);
@@ -381,6 +381,16 @@ namespace Subzz.Business.Services.Users
         public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId)
         {
             return _repo.GetSubstituteByCategoryId(CategoryId);
+        }
+
+        public int DeleteSubstituteCategory(int CategoryId)
+        {
+            return _repo.DeleteSubstituteCategory(CategoryId);
+        }
+
+        public SubstituteCategory UpdateSubstituteCategoryById(SubstituteCategory substituteCategory)
+        {
+            return _repo.UpdateSubstituteCategoryById(substituteCategory);
         }
 
         #endregion

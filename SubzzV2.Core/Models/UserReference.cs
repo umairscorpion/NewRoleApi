@@ -30,5 +30,6 @@ namespace SubzzV2.Core.Models
         public List<RolePermission> Permissions { get; set; }
         public bool IsViewedNewVersion { get; set; }
         public string UserRoleDesciption { get; set; }
+        public List<string> SecondarySchools = new List<string>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Extensions.Configuration;
+using NETCore.Encrypt;
 using Subzz.Integration.Core.Container;
 using Subzz.Integration.Core.Domain;
 using Subzz.Integration.Core.Helper;
@@ -40,6 +41,7 @@ namespace SubzzV2.Integration.Core.Notification
                 var root = configurationBuilder.Build();
                 string apiUrl = root.GetSection("URL").GetSection("api").Value;
                 string web = root.GetSection("URL").GetSection("web").Value;
+                //var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
                 if(message.TemplateId == 14)
@@ -58,6 +60,8 @@ namespace SubzzV2.Integration.Core.Notification
                 }
                 if (message.TemplateId == 25)
                 {
+                    //message.Password = EncryptProvider.DESEncrypt(message.Password, desKey);
+                    //var EmailId = EncryptProvider.DESEncrypt(message.SendTo, desKey);
                     message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
@@ -85,6 +89,8 @@ namespace SubzzV2.Integration.Core.Notification
             }
             catch (System.Exception ex)
             {
+                var aesKey = EncryptProvider.CreateAesKey();
+                var key = aesKey.Key;
                 DateTime updatedOn = DateTime.Now;
                 CommunicationContainer.Logger.LogEmail(message.SendTo, null, "Subzz Job Notification", Convert.ToString(ex), updatedOn, Convert.ToString(message.AbsenceId), "FAIL");
                 //CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");

@@ -15,6 +15,7 @@ namespace SubzzV2.Core.Models
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsDeleted { get; set; }
+        public string TimeToSendNotification { get; set; }
         public List<SubstituteList> SubstituteList { get; set; }
     }
 }
