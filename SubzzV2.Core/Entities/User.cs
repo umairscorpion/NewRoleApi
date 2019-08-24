@@ -71,6 +71,7 @@ namespace SubzzV2.Core.Entities
         public int SearchType { get; set; }
         public int ReportType { get; set; }
         public bool IsViewedNewVersion { get; set; }
+        public bool ForUserVerification { get; set; }
     }
 
     public class UserSummary {

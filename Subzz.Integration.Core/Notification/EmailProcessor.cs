@@ -58,7 +58,7 @@ namespace SubzzV2.Integration.Core.Notification
                 }
                 if (message.TemplateId == 25)
                 {
-                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo;
+                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&ac=" + 5;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);

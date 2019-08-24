@@ -56,6 +56,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                 param.Add("@Month", filter.Month);
                 param.Add("@Year", filter.Year);
                 param.Add("@AbsencePosition", filter.AbsencePosition);
+                param.Add("@ActiveUserId", filter.UserId);
                 return connection.Query<ReportSummary>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }
@@ -107,6 +108,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                 param.Add("@Month", filter.Month);
                 param.Add("@Year", filter.Year);
                 param.Add("@AbsencePosition", filter.AbsencePosition);
+                param.Add("@ActiveUserId", filter.UserId);
                 return connection.Query<ReportDetail>(sql, param, commandType: System.Data.CommandType.StoredProcedure).ToList();
             }
         }

@@ -27,6 +27,7 @@ namespace Subzz.Api.Controllers.Reports
             {
                 model.District = base.CurrentUser.DistrictId;
                 model.OrganizationId = base.CurrentUser.OrganizationId;
+                model.UserId = base.CurrentUser.Id;
                 var reportSummary = _service.GetReportSummary(model);
                 return Ok(reportSummary);
             }
@@ -47,6 +48,7 @@ namespace Subzz.Api.Controllers.Reports
             {
                 model.District = base.CurrentUser.DistrictId;
                 model.OrganizationId = base.CurrentUser.OrganizationId;
+                model.UserId = base.CurrentUser.Id;
                 var reportDetails = _service.GetReportDetails(model);
                 return Ok(reportDetails);
             }
