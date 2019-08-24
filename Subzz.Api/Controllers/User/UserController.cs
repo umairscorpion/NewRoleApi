@@ -328,15 +328,15 @@ namespace Subzz.Api.Controllers.User
             }
         }
 
-        [Route("sendWellcomeLetterToAll/{DistrictId}")]
+        [Route("sendWellcomeLetterToAll/{DistrictId}/{UserRole}")]
         [HttpGet]
-        public IActionResult SendWelcomeLetterToAll(int districtId)
+        public IActionResult SendWelcomeLetterToAll(int districtId, int userRole)
         {
             
             try
             {
                 
-                 IEnumerable<SubzzV2.Core.Entities.User> users = _service.GetUsersByDistrictId(districtId);
+                 IEnumerable<SubzzV2.Core.Entities.User> users = _service.GetUsersByDistrictId(districtId, userRole);
                  Task.Run(() => SendWellcomeEmailToAll(users));
                  return Ok();
                 

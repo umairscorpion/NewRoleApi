@@ -16,6 +16,7 @@ namespace SubzzAbsence.Business.Absence.Interface
         IEnumerable<AbsenceModel> GetAbsences(DateTime StartDate, DateTime EndDate, string UserId, string CampusId);
         IEnumerable<EmployeeSchedule> GetAbsencesScheduleEmployee(DateTime StartDate, DateTime EndDate, string UserId);
         int UpdateAbsenceStatus(int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId);
+        int CheckNegativeAllowance(int AllowanceType, string UserId, string EndDate, string StartDate);
         IEnumerable<AbsenceModel> GetAbsencesByStatus(int StatusId);
         AbsenceModel GetAbsenceDetailByAbsenceId(int AbsenceId);
         Task<int> CreatePreferredAbsenceHistory(IEnumerable<User> Substitutes, AbsenceModel absences);

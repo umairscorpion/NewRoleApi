@@ -228,32 +228,67 @@ namespace Subzz.Api.Controllers.Absence
                                 if (_userService.GetUserAvailability(user.UserId, absenceModel.AbsenceId))
                                 {
                                     var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                                    var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                                    var jobPostedEvent = events.Where(x => x.EventId == 5).First(); 
                                     message.TemplateId = 1;
                                     if (user.IsSubscribedEmail)
                                     {
                                         if (jobPostedEvent.EmailAlert)
                                         {
-                                            var sub = _userService.GetSubjectsForNotifications(user.UserId);
-                                            var subjects = sub.Where(x => x.TeacherSpecialityId == DataForEmails.SpecialityTypeId).FirstOrDefault();
-                                            if (DataForEmails.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
-                                                DataForEmails.OnlyCertified ? user.IsCertified == 1 : true)
-                                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                                            if (absenceModel.OrganizationId != "-1")
+                                            {
+                                                var subSchools = _userService.GetSubstitutePreferredSchools(user.UserId);
+                                                var isSchoolEnabled = subSchools.Where(x => x.OrganizationId == absenceModel.OrganizationId).First();
+                                                if(isSchoolEnabled.IsEnabled)
+                                                {
+                                                    var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                                                    var subjects = sub.Where(x => x.TeacherSpecialityId == DataForEmails.SpecialityTypeId).FirstOrDefault();
+                                                    if (DataForEmails.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                                                        DataForEmails.OnlyCertified ? user.IsCertified == 1 : true)
+                                                        await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                                                var subjects = sub.Where(x => x.TeacherSpecialityId == DataForEmails.SpecialityTypeId).FirstOrDefault();
+                                                if (DataForEmails.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                                                    DataForEmails.OnlyCertified ? user.IsCertified == 1 : true)
+                                                    await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                                            }
                                         }
                                     }
+
 
                                     if (user.IsSubscribedSMS)
                                     {
                                         message.PhoneNumber = user.PhoneNumber;
-                                        if (jobPostedEvent.TextAlert)
+                                        if (absenceModel.OrganizationId != "-1")
                                         {
-                                            message.PhoneNumber = user.PhoneNumber;
-                                            var sub = _userService.GetSubjectsForNotifications(user.UserId);
-                                            var subjects = sub.Where(x => x.TeacherSpecialityId == DataForEmails.SpecialityTypeId).FirstOrDefault();
-                                            if (DataForEmails.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
-                                                DataForEmails.OnlyCertified ? user.IsCertified == 1 : true)
-                                                CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                            var subSchools = _userService.GetSubstitutePreferredSchools(user.UserId);
+                                            var isSchoolEnabled = subSchools.Where(x => x.OrganizationId == absenceModel.OrganizationId).First();
+                                            if (isSchoolEnabled.IsEnabled)
+                                            {
+                                                message.PhoneNumber = user.PhoneNumber;
+                                                var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                                                var subjects = sub.Where(x => x.TeacherSpecialityId == DataForEmails.SpecialityTypeId).FirstOrDefault();
+                                                if (DataForEmails.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                                                    DataForEmails.OnlyCertified ? user.IsCertified == 1 : true)
+                                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                            }
                                         }
+                                        else
+                                        {
+                                            if (jobPostedEvent.TextAlert)
+                                            {
+                                                message.PhoneNumber = user.PhoneNumber;
+                                                var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                                                var subjects = sub.Where(x => x.TeacherSpecialityId == DataForEmails.SpecialityTypeId).FirstOrDefault();
+                                                if (DataForEmails.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                                                    DataForEmails.OnlyCertified ? user.IsCertified == 1 : true)
+                                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                            }
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -590,6 +625,28 @@ namespace Subzz.Api.Controllers.Absence
                 if (statusId == 1)
                     Task.Run(() => SendNotificationsOnJobReleased(AbsenceId));
                 return Json("success");
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("checkNegativeAllowance")]
+        [HttpPost]
+        public ActionResult CheckNegativeAllowance([FromBody]LeaveBalance bal)
+        {
+            try
+            {
+                int allowance = _service.CheckNegativeAllowance(bal.allowanceType, bal.UserId, bal.AbsenceEndDate, bal.AbsenceStartDate);
+                if(allowance == 1)
+                {
+                    return Json("success");
+                }
+                return Json("error");
             }
             catch (Exception ex)
             {

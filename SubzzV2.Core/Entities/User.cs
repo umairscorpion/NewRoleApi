@@ -73,6 +73,8 @@ namespace SubzzV2.Core.Entities
         public bool IsViewedNewVersion { get; set; }
         public bool ForUserVerification { get; set; }
         public string CounrtyCode { get; set; }
+        public string IsWelcomeEmailSend { get; set; }
+        public string JobId { get; set; }
     }
 
     public class UserSummary {
