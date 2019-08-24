@@ -62,7 +62,7 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     //message.Password = EncryptProvider.DESEncrypt(message.Password, desKey);
                     //var EmailId = EncryptProvider.DESEncrypt(message.SendTo, desKey);
-                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo;
+                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&ac=" + 5;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
