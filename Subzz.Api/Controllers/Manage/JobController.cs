@@ -197,6 +197,8 @@ namespace Subzz.Api.Controllers.Manage
                 message.FileContentType = absenceDetail.FileContentType;
                 message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                 //Notification notification = new Notification();
+                if(absenceDetail.Status != 1)
+                    return null;
                 Task.Run(() => SendJobDeclinEmails(users, message));
                 // Audit Log
                 var audit = new AuditLog

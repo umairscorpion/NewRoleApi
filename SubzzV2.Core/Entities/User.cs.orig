@@ -72,10 +72,12 @@ namespace SubzzV2.Core.Entities
         public int ReportType { get; set; }
         public bool IsViewedNewVersion { get; set; }
 <<<<<<< HEAD
-        public string CounrtyCode { get; set; }
+        public string IsWelcomeEmailSend { get; set; }
+        public string JobId { get; set; }
 =======
         public bool ForUserVerification { get; set; }
->>>>>>> afa42e2dc641ee9f83c5cf71248ceedb4f0a9eca
+        public string CounrtyCode { get; set; }
+>>>>>>> b7bcb7dbfbc6644cc8bc19806c194ffe29b219ea
     }
 
     public class UserSummary {

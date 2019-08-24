@@ -48,7 +48,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         IEnumerable<User> GetFavoriteSubstitutes(string UserId);
         IEnumerable<User> GetBlockedSubstitutes(string UserId);
         IEnumerable<User> GetAdminListByAbsenceId(int AbsenceId);
-        IEnumerable<User> GetUsersByDistrictId(int districtId);
+        IEnumerable<User> GetUsersByDistrictId(int districtId, int userRole);
         IEnumerable<PreferredSchoolModel> GetSubstitutePreferredSchools(string UserId);
         Task<int> UpdateEnabledSchools(PreferredSchoolModel preferredSchoolModel);
         IEnumerable<SubstituteAvailability> GetSubstituteAvailability(SubstituteAvailability model);
