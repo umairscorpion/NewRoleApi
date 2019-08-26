@@ -1646,7 +1646,7 @@ namespace Subzz.Api.Controllers.User
             substituteCategories = _service.GetSubstituteCategoryList(districtId);
             foreach (var substituteCategory in substituteCategories)
             {
-                substituteCategory.SubstituteList = _service.GetSubstituteByCategoryId(substituteCategory.CategoryId);
+                substituteCategory.SubstituteList = _service.GetSubstituteByCategoryId(substituteCategory.CategoryId, districtId);
             }
             return Ok(substituteCategories);
         }
@@ -1655,7 +1655,8 @@ namespace Subzz.Api.Controllers.User
         [HttpGet]
         public IActionResult GetSubstituteListForNewList()
         {
-            var SubList = _service.GetSubstituteByCategoryId(0);
+            var districtId = CurrentUser.DistrictId;
+            var SubList = _service.GetSubstituteByCategoryId(0, districtId);
             return Ok(SubList);
         }
         //Get Only Categories against district

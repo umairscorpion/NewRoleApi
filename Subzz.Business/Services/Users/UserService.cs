@@ -378,9 +378,9 @@ namespace Subzz.Business.Services.Users
             return _repo.GetSubstituteCategoryList(districtId);
         }
 
-        public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId)
+        public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId, int districtId)
         {
-            return _repo.GetSubstituteByCategoryId(CategoryId);
+            return _repo.GetSubstituteByCategoryId(CategoryId, districtId);
         }
 
         public int DeleteSubstituteCategory(int CategoryId)

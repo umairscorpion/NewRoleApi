@@ -1093,11 +1093,12 @@ namespace Subzz.DataAccess.Repositories.Users
             return Db.Query<SubstituteCategory>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
-        public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId)
+        public List<SubstituteList> GetSubstituteByCategoryId(int CategoryId, int districtId)
         {
             const string query = "[Users].[sp_getSubstituteListByCategoryId]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@CategoryId", CategoryId);
+            queryParams.Add("@districtId", districtId);
             return Db.Query<SubstituteList>(query, queryParams, commandType: CommandType.StoredProcedure).ToList();
         }
 
