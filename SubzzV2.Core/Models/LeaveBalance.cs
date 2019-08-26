@@ -22,9 +22,9 @@ namespace SubzzV2.Core.Models
         public int BalanceId { get; set; }
         public string AllowanceTitle { get; set; }
         public Decimal AllowanceBalance { get; set; }
-        public int FirstColumn { get; set; }
-        public int SecondColumn { get; set; }
-        public int ThirdColumn { get; set; }
+        public Decimal FirstColumn { get; set; }
+        public Decimal SecondColumn { get; set; }
+        public Decimal ThirdColumn { get; set; }
         public string AbsenceStartDate { get; set; }
         public string AbsenceEndDate { get; set; }
         public int allowanceType { get; set; }
