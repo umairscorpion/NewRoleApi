@@ -21,10 +21,10 @@ namespace SubzzV2.Core.Models
         public bool IsAllowNegativeAllowance { get; set; }
         public int BalanceId { get; set; }
         public string AllowanceTitle { get; set; }
-        public Decimal AllowanceBalance { get; set; }
-        public Decimal FirstColumn { get; set; }
-        public Decimal SecondColumn { get; set; }
-        public Decimal ThirdColumn { get; set; }
+        public decimal AllowanceBalance { get; set; }
+        public decimal FirstColumn { get; set; }
+        public decimal SecondColumn { get; set; }
+        public decimal ThirdColumn { get; set; }
         public string AbsenceStartDate { get; set; }
         public string AbsenceEndDate { get; set; }
         public int allowanceType { get; set; }

@@ -92,7 +92,7 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         SubstituteCategory InsertSubstituteCategory(SubstituteCategory substituteCategory);
         SubstituteCategory UpdateSubstituteCategory(SubstituteCategory substituteCategory);
         List<SubstituteCategory> GetSubstituteCategoryList(int districtId);
-        List<SubstituteList> GetSubstituteByCategoryId(int CategoryId);
+        List<SubstituteList> GetSubstituteByCategoryId(int CategoryId, int districtId);
         int DeleteSubstituteCategory(int CategoryId);
         SubstituteCategory UpdateSubstituteCategoryById(SubstituteCategory substituteCategory);
         #endregion
