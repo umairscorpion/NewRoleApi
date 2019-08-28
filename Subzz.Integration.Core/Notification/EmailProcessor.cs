@@ -49,7 +49,7 @@ namespace SubzzV2.Integration.Core.Notification
                     message.ApproveUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 3;
                     message.DenyUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 4;
                 }
-                if (message.TemplateId == 1)
+                if (message.TemplateId == 1 || message.TemplateId == 7)
                 {
                     message.AcceptUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
                     message.DeclineUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
