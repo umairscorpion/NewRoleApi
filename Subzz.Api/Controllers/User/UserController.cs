@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,8 @@ namespace Subzz.Api.Controllers.User
         private IHostingEnvironment _hostingEnvironment;
         private IUserAuthenticationService _authService;
         private readonly IAuditingService _audit;
-        public UserController(IUserService service, IUserAuthenticationService authService, IHostingEnvironment hostingEnvironment, IAuditingService audit)
+        public UserController(IUserService service, IUserAuthenticationService authService,
+            IHostingEnvironment hostingEnvironment, IAuditingService audit)
         {
             _service = service;
             _hostingEnvironment = hostingEnvironment;

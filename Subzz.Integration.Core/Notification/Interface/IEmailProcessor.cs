@@ -1,4 +1,5 @@
-﻿using Subzz.Integration.Core.Domain;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Subzz.Integration.Core.Domain;
 using SubzzV2.Core.Enum;
 using System;
 using System.Collections.Generic;

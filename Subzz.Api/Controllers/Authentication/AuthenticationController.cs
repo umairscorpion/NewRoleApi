@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -22,7 +23,8 @@ namespace Subzz.Api.Controllers.Authentication
         private readonly IUserAuthenticationService _service;
         private readonly IUserService _userService;
         private readonly IAuditingService _audit;
-        public AuthenticationController(IUserService userService, IUserAuthenticationService service, IAuditingService audit)
+        public AuthenticationController(IUserService userService, IUserAuthenticationService service,
+            IAuditingService audit)
         {
             _service = service;
             _userService = userService;
@@ -202,6 +204,30 @@ namespace Subzz.Api.Controllers.Authentication
             {
             }
             return null;
+        }
+
+        [Route("unprotectdata")]
+        [HttpPost]
+        public IActionResult Unprotectdata([FromBody]Protected model)
+        {
+            var data = DataProtectionProvider.Create("Subzz");
+            var protector = data.CreateProtector("secretAdmin@0192837465");
+            try
+            {
+                model.Email = protector.Unprotect(model.Email);
+                model.Password = protector.Unprotect(model.Password);
+                if (model.Action > 0 && model.Action != 5)
+                    model.AbsenceId = protector.Unprotect(model.AbsenceId);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Invalid");
+            }
+            finally
+            {
+                protector = null;
+            }
         }
     }
 }

@@ -89,6 +89,7 @@
     <Compile Include="Models\PositionDetail.cs" />
     <Compile Include="Models\PreferredSchoolModel.cs" />
     <Compile Include="Models\PreferredSubstituteModel.cs" />
+    <Compile Include="Models\Protected.cs" />
     <Compile Include="Models\ReportDetail.cs" />
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportSummary.cs" />
