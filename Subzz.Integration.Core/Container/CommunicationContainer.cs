@@ -1,4 +1,5 @@
-﻿using Subzz.Integration.Core.Notification;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Subzz.Integration.Core.Notification;
 using SubzzV2.Integration.Core.Notification;
 using SubzzV2.Integration.Core.Notification.Interface;
 using System;
@@ -10,7 +11,6 @@ namespace Subzz.Integration.Core.Container
     public class CommunicationContainer
     {
         private ILogger _logger;
-
         public virtual ILogger Logger
         {
             get
