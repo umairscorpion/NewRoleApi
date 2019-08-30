@@ -48,7 +48,7 @@ namespace SubzzV2.Integration.Core.Notification
                     message.ApproveUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 3;
                     message.DenyUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 4;
                 }
-                if (message.TemplateId == 1)
+                if (message.TemplateId == 1 || message.TemplateId == 7)
                 {
                     message.AcceptUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 1;
                     message.DeclineUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 2;
