@@ -68,10 +68,10 @@ namespace SubzzV2.Integration.Core.Notification
         {
             //string connectionString = "data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true";
 <<<<<<< HEAD
-            string connectionString = "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
+            string connectionString = "Data Source=DESKTOP-BQ3LKMC\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
 =======
-            string connectionString = "Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
->>>>>>> afa42e2dc641ee9f83c5cf71248ceedb4f0a9eca
+            string connectionString = "Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True";
+>>>>>>> d2a7ba145e7793fd6363a6174905e942b2eca2a7
             //string connectionString = "data source=162.241.138.178\\stg;Initial Catalog=Subzz_Settings;user id=tamoor;password=password;multipleactiveresultsets=true";
             List<SmsTemplate> smsTemplatesList;
 
@@ -95,10 +95,10 @@ namespace SubzzV2.Integration.Core.Notification
         {
             List<MailTemplate> mailTemplatesList;
 <<<<<<< HEAD
-            using (var dc = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
+            using (var dc = new SqlConnection("Data Source=DESKTOP-BQ3LKMC\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
 =======
-            using (var dc = new SqlConnection("Data Source=DESKTOP-V00GN3I\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
->>>>>>> afa42e2dc641ee9f83c5cf71248ceedb4f0a9eca
+            using (var dc = new SqlConnection("Data Source=DESKTOP-THR93CO\\SQLEXPRESS;Initial Catalog=Subzz_Settings;Integrated Security=True"))
+>>>>>>> d2a7ba145e7793fd6363a6174905e942b2eca2a7
             //using (var dc = new SqlConnection("data source=162.241.138.178;Initial Catalog=Subzz_Settings;user id=subzz_user;password=w9if%l10;multipleactiveresultsets=true"))
             //using (var dc = new SqlConnection("data source=162.241.138.178\\stg;Initial Catalog=Subzz_Settings;user id=tamoor;password=password;multipleactiveresultsets=true"))
             {
