@@ -78,7 +78,7 @@ namespace Subzz.Api.Controllers.Leave
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Approved,
                         DistrictId = CurrentUser.DistrictId,
@@ -91,7 +91,7 @@ namespace Subzz.Api.Controllers.Leave
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Denied,
                         DistrictId = CurrentUser.DistrictId,
@@ -104,7 +104,7 @@ namespace Subzz.Api.Controllers.Leave
                     var audit = new AuditLog
                     {
                         UserId = CurrentUser.Id,
-                        EntityId = model.AbsenceId.ToString(),
+                        EntityId = model.ConfirmationNumber.ToString(),
                         EntityType = AuditLogs.EntityType.Absence,
                         ActionType = AuditLogs.ActionType.Archived,
                         DistrictId = CurrentUser.DistrictId,

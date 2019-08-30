@@ -241,7 +241,7 @@ namespace Subzz.Api.Controllers.Absence
                                         (subjects != null ? subjects.SubjectNotification : true) && (DataForEmails.OnlyCertified ? user.IsCertified == 1 : true) && 
                                         (categories != null ? categories.IsNotificationSend : true))
                                     {
-                                        if (absenceModel.OrganizationId != "-1")
+                                        if (absenceModel.OrganizationId != "-1") 
                                             {
                                                 var subSchools = _userService.GetSubstitutePreferredSchools(user.UserId);
                                                 var isSchoolEnabled = subSchools.Where(x => x.OrganizationId == absenceModel.OrganizationId).First();
@@ -1140,32 +1140,80 @@ namespace Subzz.Api.Controllers.Absence
                     if (user.RoleId == 4)
                     {
                         message.TemplateId = 7;
-                        if (user.IsSubscribedEmail)
+                        var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                        var jobPostedEvent = events.Where(x => x.EventId == 4).First();
+                        var grade = _userService.GetGradeLevelsForNotification(user.UserId);
+                        var isGradeEnabled = grade.Where(x => x.TeachingLevelId == absenceDetail.GradeId).FirstOrDefault();
+                        var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                        var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
+                        var cat = _userService.GetSubstituteCategories(user.UserId);
+                        var categories = cat.Where(x => x.TypeId == absenceDetail.PositionId).FirstOrDefault();
+
+                        if (user.IsSubscribedEmail && jobPostedEvent.EmailAlert && (isGradeEnabled != null ? isGradeEnabled.GradeNotification : true) &&
+                            (subjects != null ? subjects.SubjectNotification : true) && (absenceDetail.OnlyCertified ? user.IsCertified == 1 : true) &&
+                            (categories != null ? categories.IsNotificationSend : true))
                         {
-                            var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                            var jobPostedEvent = events.Where(x => x.EventId == 5).First();
-                            if (jobPostedEvent.EmailAlert)
+                            if (absenceDetail.OrganizationId != "-1")
                             {
-                                var sub = _userService.GetSubjectsForNotifications(user.UserId);
-                                var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
-                                if (absenceDetail.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
-                                    absenceDetail.OnlyCertified ? user.IsCertified == 1 : true)
+                                var subSchools = _userService.GetSubstitutePreferredSchools(user.UserId);
+                                var isSchoolEnabled = subSchools.Where(x => x.OrganizationId == absenceDetail.OrganizationId).First();
+                                if (isSchoolEnabled.IsEnabled)
+                                {
                                     await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-                            }    
-                        }
-                        if (user.IsSubscribedSMS)
-                        {
-                            var events = _userService.GetSubstituteNotificationEvents(user.UserId);
-                            var jobPostedEvent = events.Where(x => x.EventId == 5).First();
-                            if (jobPostedEvent.TextAlert)
+                                }
+                            }
+                            else
                             {
-                                var sub = _userService.GetSubjectsForNotifications(user.UserId);
-                                var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
-                                if (absenceDetail.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
-                                    absenceDetail.OnlyCertified ? user.IsCertified == 1 : true)
-                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                             }
                         }
+
+                        if (user.IsSubscribedSMS && jobPostedEvent.TextAlert && (isGradeEnabled != null ? isGradeEnabled.GradeNotification : true) &&
+                            (subjects != null ? subjects.SubjectNotification : true) && (absenceDetail.OnlyCertified ? user.IsCertified == 1 : true) &&
+                            (categories != null ? categories.IsNotificationSend : true))
+                        {
+                            message.PhoneNumber = user.PhoneNumber;
+                            if (absenceDetail.OrganizationId != "-1")
+                            {
+                                var subSchools = _userService.GetSubstitutePreferredSchools(user.UserId);
+                                var isSchoolEnabled = subSchools.Where(x => x.OrganizationId == absenceDetail.OrganizationId).First();
+                                if (isSchoolEnabled.IsEnabled)
+                                {
+                                    message.PhoneNumber = user.PhoneNumber;
+                                    CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                                }
+                            }
+                            else
+                            {
+                                CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                            }
+                        }
+                        //if (user.IsSubscribedEmail)
+                        //{
+                        //    var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                        //    var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                        //    if (jobPostedEvent.EmailAlert)
+                        //    {
+                        //        var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                        //        var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
+                        //        if (absenceDetail.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                        //            absenceDetail.OnlyCertified ? user.IsCertified == 1 : true)
+                        //            await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+                        //    }    
+                        //}
+                        //if (user.IsSubscribedSMS)
+                        //{
+                        //    var events = _userService.GetSubstituteNotificationEvents(user.UserId);
+                        //    var jobPostedEvent = events.Where(x => x.EventId == 5).First();
+                        //    if (jobPostedEvent.TextAlert)
+                        //    {
+                        //        var sub = _userService.GetSubjectsForNotifications(user.UserId);
+                        //        var subjects = sub.Where(x => x.TeacherSpecialityId == absenceDetail.SpecialityTypeId).FirstOrDefault();
+                        //        if (absenceDetail.OnlySubjectSpecialist && subjects != null ? subjects.SubjectNotification : true &&
+                        //            absenceDetail.OnlyCertified ? user.IsCertified == 1 : true)
+                        //            CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
+                        //    }
+                        //}
 
                     }
                     //For Admins
