@@ -69,19 +69,21 @@
             public static string ViewedEmployee     = "Viewed Employee";
             public static string EmployeeActive     = "Activated Employee";
             public static string EmployeeInactive   = "Inactivated Employee";
+            public static string EmployeeVerification = "Verified Employee";
 
             // For Substitute Related Actions
             public static string CreatedSubstitute  = "Added Substitute";
             public static string UpdatedSubstitute  = "Updated Substitute";
             public static string DeletedSubstitute  = "Deleted Substitute";
             public static string ViewedSubstitute   = "Viewed Substitute";
-            public static string SubstituteeActive  = "Activated Substitute";
+            public static string SubstituteActive   = "Activated Substitute";
             public static string SubstituteInactive = "Inactivated Substitute";
             public static string CreatedSubPosition = "Added Substitute Position";
             public static string UpdatedSubPosition = "Updated Substitute Position";
             public static string DeletedSubPosition = "Deleted Substitute Position";
             public static string UpdatedSubList     = "Updated School Substitute List";
             public static string UpdatedBlockedList = "Updated School Blocked Substitute List";
+            public static string SubstituteVerification = "Verified Substitute";
 
             // For LeaveType Related Actions
             public static string CreatedLeaveType   = "Added Leave Type";

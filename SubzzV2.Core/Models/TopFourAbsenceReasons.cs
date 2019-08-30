@@ -8,8 +8,8 @@ namespace SubzzV2.Core.Models
 {
     public class TopFourAbsenceReasons
     {
-        public string Name { get; set; }
-        public int Total { get; set; }
+        public string ReasonName { get; set; }
+        public int TotalAbsenceReason { get; set; }
        
     }
 }
