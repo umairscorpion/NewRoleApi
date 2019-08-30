@@ -30,5 +30,6 @@ namespace SubzzV2.Core.Models
         public bool IsActive { get; set; }
         public string SchoolTimeZoneTitle { get; set; }
         public string CounrtyCode { get; set; }
+        public int CountryId { get; set; }
     }
 }

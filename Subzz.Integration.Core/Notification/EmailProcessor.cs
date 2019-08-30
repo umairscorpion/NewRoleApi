@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using NETCore.Encrypt;
 using Subzz.Integration.Core.Container;
