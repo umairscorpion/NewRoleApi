@@ -244,7 +244,7 @@ namespace Subzz.Api.Controllers.Authentication
                 model.Email = protector.Unprotect(model.Email);
                 model.Password = protector.Unprotect(model.Password);
                 if (model.Action > 0 && model.Action != 5)
-                    model.AbsenceId = protector.Unprotect(model.AbsenceId);
+                    model.AbsenceId = protector.Unprotect(model.AbsenceId); //when action = 5 then there is no JobId 
                 return Ok(model);
             }
             catch (Exception ex)
