@@ -37,5 +37,6 @@ namespace SubzzV2.Core.Models
         public string CancelledBy { get; set; }
         public string EmployeeProfilePicUrl { get; set; }
         public string ConfirmationNumber { get; set; }
+        public string PayrollNotes { get; set; }
     }
 }
