@@ -18,6 +18,7 @@ using SubzzV2.Core.Enum;
 using Subzz.Business.Services.Users.Interface;
 using Subzz.Integration.Core.Helper;
 using Subzz.Integration.Core.Domain;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace Subzz.Api.Controllers.Absence
 {
@@ -28,7 +29,8 @@ namespace Subzz.Api.Controllers.Absence
         private readonly IUserService _userService;
         private IHostingEnvironment _hostingEnvironment;
         private readonly IAuditingService _audit;
-        public AbsenceController(IAbsenceService service, IHostingEnvironment hostingEnvironment, IUserService userService, IAuditingService audit)
+        public AbsenceController(IAbsenceService service, IHostingEnvironment hostingEnvironment,
+            IUserService userService, IAuditingService audit)
         {
             _service = service;
             _userService = userService;
@@ -219,7 +221,7 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         try
                         {
-                            message.Password = user.Password;
+                            message.Password = user.Password; 
                             message.UserName = user.FirstName;
                             message.SendTo = user.Email;
                             //For Substitutes
@@ -297,6 +299,7 @@ namespace Subzz.Api.Controllers.Absence
                             //For Admins
                             else
                             {
+                                var data = message.SendTo;
                                 message.TemplateId = 2;
                                 if (user.IsSubscribedEmail)
                                 {
@@ -323,6 +326,7 @@ namespace Subzz.Api.Controllers.Absence
                             message.UserName = user.FirstName;
                             message.Password = user.Password;
                             message.SendTo = user.Email;
+                            message.Password = user.Password;
                             //For Substitutes
                             if (user.RoleId == 4)
                             {
@@ -519,6 +523,7 @@ namespace Subzz.Api.Controllers.Absence
                         {
                             message.UserName = user.FirstName;
                             message.SendTo = user.Email;
+                            message.Password = user.Password;
                             if (user.RoleId == 3)
                             {
                                 message.TemplateId = 13;

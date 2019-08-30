@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using NETCore.Encrypt;
 using Subzz.Integration.Core.Container;
@@ -18,10 +19,6 @@ namespace SubzzV2.Integration.Core.Notification
 {
     public class EmailProcessor : IEmailProcessor
     {
-        public EmailProcessor()
-        {
-
-        }
         private CommunicationContainer _communicationContainer;
         public virtual CommunicationContainer CommunicationContainer
         {
@@ -33,12 +30,14 @@ namespace SubzzV2.Integration.Core.Notification
 
         public async Task ProcessAsync(Message message, MailTemplateEnums mailTemplateEnums)
         {
+            var data = DataProtectionProvider.Create("Subzz");
+            var protector = data.CreateProtector("secretAdmin@0192837465");
             try
             {
                 var configurationBuilder = new ConfigurationBuilder();
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 configurationBuilder.AddJsonFile(path, false);
-                var root = configurationBuilder.Build();
+                var root = configurationBuilder.Build();    
                 string apiUrl = root.GetSection("URL").GetSection("api").Value;
                 string web = root.GetSection("URL").GetSection("web").Value;
                 //var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
@@ -46,13 +45,13 @@ namespace SubzzV2.Integration.Core.Notification
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
                 if(message.TemplateId == 14)
                 {
-                    message.ApproveUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 3;
-                    message.DenyUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 4;
+                    message.ApproveUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 3;
+                    message.DenyUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 4;
                 }
                 if (message.TemplateId == 1 || message.TemplateId == 7)
                 {
-                    message.AcceptUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
-                    message.DeclineUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
+                    message.AcceptUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 1;
+                    message.DeclineUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 2;
                 }
                 if (message.TemplateId == 9)
                 {
@@ -62,7 +61,7 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     //message.Password = EncryptProvider.DESEncrypt(message.Password, desKey);
                     //var EmailId = EncryptProvider.DESEncrypt(message.SendTo, desKey);
-                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&ac=" + 5;
+                    message.VerifyUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&ac=" + 5;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
@@ -95,6 +94,10 @@ namespace SubzzV2.Integration.Core.Notification
                 CommunicationContainer.Logger.LogEmail(message.SendTo, null, "Subzz Job Notification", Convert.ToString(ex), updatedOn, Convert.ToString(message.AbsenceId), "FAIL");
                 //CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
                 //throw ex;
+            }
+            finally
+            {
+                protector = null;
             }
         }
 
