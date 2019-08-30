@@ -496,7 +496,7 @@ namespace Subzz.Api.Controllers.User
                             UserId = CurrentUser.Id,
                             EntityId = model.UserId.ToString(),
                             EntityType = AuditLogs.EntityType.Substitute,
-                            ActionType = AuditLogs.ActionType.SubstituteeActive,
+                            ActionType = AuditLogs.ActionType.SubstituteActive,
                             DistrictId = CurrentUser.DistrictId,
                             OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
                         };

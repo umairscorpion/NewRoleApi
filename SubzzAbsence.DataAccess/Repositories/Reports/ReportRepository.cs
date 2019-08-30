@@ -74,7 +74,7 @@ namespace SubzzAbsence.DataAccess.Repositories.Reports
                 }
                 else
                 {
-                    if (filter.Month != 0 || filter.Year != "")
+                    if (filter.Month != 0 || filter.Year.Length > 0)
                     {
                         param.Add("@FromDate", null);
                         param.Add("@ToDate", null);

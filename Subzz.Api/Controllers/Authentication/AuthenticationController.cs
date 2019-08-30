@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
 using Subzz.Integration.Core.Container;
 using SubzzV2.Core.Entities;
@@ -193,6 +194,32 @@ namespace Subzz.Api.Controllers.Authentication
             try
             {
                 var Model = _userService.UpdateUserStatus(model);
+                //if (model.RoleId == 4)
+                //{
+                //    var audit = new AuditLog
+                //    {
+                //        UserId = CurrentUser.Id,
+                //        EntityId = model.UserId.ToString(),
+                //        EntityType = AuditLogs.EntityType.Substitute,
+                //        ActionType = AuditLogs.ActionType.SubstituteVerification,
+                //        DistrictId = CurrentUser.DistrictId,
+                //        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                //    };
+                //    _audit.InsertAuditLog(audit);
+                //}
+                //else
+                //{
+                //    var audit = new AuditLog
+                //    {
+                //        UserId = CurrentUser.Id,
+                //        EntityId = model.UserId.ToString(),
+                //        EntityType = AuditLogs.EntityType.Staff,
+                //        ActionType = AuditLogs.ActionType.EmployeeVerification,
+                //        DistrictId = CurrentUser.DistrictId,
+                //        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                //    };
+                //    _audit.InsertAuditLog(audit);
+                //}
                 return Model;
             }
             catch (Exception ex)

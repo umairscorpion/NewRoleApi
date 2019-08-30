@@ -46,13 +46,13 @@ namespace SubzzV2.Integration.Core.Notification
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
                 if(message.TemplateId == 14)
                 {
-                    message.ApproveUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 3;
-                    message.DenyUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 4;
+                    message.ApproveUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 3;
+                    message.DenyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 4;
                 }
                 if (message.TemplateId == 1)
                 {
-                    message.AcceptUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
-                    message.DeclineUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
+                    message.AcceptUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 1;
+                    message.DeclineUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&job=" + message.AbsenceId + "&ac=" + 2;
                 }
                 if (message.TemplateId == 9)
                 {
@@ -62,7 +62,7 @@ namespace SubzzV2.Integration.Core.Notification
                 {
                     //message.Password = EncryptProvider.DESEncrypt(message.Password, desKey);
                     //var EmailId = EncryptProvider.DESEncrypt(message.SendTo, desKey);
-                    message.VerifyUrl = web + "/?pa=" + message.Password + "&email=" + message.SendTo + "&ac=" + 5;
+                    message.VerifyUrl = "http://localhost:4200" + "/?pa=" + message.Password + "&email=" + message.SendTo + "&ac=" + 5;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
