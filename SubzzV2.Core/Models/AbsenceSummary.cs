@@ -75,6 +75,8 @@ namespace SubzzV2.Core.Models
         public int SubjectCareer { get; set; }
         public int SubjectSpecial { get; set; }
         public int SubjectAdult { get; set; }
+        public int TotalAbsenceReason { get; set; }
+        public string ReasonName { get; set; }
 
     }
 }
