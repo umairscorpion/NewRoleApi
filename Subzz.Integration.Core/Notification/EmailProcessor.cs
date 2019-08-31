@@ -40,28 +40,35 @@ namespace SubzzV2.Integration.Core.Notification
                 var root = configurationBuilder.Build();    
                 string apiUrl = root.GetSection("URL").GetSection("api").Value;
                 string web = root.GetSection("URL").GetSection("web").Value;
-                //var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
+                //Private Key
+                var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
+                
+                //Encryption
+                var encEmail = EncryptProvider.DESEncrypt(message.SendTo, desKey);
+                var encPassword = EncryptProvider.DESEncrypt(message.Password, desKey);
+                var encAbsenceId = EncryptProvider.DESEncrypt(message.AbsenceId.ToString(), desKey);
+
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
                 if(message.TemplateId == 14)
                 {
-                    message.ApproveUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 3;
-                    message.DenyUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 4;
+                    message.ApproveUrl = web + "/?pa=" + encPassword + "&email=" + encEmail + "&job=" + encAbsenceId + "&ac=" + 3;
+                    message.DenyUrl = web + "/?pa=" + encPassword + "&email=" + encEmail + "&job=" + encAbsenceId + "&ac=" + 4;
                 }
                 if (message.TemplateId == 1 || message.TemplateId == 7)
                 {
-                    message.AcceptUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 1;
-                    message.DeclineUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 2;
+                    message.AcceptUrl = web + "/?pa=" + encPassword + "&email=" + encEmail + "&job=" + encAbsenceId + "&ac=" + 1;
+                    message.DeclineUrl = web + "/?pa=" + encPassword + "&email=" + encEmail + "&job=" + encAbsenceId + "&ac=" + 2;
                 }
                 if (message.TemplateId == 9)
                 {
-                    message.resetPassUrl = web + "/resetPassword/?key=" + message.ActivationCode + "&email=" + message.SendTo;
+                    message.resetPassUrl = web + "/resetPassword/?email=" + encEmail + "&key=" + message.ActivationCode;
                 }
                 if (message.TemplateId == 25)
                 {
                     //message.Password = EncryptProvider.DESEncrypt(message.Password, desKey);
                     //var EmailId = EncryptProvider.DESEncrypt(message.SendTo, desKey);
-                    message.VerifyUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&ac=" + 5;
+                    message.VerifyUrl = web + "/?pa=" + encPassword + "&email=" + encEmail + "&ac=" + 5;
                 }
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
@@ -88,8 +95,6 @@ namespace SubzzV2.Integration.Core.Notification
             }
             catch (System.Exception ex)
             {
-                var aesKey = EncryptProvider.CreateAesKey();
-                var key = aesKey.Key;
                 DateTime updatedOn = DateTime.Now;
                 CommunicationContainer.Logger.LogEmail(message.SendTo, null, "Subzz Job Notification", Convert.ToString(ex), updatedOn, Convert.ToString(message.AbsenceId), "FAIL");
                 //CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");
