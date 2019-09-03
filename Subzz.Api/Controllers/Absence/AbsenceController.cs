@@ -156,6 +156,18 @@ namespace Subzz.Api.Controllers.Absence
                     {
                         Task.Run(() => SendJobPostEmails(model));
                         return Json(absenceCreation.ConfirmationNumber.ToString());
+                        //DateTime date = DateTime.Now;
+                        //var currentDate = DateTime.Parse(Convert.ToDateTime(date).ToShortDateString());
+                        //var absenceStartDate = DateTime.Parse(Convert.ToDateTime(model.StartDate).ToShortDateString());
+                        //if (absenceStartDate < currentDate)
+                        //{
+                        //    return Json(absenceCreation.ConfirmationNumber.ToString());
+                        //}
+                        //else
+                        //{
+                        //    Task.Run(() => SendJobPostEmails(model));
+                        //    return Json(absenceCreation.ConfirmationNumber.ToString());
+                        //}
                     }
                 }
             }

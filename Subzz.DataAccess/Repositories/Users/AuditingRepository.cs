@@ -73,8 +73,16 @@ namespace Subzz.DataAccess.Repositories.Users
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictId", model.DistrictId);
             queryParams.Add("@OrganizationId", model.OrganizationId);
-            queryParams.Add("@StartDate", model.StartDate);
-            queryParams.Add("@EndDate", model.EndDate);
+            if (model.EntityId.Length > 0)
+            {
+                queryParams.Add("@StartDate", null);
+                queryParams.Add("@EndDate", null);
+            }
+            else
+            {
+                queryParams.Add("@StartDate", model.StartDate);
+                queryParams.Add("@EndDate", model.EndDate);
+            }
             queryParams.Add("@EntityId", model.EntityId);
             queryParams.Add("@LoginUserId", model.LoginUserId);
             var result = Db.Query<AuditLogAbsenceView>(sql, queryParams, commandType: CommandType.StoredProcedure).ToList();
