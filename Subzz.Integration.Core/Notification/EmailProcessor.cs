@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using NETCore.Encrypt;
 using Subzz.Integration.Core.Container;
@@ -37,13 +36,13 @@ namespace SubzzV2.Integration.Core.Notification
                 var configurationBuilder = new ConfigurationBuilder();
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 configurationBuilder.AddJsonFile(path, false);
-                var root = configurationBuilder.Build();    
+                var root = configurationBuilder.Build();
                 string apiUrl = root.GetSection("URL").GetSection("api").Value;
                 string web = root.GetSection("URL").GetSection("web").Value;
                 //var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
-                if(message.TemplateId == 14)
+                if (message.TemplateId == 14)
                 {
                     message.ApproveUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 3;
                     message.DenyUrl = web + "/?pa=" + protector.Protect(message.Password) + "&email=" + protector.Protect(message.SendTo) + "&job=" + protector.Protect(message.AbsenceId.ToString()) + "&ac=" + 4;
@@ -66,7 +65,7 @@ namespace SubzzV2.Integration.Core.Notification
                 MailTemplate mailTemplate = await CommunicationContainer.MailTemplatesBuilder
                     .GetMailTemplateByIdAsync((int)mailTemplateEnums);
                 string[] to;
-                    to = new string[] { message.SendTo };
+                to = new string[] { message.SendTo };
                 var param = GetParam(message);
                 string body = PrepareBodyMessage(param, mailTemplate.EmailContent);
                 if (mailTemplate.EmailDisclaimerNeeded)
@@ -84,12 +83,10 @@ namespace SubzzV2.Integration.Core.Notification
                     mailTemplate.SenderEmail, true, message.AttachedFileName, message.FileContentType);
                 }
                 DateTime updatedOn = DateTime.Now;
-                CommunicationContainer.Logger.LogEmail(message.SendTo, body, mailTemplate.Notes , null, updatedOn, Convert.ToString(message.AbsenceId), "OK");
+                CommunicationContainer.Logger.LogEmail(message.SendTo, body, mailTemplate.Notes, null, updatedOn, Convert.ToString(message.AbsenceId), "OK");
             }
             catch (System.Exception ex)
             {
-                var aesKey = EncryptProvider.CreateAesKey();
-                var key = aesKey.Key;
                 DateTime updatedOn = DateTime.Now;
                 CommunicationContainer.Logger.LogEmail(message.SendTo, null, "Subzz Job Notification", Convert.ToString(ex), updatedOn, Convert.ToString(message.AbsenceId), "FAIL");
                 //CommunicationContainer.Logger.LogError(ex, "Process", "EmailProcessor");

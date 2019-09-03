@@ -10,6 +10,8 @@ using SubzzV2.Core.Models;
 using Subzz.Business.Services.Users.Interface;
 using SubzzV2.Core.Enum;
 using Subzz.Integration.Core.Helper;
+using ExcelDataReader;
+using System.Data;
 
 namespace Subzz.Api.Controllers.Manage
 {
@@ -211,6 +213,63 @@ namespace Subzz.Api.Controllers.Manage
             {
             }
             return null;
+        }
+
+        [Route("uploadExcel/{DistrictId}")]
+        [HttpPost]
+        public IActionResult Upload(int DistrictId)
+        {
+            var file = Request.Form.Files[0];
+            var stream = file.OpenReadStream();
+            IExcelDataReader reader = null;
+
+            if (file.FileName.EndsWith(".xls"))
+            {
+                reader = ExcelReaderFactory.CreateBinaryReader(stream);
+            }
+            else if (file.FileName.EndsWith(".xlsx"))
+            {
+                reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            }
+            else
+            {
+                return Ok("NotSupported");
+            }
+
+            DataSet excelRecords = reader.AsDataSet();
+            reader.Close();
+
+            var finalRecords = excelRecords.Tables[0];
+            if(finalRecords.Rows.Count <= 1)
+            {
+                return Ok("Empty");
+            }
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                //UserInfo objUser = new UserInfo();
+                //objUser.UserName = finalRecords.Rows[i][0].ToString();
+                //objUser.EmailId = finalRecords.Rows[i][1].ToString();
+                //objUser.Gender = finalRecords.Rows[i][2].ToString();
+                //objUser.Address = finalRecords.Rows[i][3].ToString();
+                //objUser.MobileNo = finalRecords.Rows[i][4].ToString();
+                //objUser.PinCode = finalRecords.Rows[i][5].ToString();
+
+                OrganizationModel model = new OrganizationModel();
+                model.SchoolName = finalRecords.Rows[i][0].ToString();
+                model.SchoolAddress = finalRecords.Rows[i][1].ToString();
+                model.SchoolCity = finalRecords.Rows[i][2].ToString();
+                model.SchoolZipCode =  int.Parse(finalRecords.Rows[i][3].ToString());
+                model.SchoolTimeZone = int.Parse(finalRecords.Rows[i][4].ToString());
+                model.SchoolStartTime = DateTime.Parse(finalRecords.Rows[i][5].ToString()).TimeOfDay;
+                model.School1stHalfEnd = DateTime.Parse(finalRecords.Rows[i][6].ToString()).TimeOfDay;
+                model.School2ndHalfStart = DateTime.Parse(finalRecords.Rows[i][7].ToString()).TimeOfDay;
+                model.SchoolEndTime = DateTime.Parse(finalRecords.Rows[i][8].ToString()).TimeOfDay;
+                model.SchoolPhone = "+" + finalRecords.Rows[i][9].ToString();
+                model.SchoolDistrictId = DistrictId;
+                var school = _service.InsertSchool(model);
+            }
+
+            return Ok("Imported");
         }
     }
 }

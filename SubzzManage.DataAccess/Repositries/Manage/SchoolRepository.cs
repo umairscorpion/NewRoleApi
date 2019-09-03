@@ -163,5 +163,18 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             Db.Execute(sql, param: param, commandType: commandType);
             return Convert.ToBoolean(param.Get<int>("@HasSucceeded"));
         }
+
+
+        public int GetDistrictId(string districtName)
+        {
+           var sql = "[Location].[GetDistrictIdByDistrictName]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictName", districtName);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+
+
+        }
+
+
     }
 }
