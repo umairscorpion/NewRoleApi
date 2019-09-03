@@ -18,5 +18,6 @@ namespace SubzzManage.DataAccess.Repositries.Manage.Interface
         LocationTime GetOrganizationTimeByOrganizationId(string OrganizationId);
         IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel);
         AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope);
+        int GetDistrictId(string name);
     }
 }

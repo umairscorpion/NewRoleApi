@@ -62,5 +62,10 @@ namespace SubzzManage.Business.Manage
         {
             return _repo.UpdateAbsenceScope(absenceScope);
         }
+
+        public int GetDistrictId(string name)
+        {
+            return _repo.GetDistrictId(name);
+        }
     }
 }
