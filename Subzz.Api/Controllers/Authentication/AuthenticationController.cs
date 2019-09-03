@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -8,7 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using NETCore.Encrypt;
 using Subzz.Api.Controllers.Base;
 using Subzz.Business.Services.Users.Interface;
 using Subzz.Integration.Core.Container;
@@ -237,14 +240,22 @@ namespace Subzz.Api.Controllers.Authentication
         [HttpPost]
         public IActionResult Unprotectdata([FromBody]Protected model)
         {
-            var data = DataProtectionProvider.Create("Subzz");
-            var protector = data.CreateProtector("secretAdmin@0192837465");
+            var configurationBuilder = new ConfigurationBuilder();
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+            configurationBuilder.AddJsonFile(path, false);
+            var root = configurationBuilder.Build();
+            var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
             try
             {
-                model.Email = protector.Unprotect(model.Email);
-                model.Password = protector.Unprotect(model.Password);
+                if (model.Action == 10) //reset Password from email
+                {
+                    model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
+                    return Ok(model);
+                }
+                model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
+                model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);
                 if (model.Action > 0 && model.Action != 5)
-                    model.AbsenceId = protector.Unprotect(model.AbsenceId); //when action = 5 then there is no JobId 
+                    model.AbsenceId = EncryptProvider.DESDecrypt(model.AbsenceId, desKey); //when action = 5 then there is no JobId 
                 return Ok(model);
             }
             catch (Exception ex)
@@ -253,7 +264,6 @@ namespace Subzz.Api.Controllers.Authentication
             }
             finally
             {
-                protector = null;
             }
         }
     }
