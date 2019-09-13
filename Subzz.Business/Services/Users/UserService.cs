@@ -64,6 +64,16 @@ namespace Subzz.Business.Services.Users
             return _repo.InsertUser(model);
         }
 
+        public User InsertTemporarySubstitutes(User model, string status)
+        {
+            return _repo.InsertTemporarySubstitutes(model, status);
+        }
+
+        public User InsertTemporaryStaff(User model, string status)
+        {
+            return _repo.InsertTemporaryStaff(model, status);
+        }
+
         public User UpdateEmployee(User model)
         {
             return _repo.UpdateEmployee(model);
@@ -73,6 +83,49 @@ namespace Subzz.Business.Services.Users
         {
             return _repo.GetUsers(userId, userRole, districtId, organizationId);
         }
+
+        public IEnumerable<User> GetTemporarySubstitutes()
+        {
+            return _repo.GetTemporarySubstitutes();
+        }
+
+        public int DeleteTemporarySubstitutes(int DistrictId)
+        {
+            return _repo.DeleteTemporarySubstitutes(DistrictId);
+        }
+
+        public IEnumerable<User> GetTemporaryStaff()
+        {
+            return _repo.GetTemporaryStaff();
+        }
+
+        public int DeleteTemporaryStaff(int DistrictId)
+        {
+            return _repo.DeleteTemporaryStaff(DistrictId);
+        }
+
+        public IEnumerable<User> GetAllUserRoles()
+        {
+            return _repo.GetAllUserRoles();
+        }
+
+        public IEnumerable<OrganizationModel> GetSchools()
+        {
+            return _repo.GetSchools();
+        }
+        public IEnumerable<DistrictModel> GetDistricts()
+        {
+            return _repo.GetDistricts();
+        }
+        public IEnumerable<LookupModel> GetTeachingLevels()
+        {
+            return _repo.GetTeachingLevels();
+        }
+        public IEnumerable<LookupModel> GetTeachingSubjects()
+        {
+            return _repo.GetTeachingSubjects();
+        }
+
         public IEnumerable<User> SearchContent(string userId, int districtId, string organizationId, string searchQuery)
         {
             return _repo.SearchContent(userId, districtId, organizationId, searchQuery);

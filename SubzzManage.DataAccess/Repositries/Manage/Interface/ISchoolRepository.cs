@@ -10,14 +10,21 @@ namespace SubzzManage.DataAccess.Repositries.Manage.Interface
     public interface ISchoolRepository
     {
         OrganizationModel InsertSchool(OrganizationModel user);
+        OrganizationModel InsertSchoolTemporary(OrganizationModel user, int DistrictId, string Status);
         OrganizationModel UpdateSchool(OrganizationModel model);
         IEnumerable<OrganizationModel> GetSchools();
+        IEnumerable<OrganizationModel> GetTemporarySchools();
         int DeleteSchool(string schoolId);
+        int DeleteTemporarySchools(int DistrictId);
         IEnumerable<OrganizationModel> GetSchool(string schoolId);
         IEnumerable<OrganizationModel> GetOrganizationsByDistrictId(int districtId);
         LocationTime GetOrganizationTimeByOrganizationId(string OrganizationId);
         IEnumerable<AbsenceScope> GetAbsenceScopes(OrganizationModel organizationModel);
         AbsenceScope UpdateAbsenceScope(AbsenceScope absenceScope);
         int GetDistrictId(string name);
+        int GetCountryId(string name);
+        int GetStateId(string name);
+        IEnumerable<CountryModel> GetCountries();
+        IEnumerable<StateModel> GetStateByCountryId(int counrtyId);
     }
 }

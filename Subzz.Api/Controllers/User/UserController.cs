@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ExcelDataReader;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -320,16 +322,29 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        //[Route("resendWelcomeLetter")]
+        //[HttpPost]
+        //public void ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
+        //{
+            
+        //        SendWelcomeLetter(user);
+        //}
+
         [Route("resendWelcomeLetter")]
         [HttpPost]
-        public void ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
+        public IActionResult ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
         {
-            if (user.IsActive == true)
+            try
             {
-                SendWelcomeLetter(user);
+                Task.Run(() => SendWelcomeLetter(user));
+                return Ok();
             }
-        }
+            catch(Exception ex)
+            {
 
+            }
+            return null;
+        }
         [Route("sendWellcomeLetterToAll/{DistrictId}/{UserRole}")]
         [HttpGet]
         public IActionResult SendWelcomeLetterToAll(int districtId, int userRole)
@@ -337,12 +352,9 @@ namespace Subzz.Api.Controllers.User
             
             try
             {
-                
                  IEnumerable<SubzzV2.Core.Entities.User> users = _service.GetUsersByDistrictId(districtId, userRole);
                  Task.Run(() => SendWellcomeEmailToAll(users));
                  return Ok();
-                
-                
             }
             catch(Exception ex)
             {
@@ -374,17 +386,34 @@ namespace Subzz.Api.Controllers.User
             }
         }
 
-        private void SendWelcomeLetter(SubzzV2.Core.Entities.User user)
-        {
-            Message message = new Message();
-            message.Password = user.Password;
-            message.UserName = user.FirstName;
-            message.SendTo = user.Email;
-            message.Photo = user.ProfilePicture;
-            message.TemplateId = 25;
-            CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
-        }
+        //private void SendWelcomeLetter(SubzzV2.Core.Entities.User user)
+        //{
+        //    Message message = new Message();
+        //    message.Password = user.Password;
+        //    message.UserName = user.FirstName;
+        //    message.SendTo = user.Email;
+        //    message.Photo = user.ProfilePicture;
+        //    message.TemplateId = 25;
+        //    CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+        //}
 
+        async Task SendWelcomeLetter(SubzzV2.Core.Entities.User user)
+        {
+            try
+            {
+                Message message = new Message();
+                message.Password = user.Password;
+                message.UserName = user.FirstName;
+                message.SendTo = user.Email;
+                message.Photo = user.ProfilePicture;
+                message.TemplateId = 25;
+                await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
         [Route("updateUser")]
         [HttpPatch]
         public SubzzV2.Core.Entities.User UpdateUser([FromBody]SubzzV2.Core.Entities.User model)
@@ -471,6 +500,80 @@ namespace Subzz.Api.Controllers.User
                 var UserId = base.CurrentUser.Id;
                 var Users = _service.GetUsers(UserId, roleId, districtId, orgId);
                 return Users;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [HttpGet]
+        [Route("getTemporarySubstitutes")]
+        public IEnumerable<SubzzV2.Core.Entities.User> GetTemporarySubstitutes()
+        {
+            try
+            {
+                var Users = _service.GetTemporarySubstitutes();
+                return Users;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("deleteTemporarySubstitutes")]
+        [HttpGet]
+        public IActionResult DeleteTemporarySubstitutes()
+        {
+            try
+            {
+                var DistrictId = 0;
+                var DeleteTemporarySchools = _service.DeleteTemporarySubstitutes(DistrictId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [HttpGet]
+        [Route("getTemporaryStaff")]
+        public IEnumerable<SubzzV2.Core.Entities.User> GetTemporaryStaff()
+        {
+            try
+            {
+                var Users = _service.GetTemporaryStaff();
+                return Users;
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("deleteTemporaryStaff")]
+        [HttpGet]
+        public IActionResult DeleteTemporaryStaff()
+        {
+            try
+            {
+                var DistrictId = 0;
+                var DeleteTemporarySchools = _service.DeleteTemporaryStaff(DistrictId);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -1291,6 +1394,558 @@ namespace Subzz.Api.Controllers.User
             return null;
         }
 
+        [Route("verifySubstitutesData/{DistrictId}")]
+        [HttpPost]
+        public IActionResult VerifyData(int DistrictId)
+        {
+            var file = Request.Form.Files[0];
+            var stream = file.OpenReadStream();
+            IExcelDataReader reader = null;
+
+            if (file.FileName.EndsWith(".xls"))
+            {
+                reader = ExcelReaderFactory.CreateBinaryReader(stream);
+            }
+            else if (file.FileName.EndsWith(".xlsx"))
+            {
+                reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            }
+            else
+            {
+                return Ok(1);
+            }
+
+            DataSet excelRecords = reader.AsDataSet();
+            reader.Close();
+
+            var finalRecords = excelRecords.Tables[0];
+            if (finalRecords.Rows.Count <= 1)
+            {
+                return Ok(2);
+            }
+
+            var deletesubstitutes = _service.DeleteTemporarySubstitutes(DistrictId);
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                var Status = "";
+                SubzzV2.Core.Entities.User model = new SubzzV2.Core.Entities.User();
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][0].ToString()))
+                {
+                    Status = "Please Fill First Name in column 1. ";
+                    model.FirstName = null;
+                }
+                else
+                {
+                    model.FirstName = finalRecords.Rows[i][0].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][1].ToString()))
+                {
+                    Status = Status + "Please Fill Last Name in column 2. ";
+                    model.LastName = null;
+                }
+                else
+                {
+                    model.LastName = finalRecords.Rows[i][1].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][2].ToString()))
+                {
+                    Status = Status + "Please Fill User Type in column 3. ";
+                    model.UserTypeId = 0;
+                }
+                else
+                {
+                    model.UserTypeDescription = finalRecords.Rows[i][2].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][3].ToString()))
+                {
+                    Status = Status + "Please Fill Email in column 4. ";
+                    model.Email = null;
+                }
+                else
+                {
+                    model.Email = finalRecords.Rows[i][3].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][4].ToString()))
+                {
+                    Status = Status + "Please Fill Phone Number in column 5. ";
+                    model.PhoneNumber = null;
+                }
+                else
+                {
+                    model.PhoneNumber = "+" + finalRecords.Rows[i][4].ToString();
+                }
+                model.DistrictId = DistrictId;
+                var record = _service.InsertTemporarySubstitutes(model, Status); 
+                
+                //var userModel = _service.InsertUser(model);
+            }
+
+            return Ok(3);
+        }
+
+        [Route("importSubstitutes/{DistrictId}")]
+        [HttpPost]
+        public IActionResult Upload(int DistrictId)
+        {
+            var file = Request.Form.Files[0];
+            var stream = file.OpenReadStream();
+            IExcelDataReader reader = null;
+
+            if (file.FileName.EndsWith(".xls"))
+            {
+                reader = ExcelReaderFactory.CreateBinaryReader(stream);
+            }
+            else if (file.FileName.EndsWith(".xlsx"))
+            {
+                reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            }
+            else
+            {
+                return Ok(1);
+            }
+
+            DataSet excelRecords = reader.AsDataSet();
+            reader.Close();
+
+            var finalRecords = excelRecords.Tables[0];
+            if (finalRecords.Rows.Count <= 1)
+            {
+                return Ok(2);
+            }
+
+            var deletesubstitutes = _service.DeleteTemporarySubstitutes(DistrictId);
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                var Status = "";
+                SubzzV2.Core.Entities.User model = new SubzzV2.Core.Entities.User();
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][0].ToString()))
+                {
+                    Status = "Please Fill First Name in column 1 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.FirstName = finalRecords.Rows[i][0].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][1].ToString()))
+                {
+                    Status = Status + "Please Fill Last Name in column 2 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.LastName = finalRecords.Rows[i][1].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][2].ToString()))
+                {
+                    Status = Status + "Please Fill User Type in column 3 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.UserTypeDescription = finalRecords.Rows[i][2].ToString();
+                    var positions = _service.GetPositions(DistrictId);
+                    var pos = positions.Where(x => x.Title == model.UserTypeDescription).FirstOrDefault();
+                    if (pos == null)
+                        return Json("Position type does not exists in selected district. Please enter another position type in column 3 at row " + i);
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][3].ToString()))
+                {
+                    Status = Status + "Please Fill Email in column 4 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.Email = finalRecords.Rows[i][3].ToString();
+                    var Emails = _service.VerifyUser(model);
+                    if (Emails)
+                        return Json("Email already belongs to another user. Please enter another email address in column 4 at row " + i);
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][4].ToString()))
+                {
+                    Status = Status + "Please Fill Phone Number in column 5 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.PhoneNumber = "+" + finalRecords.Rows[i][4].ToString();
+                }
+
+                
+                    
+                }
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                SubzzV2.Core.Entities.User model = new SubzzV2.Core.Entities.User();
+                model.FirstName = finalRecords.Rows[i][0].ToString();
+                model.LastName = finalRecords.Rows[i][1].ToString();
+                model.UserTypeDescription = finalRecords.Rows[i][2].ToString();
+                var positions = _service.GetPositions(DistrictId);
+                var pos = positions.Where(x => x.Title == model.UserTypeDescription).FirstOrDefault();
+                model.UserTypeId = pos.Id;
+                model.TeachingLevel = 0;
+                model.SpecialityTypeId = 0;
+                model.RoleId = 4;
+                model.Gender = "M";
+                model.DistrictId = DistrictId;
+                model.Email = finalRecords.Rows[i][3].ToString();
+                model.PhoneNumber = "+" + finalRecords.Rows[i][4].ToString();
+                model.IsSubscribedEmail = true;
+                model.IsSubscribedSMS = true;
+                model.ProfilePicture = "noimage.png";
+                model.PayRate = 20;
+                model.HourLimit = 20;
+                model.Password = "Password1";
+                var userModel = _service.InsertUser(model);
+            }
+
+            return Ok(3);
+        }
+
+
+        [Route("verifyStaffData/{DistrictId}")]
+        [HttpPost]
+        public IActionResult VerifyStaffData(int DistrictId)
+        {
+            var file = Request.Form.Files[0];
+            var stream = file.OpenReadStream();
+            IExcelDataReader reader = null;
+
+            if (file.FileName.EndsWith(".xls"))
+            {
+                reader = ExcelReaderFactory.CreateBinaryReader(stream);
+            }
+            else if (file.FileName.EndsWith(".xlsx"))
+            {
+                reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            }
+            else
+            {
+                return Ok(1);
+            }
+
+            DataSet excelRecords = reader.AsDataSet();
+            reader.Close();
+
+            var finalRecords = excelRecords.Tables[0];
+            if (finalRecords.Rows.Count <= 1)
+            {
+                return Ok(2);
+            }
+
+            var deleteStaff = _service.DeleteTemporaryStaff(DistrictId);
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                var Status = "";
+                SubzzV2.Core.Entities.User model = new SubzzV2.Core.Entities.User();
+                if(string.IsNullOrEmpty(finalRecords.Rows[i][0].ToString()))
+                {
+                    Status = "Please Fill First Name in column 1. ";
+                }
+                else
+                {
+                    model.FirstName = finalRecords.Rows[i][0].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][1].ToString()))
+                {
+                    Status = Status + "Please Fill Last Name in column 2. ";
+                }
+                else
+                {
+                    model.LastName = finalRecords.Rows[i][1].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][2].ToString()))
+                {
+                    Status = Status + "Please Fill User Role in column 3. ";
+                }
+                else
+                {
+                    model.UserRoleDesciption = finalRecords.Rows[i][2].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][3].ToString()))
+                {
+                    Status = Status + "Please Fill Work Location in column 4. ";
+                }
+                else
+                {
+                    model.OrganizationName = finalRecords.Rows[i][3].ToString();
+
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][4].ToString()))
+                {
+                    Status = Status + "Please Fill Grade in column 5. ";
+                }
+                else
+                {
+                    model.UserGrade = finalRecords.Rows[i][4].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][5].ToString()))
+                {
+                    Status = Status + "Please Fill Subject in column 6.  ";
+                }
+                else
+                {
+                    model.UserSubject = finalRecords.Rows[i][5].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][6].ToString()))
+                {
+                    Status = Status + "Please Fill Employe Email in column 7. ";
+                }
+                else
+                {
+                    model.Email = finalRecords.Rows[i][6].ToString();
+
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][7].ToString()))
+                {
+                    Status = Status + "Please Fill Phone Number in column 8. ";
+                }
+                else
+                {
+                    model.PhoneNumber = "+" + finalRecords.Rows[i][7].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][8].ToString()))
+                {
+                    Status = Status + "Please Fill User Level in column 9. ";
+                }
+                else
+                {
+                    model.UserLevelDescription = finalRecords.Rows[i][8].ToString();
+                }
+                model.DistrictId = DistrictId;
+                var record = _service.InsertTemporaryStaff(model, Status);
+            }
+
+            return Ok(3);
+        }
+
+        [Route("importStaff/{DistrictId}")]
+        [HttpPost]
+        public IActionResult ImportStaff(int DistrictId)
+        {
+            var file = Request.Form.Files[0];
+            var stream = file.OpenReadStream();
+            IExcelDataReader reader = null;
+
+            if (file.FileName.EndsWith(".xls"))
+            {
+                reader = ExcelReaderFactory.CreateBinaryReader(stream);
+            }
+            else if (file.FileName.EndsWith(".xlsx"))
+            {
+                reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            }
+            else
+            {
+                return Ok(1);
+            }
+
+            DataSet excelRecords = reader.AsDataSet();
+            reader.Close();
+
+            var finalRecords = excelRecords.Tables[0];
+            if (finalRecords.Rows.Count <= 1)
+            {
+                return Ok(2);
+            }
+
+            var deletesubstitutes = _service.DeleteTemporarySubstitutes(DistrictId);
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                var Status = "";
+                SubzzV2.Core.Entities.User model = new SubzzV2.Core.Entities.User();
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][0].ToString()))
+                {
+                    Status = "Please Fill First Name in column 1 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.FirstName = finalRecords.Rows[i][0].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][1].ToString()))
+                {
+                    Status = Status + "Please Fill Last Name in column 2 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.LastName = finalRecords.Rows[i][1].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][2].ToString()))
+                {
+                    Status = Status + "Please Fill User Role in column 3 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.UserRoleDesciption = finalRecords.Rows[i][2].ToString();
+                    var Roles = _service.GetAllUserRoles();
+                    var role = Roles.Where(x => x.RoleName == model.UserRoleDesciption).FirstOrDefault();
+                    if (role == null)
+                        return Json("Role doesnot exists in database. Please enter another role in column 3 at row " + i);
+
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][3].ToString()))
+                {
+                    Status = Status + "Please Fill Work Location in column 4 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                        
+                        if (string.IsNullOrEmpty(finalRecords.Rows[i][8].ToString()))
+                        {
+                            Status = Status + "Please Fill User Level in column 9 at row " + i;
+                            return Json(Status);
+                        }
+                        else
+                        {
+                            if (finalRecords.Rows[i][8].ToString() == "Campus" || finalRecords.Rows[i][8].ToString() == "District")
+                            {
+                                model.OrganizationName = finalRecords.Rows[i][3].ToString();
+                                var Schools = _service.GetSchools();
+                                var school = Schools.Where(x => x.SchoolName == model.OrganizationName).FirstOrDefault();
+                                var Districts = _service.GetDistricts();
+                                var district = Schools.Where(x => x.DistrictName == model.OrganizationName).FirstOrDefault();
+                                if (school == null && district == null)
+                                    return Json("Work Location doesnot exists in database. Please enter another location in column 4 at row " + i);
+                            }
+                            else
+                            {
+                            return Json("User Level should be Campus or District in column 9.");
+                            }
+                        }
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][4].ToString()))
+                {
+                    Status = Status + "Please Fill Grade in column 5 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.UserGrade = finalRecords.Rows[i][4].ToString();
+                    var Grades = _service.GetTeachingLevels();
+                    var grade = Grades.Where(x => x.Title == model.UserGrade).FirstOrDefault();
+                    if (grade == null)
+                        return Json("Grade doesnot exists in database. Please enter another grade in column 5 at row " + i);
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][5].ToString()))
+                {
+                    Status = Status + "Please Fill Subject in column 6 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.UserSubject = finalRecords.Rows[i][5].ToString();
+                    var Subjects = _service.GetTeachingSubjects();
+                    var subject = Subjects.Where(x => x.Title == model.UserSubject).FirstOrDefault();
+                    if (subject == null)
+                        return Json("Subject doesnot exists in database. Please enter another Subject in column 6 at row " + i);
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][6].ToString()))
+                {
+                    Status = Status + "Please Fill Employe Email in column 7 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.Email = finalRecords.Rows[i][6].ToString();
+                    var Emails = _service.VerifyUser(model);
+                    if (Emails)
+                        return Json("Email already belongs to another user. Please enter another email address in column 7 at row " + i);
+
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][7].ToString()))
+                {
+                    Status = Status + "Please Fill Phone Number in column 8 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    model.PhoneNumber = "+" + finalRecords.Rows[i][7].ToString();
+                }
+
+                if (string.IsNullOrEmpty(finalRecords.Rows[i][8].ToString()))
+                {
+                    Status = Status + "Please Fill User Level in column 9 at row " + i;
+                    return Json(Status);
+                }
+                else
+                {
+                    //model.UserLevel = "+" + finalRecords.Rows[i][8].ToString();
+                }
+
+            }
+            for (int i = 1; i < finalRecords.Rows.Count; i++)
+            {
+                SubzzV2.Core.Entities.User model = new SubzzV2.Core.Entities.User();
+                model.FirstName = finalRecords.Rows[i][0].ToString();
+                model.LastName = finalRecords.Rows[i][1].ToString();
+                model.UserRoleDesciption = finalRecords.Rows[i][2].ToString();
+                var Roles = _service.GetAllUserRoles();
+                var role = Roles.Where(x => x.RoleName == model.UserRoleDesciption).FirstOrDefault();
+                model.RoleId = role.RoleId;
+                //var positions = _service.GetPositions(DistrictId);
+                //var pos = positions.Where(x => x.Title == model.UserTypeDescription).FirstOrDefault();
+                model.UserTypeId = 1;
+
+                if (model.RoleId == 3)
+                {
+                    model.UserGrade = finalRecords.Rows[i][4].ToString();
+                    var Grades = _service.GetTeachingLevels();
+                    var grade = Grades.Where(x => x.Title == model.UserGrade).FirstOrDefault();
+                    model.TeachingLevel = grade.Id;
+                    model.UserSubject = finalRecords.Rows[i][5].ToString();
+                    var Subjects = _service.GetTeachingSubjects();
+                    var subject = Subjects.Where(x => x.Title == model.UserSubject).FirstOrDefault();
+                    model.SpecialityTypeId = subject.Id;
+                }
+                if (finalRecords.Rows[i][8].ToString() == "Campus")
+                {
+                    model.OrganizationName = finalRecords.Rows[i][3].ToString();
+                    var Schools = _service.GetSchools();
+                    var school = Schools.Where(x => x.SchoolName == model.OrganizationName).FirstOrDefault();
+                    model.OrganizationId = school.SchoolId;
+                }
+                model.Gender = "M";
+                model.DistrictId = DistrictId;
+                model.Email = finalRecords.Rows[i][6].ToString();
+                model.PhoneNumber = "+" + finalRecords.Rows[i][7].ToString();
+                model.IsSubscribedEmail = true;
+                model.IsSubscribedSMS = true;
+                model.ProfilePicture = "noimage.png";
+                model.PayRate = 0;
+                model.HourLimit = 0;
+                model.Password = "Password1";
+                var userModel = _service.InsertUser(model);
+            }
+
+            return Ok(3);
+        }
         #region PayRateSetting
         [Route("payRate")]
         [HttpPost]
