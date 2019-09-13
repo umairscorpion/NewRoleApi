@@ -70,6 +70,9 @@
             public static string EmployeeActive     = "Activated Employee";
             public static string EmployeeInactive   = "Inactivated Employee";
             public static string EmployeeVerification = "Verified Employee";
+            public static string CreatedEmpAndSWE   = "Added And Sent Welcome Email To Employee";
+            public static string SentWelcomeEmailToEmp  = "Sent Welcome Email To Employee";
+            public static string SentWelcomeEmailToAllEmp = "Sent Welcome Email To All Employees Of District";
 
             // For Substitute Related Actions
             public static string CreatedSubstitute  = "Added Substitute";
@@ -84,6 +87,9 @@
             public static string UpdatedSubList     = "Updated School Substitute List";
             public static string UpdatedBlockedList = "Updated School Blocked Substitute List";
             public static string SubstituteVerification = "Verified Substitute";
+            public static string CreatedSubAndSWE   = "Added And Sent Welcome Email To Substitute";
+            public static string SentWelcomeEmailToSub    = "Sent Welcome Email To Substitute";
+            public static string SentWelcomeEmailToAllSub = "Sent Welcome Email To All Substitutes Of District";
 
             // For LeaveType Related Actions
             public static string CreatedLeaveType   = "Added Leave Type";

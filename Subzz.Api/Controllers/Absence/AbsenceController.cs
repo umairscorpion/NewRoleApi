@@ -58,13 +58,11 @@ namespace Subzz.Api.Controllers.Absence
             }
             catch (Exception ex)
             {
-
             }
             finally
             {
             }
             return null;
-
         }
 
         [Route("uploadFile")]
@@ -642,41 +640,50 @@ namespace Subzz.Api.Controllers.Absence
 
         [Route("updateAbseceStatus/{ConfirmationNumber}/{AbsenceId}/{StatusId}/{UpdateStatusDate}/{UserId}")]
         [HttpGet]
-        public ActionResult UpdateAbsenceStatus(string ConfirmationNumber, int AbsenceId, int statusId, string UpdateStatusDate, string UserId)
+        public ActionResult UpdateAbsenceStatus(string ConfirmationNumber, int AbsenceId, int statusId, DateTime UpdateStatusDate, string UserId)
         {
             try
             {
                 int RowsEffected = _service.UpdateAbsenceStatus(AbsenceId, statusId, Convert.ToDateTime(UpdateStatusDate), UserId);
-                if (statusId == 1)
+                var audit = new AuditLog
                 {
-                    var audit = new AuditLog
-                    {
-                        UserId = CurrentUser.Id,
-                        EntityId = ConfirmationNumber.ToString(),
-                        EntityType = AuditLogs.EntityType.Absence,
-                        ActionType = AuditLogs.ActionType.Released,
-                        DistrictId = CurrentUser.DistrictId,
-                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                    };
-                    _audit.InsertAuditLog(audit);
-                }
-                else
-                {
-                    var audit = new AuditLog
-                    {
-                        UserId = CurrentUser.Id,
-                        EntityId = ConfirmationNumber.ToString(),
-                        EntityType = AuditLogs.EntityType.Absence,
-                        ActionType = AuditLogs.ActionType.Cancelled,
-                        DistrictId = CurrentUser.DistrictId,
-                        OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
-                    };
-                    _audit.InsertAuditLog(audit);
-                }
+                    UserId = CurrentUser.Id,
+                    EntityId = ConfirmationNumber.ToString(),
+                    EntityType = AuditLogs.EntityType.Absence,
+                    ActionType = statusId == 1 ? AuditLogs.ActionType.Released : AuditLogs.ActionType.Cancelled,
+                    DistrictId = CurrentUser.DistrictId,
+                    OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
+                };
+                _audit.InsertAuditLog(audit);
+
                 if (statusId == 4)
                     Task.Run(() => SendNotificationsOnJobCancelled(AbsenceId));
                 if (statusId == 1)
                     Task.Run(() => SendNotificationsOnJobReleased(AbsenceId));
+                //return Json("success");
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+            }
+            return null;
+        }
+
+        [Route("UpdateAbsenceReasonStatus")]
+        [HttpPost]
+        public ActionResult UpdateAbsenceReasonStatus([FromBody]AbsenceModel model)
+        {
+            try
+            {
+                model.DistrictId = CurrentUser.DistrictId;
+                model.OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId;
+                UpdateAbsenceStatus(model.ConfirmationNumber, model.AbsenceId, model.Status, model.CreatedDate, model.EmployeeId);
+                if(model.ForReason)
+                {
+                    var RowsEffected = _service.UpdateAbsenceReasonStatus(model);
+                }
                 return Json("success");
             }
             catch (Exception ex)
@@ -975,8 +982,7 @@ namespace Subzz.Api.Controllers.Absence
                     message.TemplateId = 15;
                     message.Password = user.Password;
                     message.UserName = user.FirstName;
-                    message.SendTo = user.Email;
-                    
+                    message.SendTo = user.Email;                   
                     //For Substitutes
                     if (user.IsSubscribedSMS && user.RoleId == 4 && absenceDetail.SubstituteRequired)
                     {
@@ -1153,6 +1159,7 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     message.UserName = user.FirstName;
                     message.SendTo = user.Email;
+                    message.Password = user.Password;
                     //For Substitutes
                     if (user.RoleId == 4)
                     {
@@ -1305,6 +1312,7 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     message.UserName = user.FirstName;
                     message.SendTo = user.Email;
+                    message.Password = user.Password;
                     //For Substitutes
                     if (user.RoleId == 4 && absenceDetail.SubstituteRequired)
                     {
@@ -1499,6 +1507,7 @@ namespace Subzz.Api.Controllers.Absence
                 {
                     message.UserName = user.FirstName;
                     message.SendTo = user.Email;
+                    message.Password = user.Password;
                     //For Substitutes
                     if (user.RoleId == 4)
                     {
@@ -1725,7 +1734,6 @@ namespace Subzz.Api.Controllers.Absence
                     if (jobPostedEvent.EmailAlert)
                          CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                 }
-
             }
             catch (Exception ex)
             {

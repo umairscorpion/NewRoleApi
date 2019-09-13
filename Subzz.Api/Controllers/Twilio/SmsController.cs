@@ -116,6 +116,18 @@ namespace Subzz.Api.Controllers.Twilio
                             message.Duration = absenceDetail.DurationType == 1 ? "Full Day" : absenceDetail.DurationType == 2 ? "First Half" : absenceDetail.DurationType == 3 ? "Second Half" : "Custom";
                             //Notification notification = new Notification();
                             Task.Run(() => SendJobAcceptEmails(users, message));
+
+                            // Audit Log
+                            var audit = new AuditLog
+                            {
+                                UserId = userId,
+                                EntityId = absenceDetail.ConfirmationNumber.ToString(),
+                                EntityType = AuditLogs.EntityType.Absence,
+                                ActionType = AuditLogs.ActionType.Accepted,
+                                DistrictId = absenceDetail.DistrictId,
+                                OrganizationId = absenceDetail.OrganizationId == "-1" ? null : absenceDetail.OrganizationId
+                            };
+                            _audit.InsertAuditLog(audit);
                         }
                         else if (status.ToLower() == "blocked")
                         {
@@ -139,13 +151,11 @@ namespace Subzz.Api.Controllers.Twilio
                         }
                         else if (status.ToLower() == "declined")
                         {
-
                             //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "Declined Successfully", AbsenceId);
                             messagingResponse.Message("Declined Successfully");
                         }
                         else if (status.ToLower() == "unavailable")
                         {
-
                             //CommunicationContainer.SMSProcessor.Process(incomingMessage.From, incomingMessage.To, "You are unavailable", AbsenceId);
                             messagingResponse.Message("You are unavailable");
                         }
@@ -161,11 +171,11 @@ namespace Subzz.Api.Controllers.Twilio
                         var audit = new AuditLog
                         {
                             UserId = userId,
-                            EntityId = body[0],
+                            EntityId = absenceDetail.ConfirmationNumber.ToString(),
                             EntityType = AuditLogs.EntityType.Absence,
                             ActionType = AuditLogs.ActionType.Declined,
-                            DistrictId = 0,
-                            OrganizationId = "N/A"
+                            DistrictId = absenceDetail.DistrictId,
+                            OrganizationId = absenceDetail.OrganizationId == "-1" ? null : absenceDetail.OrganizationId
                         };
                         _audit.InsertAuditLog(audit);
                         IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
@@ -222,7 +232,7 @@ namespace Subzz.Api.Controllers.Twilio
                             var audit = new AuditLog
                             {
                                 UserId = userId,
-                                EntityId = body[0],
+                                EntityId = absenceDetail.ConfirmationNumber.ToString(),
                                 EntityType = AuditLogs.EntityType.Absence,
                                 ActionType = AuditLogs.ActionType.Released,
                                 DistrictId = absenceDetail.DistrictId,
@@ -277,7 +287,6 @@ namespace Subzz.Api.Controllers.Twilio
                             CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
-
                     else if (user.RoleId == 3)
                     {
                         message.TemplateId = 11;
@@ -286,7 +295,6 @@ namespace Subzz.Api.Controllers.Twilio
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
-
                     //For Admins
                     else
                     {
@@ -296,8 +304,6 @@ namespace Subzz.Api.Controllers.Twilio
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
-
-
                 }
                 catch (Exception ex)
                 {
@@ -320,7 +326,6 @@ namespace Subzz.Api.Controllers.Twilio
                         //message.TemplateId = 1;
                         //await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                     }
-
                     else if (user.RoleId == 3)
                     {
                         if (user.IsSubscribedEmail)
@@ -338,7 +343,6 @@ namespace Subzz.Api.Controllers.Twilio
                             await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -415,7 +419,6 @@ namespace Subzz.Api.Controllers.Twilio
                             if (jobPostedEvent.TextAlert)
                                 CommunicationContainer.SMSProcessor.Process(message, (MailTemplateEnums)message.TemplateId);
                         }
-
                     }
                     //For Employee
                     else if (user.RoleId == 3)
@@ -428,7 +431,6 @@ namespace Subzz.Api.Controllers.Twilio
                             if (jobPostedEvent.EmailAlert)
                                 await CommunicationContainer.EmailProcessor.ProcessAsync(message, (MailTemplateEnums)message.TemplateId);
                         }
-
                     }
                     //For Admins
                     else

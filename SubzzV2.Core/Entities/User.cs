@@ -80,6 +80,10 @@ namespace SubzzV2.Core.Entities
         public string UserGrade { get; set; }
         public string UserLevelDescription { get; set; }
         public string UserWorkLocation { get; set; }
+        
+        public DateTime ModifiedOn { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
     }
 
     public class UserSummary {

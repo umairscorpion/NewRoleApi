@@ -130,6 +130,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
             queryParams.Add("@Password", model.Password);
+            queryParams.Add("@CreatedBy", model.CreatedBy);
             model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             if (model.SecondarySchools != null)
@@ -209,6 +210,7 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@IsActive", model.IsActive);
             queryParams.Add("@PayRate", Convert.ToString(model.PayRate));
             queryParams.Add("@HourLimit", model.HourLimit);
+            queryParams.Add("@ModifiedBy", model.ModifiedBy);
             Db.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
 
             if(model.SecondarySchools != null)
@@ -581,14 +583,11 @@ namespace Subzz.DataAccess.Repositories.Users
             }
             catch (Exception ex)
             {
-
             }
             finally
             {
-
             }
             return 0;
-
         }
 
         public LocationTime GetUserLocationTime(string userId, int userLevel)
@@ -647,7 +646,6 @@ namespace Subzz.DataAccess.Repositories.Users
             }
             catch (Exception ex)
             {
-
             }
             return 1;
         }
@@ -737,7 +735,6 @@ namespace Subzz.DataAccess.Repositories.Users
             var queryParams = new DynamicParameters();
             queryParams.Add("@Id", id);
             queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
-            //var result = Delete(sql, queryParams, CommandType.StoredProcedure);
             return Db.Execute(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure);
         }
 

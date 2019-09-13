@@ -74,5 +74,9 @@ namespace SubzzV2.Core.Models
         public string RunningLateTitle { get; set; }
         public string AcceptedVia { get; set; }
         public int GradeId { get; set; }
+        // When decline, release, cancel from popup and select reason why
+        public bool ForReason { get; set; } 
+        public int ReasonId { get; set; }
+        public string ReasonText { get; set; }
     }
 }

@@ -247,7 +247,10 @@ namespace Subzz.Api.Controllers.Authentication
             var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
             try
             {
-                model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);                var email = model.Email;                string output = email.Replace(" ", "+");                model.Email = EncryptProvider.DESDecrypt(output, desKey.ToString());
+                model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);
+                var email = model.Email;
+                string output = email.Replace(" ", "+");
+                model.Email = EncryptProvider.DESDecrypt(output, desKey.ToString());
                 if (model.Action == 10) //reset Password from email
                 {
                     model.Email = EncryptProvider.DESDecrypt(output, desKey);

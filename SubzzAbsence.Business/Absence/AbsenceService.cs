@@ -56,6 +56,11 @@ namespace SubzzAbsence.Business.Absence
             return _repo.UpdateAbsenceStatus(AbsenceId, statusId, UpdateStatusDate, UserId);
         }
 
+        public string UpdateAbsenceReasonStatus(AbsenceModel model)
+        {
+            return _repo.UpdateAbsenceReasonStatus(model);
+        }
+
         public int CheckNegativeAllowance(int AllowanceType, string UserId, string EndDate, string StartDate)
         {
             return _repo.CheckNegativeAllowance(AllowanceType, UserId, EndDate, StartDate);
