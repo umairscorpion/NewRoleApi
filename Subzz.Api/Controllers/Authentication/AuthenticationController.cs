@@ -252,8 +252,10 @@ namespace Subzz.Api.Controllers.Authentication
                     model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
                     return Ok(model);
                 }
-                model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
                 model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);
+                var email = model.Email;
+                string output = email.Replace(" ", "+");
+                model.Email = EncryptProvider.DESDecrypt(output, desKey.ToString());
                 if (model.Action > 0 && model.Action != 5)
                     model.AbsenceId = EncryptProvider.DESDecrypt(model.AbsenceId, desKey); //when action = 5 then there is no JobId 
                 return Ok(model);

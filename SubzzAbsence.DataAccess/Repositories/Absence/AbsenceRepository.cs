@@ -132,6 +132,24 @@ namespace SubzzAbsence.DataAccess.Repositories.Absence
             }
         }
 
+        public string UpdateAbsenceReasonStatus(AbsenceModel model)
+        {
+            using (var connection = base.GetConnection)
+            {
+                var sql = "[Absence].[UpdateAbsenceReasonStatus]";
+                var queryParams = new DynamicParameters();
+                queryParams.Add("@ConfirmationNumber", model.ConfirmationNumber);
+                queryParams.Add("@EmployeeId", model.EmployeeId);
+                queryParams.Add("@Status", model.Status);
+                queryParams.Add("@DistrictId", model.DistrictId);
+                queryParams.Add("@OrganizationId", model.OrganizationId);
+                queryParams.Add("@ReasonId", model.ReasonId);
+                queryParams.Add("@ReasonText", model.ReasonText);
+                connection.ExecuteScalar<int>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+                return model.ConfirmationNumber;
+            }
+        }
+
         public int CheckNegativeAllowance(int AllowanceType, string UserId, string EndDate, string StartDate)
         {
             using (var connection = base.GetConnection)

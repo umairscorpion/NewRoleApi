@@ -147,14 +147,18 @@ namespace Subzz.Api.Controllers.Manage
             return null;
         }
 
-        [Route("declineJob/{AbsenceId}")]
-        [HttpGet]
-        public string DeclineJob(int AbsenceId)
+        [Route("declineJob")]
+        [HttpPost]
+        public string DeclineJob([FromBody]AbsenceModel model)
         {
             try
             {
-                AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(AbsenceId);
-                IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(AbsenceId);
+                AbsenceModel absenceDetail = _absenceService.GetAbsenceDetailByAbsenceId(model.AbsenceId);
+                model.ConfirmationNumber = absenceDetail.ConfirmationNumber;
+                model.DistrictId = CurrentUser.DistrictId;
+                model.OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId;
+                var RowsEffected = _absenceService.UpdateAbsenceReasonStatus(model);
+                IEnumerable<SubzzV2.Core.Entities.User> users = _userService.GetAdminListByAbsenceId(model.AbsenceId);
                 Message message = new Message();
                 message.ConfirmationNumber = absenceDetail.ConfirmationNumber;
                 message.AbsenceId = absenceDetail.AbsenceId;
@@ -366,6 +370,7 @@ namespace Subzz.Api.Controllers.Manage
                 }
             }
         }
+
         async Task SendRunningLateEmail(IEnumerable<SubzzV2.Core.Entities.User> users, Subzz.Integration.Core.Domain.Message message, AbsenceModel absenceDetail)
         {
             foreach (var user in users)
@@ -391,6 +396,7 @@ namespace Subzz.Api.Controllers.Manage
                 }
             }
         }
+
         [Route("sendRunningLateMessage/{RunningMessage}/{AbsenceId}")]
         [HttpGet]
         public async Task<string> SendRunningLateMessage(string RunningMessage, int AbsenceId)

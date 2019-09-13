@@ -67,9 +67,7 @@ namespace SubzzV2.Integration.Core.Notification
             else
             {
                 CommunicationContainer.MessagingClient.SendMessage(message.PhoneNumber, body, message.AbsenceId);
-            }
-            
-           
+            }                   
 		}
 
         public void Process(string to, string from, string message, int absenceId)
