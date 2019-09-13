@@ -149,6 +149,43 @@ namespace Subzz.DataAccess.Repositories.Users
             return model;
         }
 
+        public User InsertTemporarySubstitutes(User model, string status)
+        {
+            var sql = "[Users].[InsertTemporarySubstitutes]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@FirstName", model.FirstName);
+            queryParams.Add("@LastName", model.LastName);
+            queryParams.Add("@UserTypeDescription", model.UserTypeDescription);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@Email", model.Email);
+            queryParams.Add("@PhoneNumber", model.PhoneNumber);
+            queryParams.Add("@Status", status);
+            model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            
+            return model;
+        }
+
+        public User InsertTemporaryStaff(User model, string status)
+        {
+            var sql = "[Users].[InsertTemporaryStaff]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@FirstName", model.FirstName);
+            queryParams.Add("@LastName", model.LastName);
+            queryParams.Add("@UserRoleDescription", model.UserRoleDesciption);
+            queryParams.Add("@UserWorkLocation", model.OrganizationName);
+            queryParams.Add("@DistrictId", model.DistrictId);
+            queryParams.Add("@Email", model.Email);
+            queryParams.Add("@PhoneNumber", model.PhoneNumber);
+            queryParams.Add("@Status", status);
+            queryParams.Add("@UserGrade", model.UserGrade);
+            queryParams.Add("@UserSubject", model.UserSubject);
+            queryParams.Add("@UserLevel", model.UserLevelDescription);
+
+            model.UserId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+
+            return model;
+        }
+
         public User UpdateUser(User model)
         {
             var sql = "[Users].[UpdateUser]";
@@ -241,6 +278,76 @@ namespace Subzz.DataAccess.Repositories.Users
             queryParams.Add("@districtId", districtId);
             queryParams.Add("@organizationId", organizationId);
             return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<User> GetTemporarySubstitutes()
+        {
+            var sql = "[Users].[GetTemporarySubstitutes]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public int DeleteTemporarySubstitutes(int DistrictId)
+        {
+            var sql = "[Users].[DeleteTemporarySubstitutes]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", DistrictId);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+
+
+        }
+
+        public IEnumerable<User> GetTemporaryStaff()
+        {
+            var sql = "[Users].[GetTemporaryStaff]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public int DeleteTemporaryStaff(int DistrictId)
+        {
+            var sql = "[Users].[DeleteTemporaryStaff]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", DistrictId);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+
+
+        }
+
+        public IEnumerable<SubzzV2.Core.Entities.User> GetAllUserRoles()
+        {
+            var sql = "[Users].[GetUserRoles]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<SubzzV2.Core.Entities.User>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<OrganizationModel> GetSchools()
+        {
+            var sql = "[Subzz_Locations].[Location].[GetSchools]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<OrganizationModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<DistrictModel> GetDistricts()
+        {
+            var sql = "[Subzz_Locations].[Location].[GetDistricts]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<DistrictModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<LookupModel> GetTeachingLevels()
+        {
+            var sql = "[Subzz_Lookups].[Lookup].[GetTeachingLevels]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+
+        }
+
+        public IEnumerable<LookupModel> GetTeachingSubjects()
+        {
+            var sql = "[Subzz_Lookups].[Lookup].[sp_getTeachingSubjects]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<LookupModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
         public IEnumerable<User> SearchContent(string userId, int districtId, string organizationId,string searchQuery)

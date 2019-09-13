@@ -27,8 +27,19 @@ namespace Subzz.Business.Services.Users.Interface
         // functions related to Employee
         #region Employee
         User InsertUser(User model);
+        User InsertTemporarySubstitutes(User model, string status);
+        User InsertTemporaryStaff(User model, string status);
         User UpdateEmployee(User model);
         IEnumerable<User> GetUsers(string userId, int userRole, int districtId, string organizationId);
+        IEnumerable<User> GetTemporarySubstitutes();
+        int DeleteTemporarySubstitutes(int DistrictId);
+        IEnumerable<User> GetTemporaryStaff();
+        int DeleteTemporaryStaff(int DistrictId);
+        IEnumerable<User> GetAllUserRoles();
+        IEnumerable<OrganizationModel> GetSchools();
+        IEnumerable<DistrictModel> GetDistricts();
+        IEnumerable<LookupModel> GetTeachingLevels();
+        IEnumerable<LookupModel> GetTeachingSubjects();
         IEnumerable<User> SearchContent(string userId, int districtId, string organizationId, string searchQuery);
         IEnumerable<User> GetEmployeeSuggestions(string searchText, int isSearchSubstitute, string organizationId, int districtId);
         bool DeleteUser(string UserId);

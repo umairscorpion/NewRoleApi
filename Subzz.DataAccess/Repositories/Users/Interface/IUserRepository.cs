@@ -24,6 +24,17 @@ namespace Subzz.DataAccess.Repositories.Users.Interface
         User UpdateUserStatus(User user);
         // functions related to Employee
         User InsertUser(User model);
+        User InsertTemporarySubstitutes(User model,  string status);
+        User InsertTemporaryStaff(User model, string status);
+        IEnumerable<User> GetTemporarySubstitutes();
+        IEnumerable<User> GetAllUserRoles();
+        IEnumerable<OrganizationModel> GetSchools();
+        IEnumerable<DistrictModel> GetDistricts();
+        IEnumerable<LookupModel> GetTeachingLevels();
+        IEnumerable<LookupModel> GetTeachingSubjects();
+        int DeleteTemporarySubstitutes(int DistrictId);
+        IEnumerable<User> GetTemporaryStaff();
+        int DeleteTemporaryStaff(int DistrictId);
         User UpdateEmployee(User model);
         User UpdatePassword(User user);
         User UpdatePasswordUsingActivationLink(User user);

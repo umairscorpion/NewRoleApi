@@ -41,12 +41,11 @@ namespace SubzzV2.Integration.Core.Notification
                 string web = root.GetSection("URL").GetSection("web").Value;
                 //Private Key
                 var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
-                
-                //Encryption
+
+               // Encryption
                 var encEmail = EncryptProvider.DESEncrypt(message.SendTo, desKey);
                 var encPassword = EncryptProvider.DESEncrypt(message.Password, desKey);
                 var encAbsenceId = EncryptProvider.DESEncrypt(message.AbsenceId.ToString(), desKey);
-
                 message.ProfilePicUrl = apiUrl + "/Profile/" + message.Photo;
                 message.UnsubscriptionUrl = web + "/unsubscribed/?email=" + message.SendTo;
                 if (message.TemplateId == 14)
@@ -61,7 +60,7 @@ namespace SubzzV2.Integration.Core.Notification
                 }
                 if (message.TemplateId == 9)
                 {
-                    message.resetPassUrl = web + "/resetPassword/?email=" + encEmail + "&key=" + message.ActivationCode;
+                    message.resetPassUrl = web + "/resetPassword/?email=" + message.SendTo + "&key=" + message.ActivationCode;
                 }
                 if (message.TemplateId == 25)
                 {

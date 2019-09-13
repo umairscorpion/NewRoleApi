@@ -75,6 +75,12 @@ namespace SubzzV2.Core.Entities
         public string CounrtyCode { get; set; }
         public string IsWelcomeEmailSend { get; set; }
         public string JobId { get; set; }
+        public string StatusMessage { get; set; }
+        public string UserSubject { get; set; }
+        public string UserGrade { get; set; }
+        public string UserLevelDescription { get; set; }
+        public string UserWorkLocation { get; set; }
+        
         public DateTime ModifiedOn { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
