@@ -60,6 +60,27 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             return model;
         }
 
+        public OrganizationModel InsertSchoolTemporary(OrganizationModel model, int DistrictId, string Status)
+        {
+            var sql = "[Location].[InsertSchoolTemporary]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@SchoolName", model.SchoolName);
+            queryParams.Add("@SchoolAddress", model.SchoolAddress);
+            queryParams.Add("@SchoolStartTime", model.SchoolStartTime);
+            queryParams.Add("@SchoolEndTime", model.SchoolEndTime);
+            queryParams.Add("@School1stHalfEnd", model.School1stHalfEnd);
+            queryParams.Add("@School2ndHalfStart", model.School2ndHalfStart);
+            queryParams.Add("@SchoolCity", model.SchoolCity);
+            queryParams.Add("@SchoolPhone", model.SchoolPhone);
+            queryParams.Add("@SchoolZipCode", model.SchoolZipCode);
+            queryParams.Add("@CountryName", model.CounrtyCode);
+            queryParams.Add("@StateName", model.StateName);
+            queryParams.Add("@Status", Status);
+            queryParams.Add("@SchoolDistrictId", DistrictId);
+            model.SchoolId = Db.ExecuteScalar<string>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure);
+            return model;
+        }
+
         public OrganizationModel UpdateSchool(OrganizationModel model)
         {
             try
@@ -103,7 +124,13 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             var queryParams = new DynamicParameters();
             return Db.Query<OrganizationModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
-        
+        public IEnumerable<OrganizationModel> GetTemporarySchools()
+        {
+            var sql = "[Location].[GetTemporarySchools]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<OrganizationModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
         public int DeleteSchool(string SchoolId)
         {
             int hasSucceeded = 0;
@@ -111,6 +138,16 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             var queryParams = new DynamicParameters();
             queryParams.Add("@SchoolId", SchoolId);
             queryParams.Add("@HasSucceeded", hasSucceeded, null, ParameterDirection.Output);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+
+
+        }
+
+        public int DeleteTemporarySchools(int DistrictId)
+        {
+            var sql = "[Location].[DeleteTemporarySchools]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictId", DistrictId);
             return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
 
 
@@ -175,8 +212,37 @@ namespace SubzzManage.DataAccess.Repositries.Manage
             var queryParams = new DynamicParameters();
             queryParams.Add("@DistrictName", districtName);
             return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
 
+        public int GetCountryId(string districtName)
+        {
+            var sql = "[Location].[GetCountryIdByCountryName]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictName", districtName);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
 
+        public int GetStateId(string districtName)
+        {
+            var sql = "[Location].[GetStateIdByStateName]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@DistrictName", districtName);
+            return Db.Query<int>(sql, param: queryParams, commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        public IEnumerable<CountryModel> GetCountries()
+        {
+            var sql = "[Subzz_Lookups].[Lookup].[GetCountries]";
+            var queryParams = new DynamicParameters();
+            return Db.Query<CountryModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
+        }
+
+        public IEnumerable<StateModel> GetStateByCountryId(int counrtyId)
+        {
+            var sql = "[Subzz_Lookups].[Lookup].[GetStatesByCounrtyId]";
+            var queryParams = new DynamicParameters();
+            queryParams.Add("@counrtyId", counrtyId);
+            return Db.Query<StateModel>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
 

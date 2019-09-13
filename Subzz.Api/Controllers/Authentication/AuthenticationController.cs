@@ -247,13 +247,15 @@ namespace Subzz.Api.Controllers.Authentication
             var desKey = root.GetSection("KEY").GetSection("SECkey").Value;
             try
             {
+                model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);                var email = model.Email;                string output = email.Replace(" ", "+");                model.Email = EncryptProvider.DESDecrypt(output, desKey.ToString());
                 if (model.Action == 10) //reset Password from email
                 {
-                    model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
+                    model.Email = EncryptProvider.DESDecrypt(output, desKey);
                     return Ok(model);
                 }
-                model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
-                model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);
+                
+                //model.Email = EncryptProvider.DESDecrypt(model.Email, desKey);
+                //model.Password = EncryptProvider.DESDecrypt(model.Password, desKey);
                 if (model.Action > 0 && model.Action != 5)
                     model.AbsenceId = EncryptProvider.DESDecrypt(model.AbsenceId, desKey); //when action = 5 then there is no JobId 
                 return Ok(model);
@@ -264,6 +266,40 @@ namespace Subzz.Api.Controllers.Authentication
             }
             finally
             {
+            }
+        }
+        private static byte[] ConvertFromBase64String(string input)
+        {
+            string working = input.Replace('-', '+').Replace('_', '/');
+            while (working.Length % 3 != 0)
+            {
+                working += '=';
+            }
+            try
+            {
+                return Convert.FromBase64String(working);
+            }
+            catch (Exception)
+            {
+                // .Net core 2.1 bug
+                // https://github.com/dotnet/corefx/issues/30793
+                try
+                {
+                    return Convert.FromBase64String(input.Replace('-', '+').Replace('_', '/'));
+                }
+                catch (Exception) { }
+                try
+                {
+                    return Convert.FromBase64String(input.Replace('-', '+').Replace('_', '/') + "=");
+                }
+                catch (Exception) { }
+                try
+                {
+                    return Convert.FromBase64String(input.Replace('-', '+').Replace('_', '/') + "==");
+                }
+                catch (Exception) { }
+
+                return null;
             }
         }
     }

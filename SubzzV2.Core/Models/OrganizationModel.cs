@@ -32,5 +32,7 @@ namespace SubzzV2.Core.Models
         public string CounrtyCode { get; set; }
         public int CountryId { get; set; }
         public int SchoolStateId { get; set; }
+        public string StateName { get; set; }
+        public string StatusMessage { get; set; }
     }
 }
