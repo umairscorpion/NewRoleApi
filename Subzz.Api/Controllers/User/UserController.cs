@@ -299,6 +299,7 @@ namespace Subzz.Api.Controllers.User
         public IActionResult ResendWelcomeLetter([FromBody]SubzzV2.Core.Entities.User user)
         {
             try
+            { 
                 Task.Run(() => SendWelcomeLetter(user));
             // Audit Log
             var audit = new AuditLog
@@ -312,11 +313,11 @@ namespace Subzz.Api.Controllers.User
                 OrganizationId = CurrentUser.OrganizationId == "-1" ? null : CurrentUser.OrganizationId
             };
             _audit.InsertAuditLog(audit);
+
             return Ok();
             }
             catch(Exception ex)
             {
-
             }
             return null;
         }

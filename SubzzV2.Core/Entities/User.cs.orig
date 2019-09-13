@@ -71,13 +71,21 @@ namespace SubzzV2.Core.Entities
         public int SearchType { get; set; }
         public int ReportType { get; set; }
         public bool IsViewedNewVersion { get; set; }
-<<<<<<< HEAD
-        public string IsWelcomeEmailSend { get; set; }
-        public string JobId { get; set; }
-=======
         public bool ForUserVerification { get; set; }
         public string CounrtyCode { get; set; }
->>>>>>> b7bcb7dbfbc6644cc8bc19806c194ffe29b219ea
+        public string IsWelcomeEmailSend { get; set; }
+        public string JobId { get; set; }
+<<<<<<< HEAD
+        public DateTime ModifiedOn { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
+=======
+        public string StatusMessage { get; set; }
+        public string UserSubject { get; set; }
+        public string UserGrade { get; set; }
+        public string UserLevelDescription { get; set; }
+        public string UserWorkLocation { get; set; }
+>>>>>>> 55428303003135b2874a0f0456341b0d37586bb6
     }
 
     public class UserSummary {
