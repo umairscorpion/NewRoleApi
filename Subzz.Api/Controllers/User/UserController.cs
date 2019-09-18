@@ -1854,6 +1854,7 @@ namespace Subzz.Api.Controllers.User
                 model.PayRate = 0;
                 model.HourLimit = 0;
                 model.Password = "Password1";
+                model.CreatedBy = CurrentUser.Id;
                 var userModel = _service.InsertUser(model);
             }
 

@@ -70,7 +70,12 @@ namespace Subzz.DataAccess.Repositories.Users
             var sql = "[Users].[GetRolePermissions]";
             var queryParams = new DynamicParameters();
             queryParams.Add("@RoleId", userRoleId);
-            queryParams.Add("@UserId", userId);
+            if(userRoleId == 6)
+                queryParams.Add("@UserId", "U000000001");
+            else
+            {
+                queryParams.Add("@UserId", userId);
+            }
             return Db.Query<RolePermission>(sql, queryParams, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
